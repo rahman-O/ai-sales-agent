@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../prisma/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Global identity. authSubject maps to verified JWT `sub` (immutable external id).
+model User {
+  id          String               @id @default(uuid()) @db.Uuid
+  authSubject String               @unique @map("auth_subject")
+  displayName String?              @map("display_name")
+  createdAt   DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime             @updatedAt @map("updated_at") @db.Timestamptz(6)
+  memberships OrganizationMember[]
+  auditLogs   AuditLog[]           @relation("AuditActor")
+  idempotency IdempotencyRecord[]
+
+  @@map("users")
+}
+
+model Organization {
+  id        String               @id @default(uuid()) @db.Uuid
+  name      String
+  createdAt DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime             @updatedAt @map("updated_at") @db.Timestamptz(6)
+  members   OrganizationMember[]
+  auditLogs AuditLog[]
+  outbox    OutboxEvent[]
+  customers Customer[]
+  locations Location[]
+  services Service[]
+  staffMembers StaffMember[]
+
+  @@map("organizations")
+}
+
+model Customer {
+  id             String             @id @default(uuid()) @db.Uuid
+  organizationId String             @map("organization_id") @db.Uuid
+  displayName    String?            @map("display_name")
+  preferredLocale String?           @map("preferred_locale")
+  version        Int                @default(1)
+  archivedAt     DateTime?          @map("archived_at") @db.Timestamptz(6)
+  mergedIntoId   String?            @map("merged_into_id") @db.Uuid
+  createdAt      DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization   Organization       @relation(fields: [organizationId], references: [id])
+  identities     CustomerIdentity[]
+
+  @@unique([organizationId, id])
+  @@index([organizationId, updatedAt, id])
+  @@map("customers")
+}
+
+model CustomerIdentity {
+  id              String   @id @default(uuid()) @db.Uuid
+  organizationId  String   @map("organization_id") @db.Uuid
+  customerId      String   @map("customer_id") @db.Uuid
+  channel         String
+  externalAddress String   @map("external_address")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  revokedAt       DateTime? @map("revoked_at") @db.Timestamptz(6)
+  customer        Customer @relation(fields: [organizationId, customerId], references: [organizationId, id])
+
+  @@unique([organizationId, channel, externalAddress])
+  @@unique([organizationId, id])
+  @@index([organizationId, customerId])
+  @@map("customer_identities")
+}
+
+model Location {
+  id             String        @id @default(uuid()) @db.Uuid
+  organizationId String        @map("organization_id") @db.Uuid
+  name           String
+  timezone       String
+  address        String?
+  active         Boolean       @default(true)
+  version        Int           @default(1)
+  archivedAt     DateTime?     @map("archived_at") @db.Timestamptz(6)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  services       Service[]
+  staffMembers   StaffMember[]
+
+  @@unique([organizationId, id])
+  @@index([organizationId, active])
+  @@map("locations")
+}
+
+model Service {
+  id             String         @id @default(uuid()) @db.Uuid
+  organizationId String         @map("organization_id") @db.Uuid
+  locationId     String         @map("location_id") @db.Uuid
+  name           String
+  durationMinutes Int           @map("duration_minutes")
+  bufferBeforeMinutes Int       @default(0) @map("buffer_before_minutes")
+  bufferAfterMinutes Int        @default(0) @map("buffer_after_minutes")
+  amountMinor    BigInt         @map("amount_minor")
+  currency       String         @db.Char(3)
+  pricingVersion Int            @default(1) @map("pricing_version")
+  active         Boolean        @default(true)
+  version        Int            @default(1)
+  archivedAt     DateTime?      @map("archived_at") @db.Timestamptz(6)
+  createdAt      DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization   Organization   @relation(fields: [organizationId], references: [id])
+  location       Location       @relation(fields: [organizationId, locationId], references: [organizationId, id])
+  staff          ServiceStaff[]
+
+  @@unique([organizationId, id])
+  @@index([organizationId, active, name])
+  @@map("services")
+}
+
+model StaffMember {
+  id             String         @id @default(uuid()) @db.Uuid
+  organizationId String         @map("organization_id") @db.Uuid
+  locationId     String         @map("location_id") @db.Uuid
+  memberUserId   String?        @map("member_user_id") @db.Uuid
+  displayName    String         @map("display_name")
+  active         Boolean        @default(true)
+  version        Int            @default(1)
+  archivedAt     DateTime?      @map("archived_at") @db.Timestamptz(6)
+  createdAt      DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization   Organization   @relation(fields: [organizationId], references: [id])
+  location       Location       @relation(fields: [organizationId, locationId], references: [organizationId, id])
+  services       ServiceStaff[]
+
+  @@unique([organizationId, id])
+  @@index([organizationId, locationId, active])
+  @@map("staff_members")
+}
+
+model ServiceStaff {
+  organizationId String      @map("organization_id") @db.Uuid
+  serviceId      String      @map("service_id") @db.Uuid
+  staffId        String      @map("staff_id") @db.Uuid
+  createdAt      DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  service        Service     @relation(fields: [organizationId, serviceId], references: [organizationId, id])
+  staff          StaffMember @relation(fields: [organizationId, staffId], references: [organizationId, id])
+
+  @@id([organizationId, serviceId, staffId])
+  @@index([organizationId, staffId])
+  @@map("service_staff")
+}
+
+model OrganizationMember {
+  organizationId String       @map("organization_id") @db.Uuid
+  userId         String       @map("user_id") @db.Uuid
+  role           String
+  status         String
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@id([organizationId, userId])
+  @@index([organizationId, role, status])
+  @@map("organization_members")
+}
+
+model AuditLog {
+  id             String        @id @default(uuid()) @db.Uuid
+  organizationId String?       @map("organization_id") @db.Uuid
+  actorUserId    String?       @map("actor_user_id") @db.Uuid
+  action         String
+  targetType     String?       @map("target_type")
+  targetId       String?       @map("target_id")
+  metadataJson   Json?         @map("metadata_json")
+  requestId      String?       @map("request_id")
+  recordedAt     DateTime      @default(now()) @map("recorded_at") @db.Timestamptz(6)
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  actor          User?         @relation("AuditActor", fields: [actorUserId], references: [id])
+
+  @@index([organizationId, recordedAt])
+  @@map("audit_logs")
+}
+
+model OutboxEvent {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  eventType      String       @map("event_type")
+  payloadJson    Json         @map("payload_json")
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId, createdAt])
+  @@map("outbox_events")
+}
+
+/// Durable idempotency for commands that must survive retries (e.g. org create).
+model IdempotencyRecord {
+  id               String    @id @default(uuid()) @db.Uuid
+  actorUserId      String    @map("actor_user_id") @db.Uuid
+  operation        String
+  idempotencyKey   String    @map("idempotency_key")
+  requestHash      String    @map("request_hash")
+  status           String
+  responseJson     Json?     @map("response_json")
+  organizationId   String?   @map("organization_id") @db.Uuid
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  completedAt      DateTime? @map("completed_at") @db.Timestamptz(6)
+  actor            User      @relation(fields: [actorUserId], references: [id])
+
+  @@unique([actorUserId, operation, idempotencyKey])
+  @@map("idempotency_records")
+}

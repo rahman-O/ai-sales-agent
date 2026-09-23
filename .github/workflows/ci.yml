@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_DB: ai_sales_agent
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: p01_migrate_only
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d ai_sales_agent"
+          --health-interval 2s
+          --health-timeout 2s
+          --health-retries 30
+      redis:
+        image: redis:7.4-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 2s
+          --health-timeout 2s
+          --health-retries 30
+
+    env:
+      NODE_ENV: test
+      APP_URL: http://localhost:3000
+      API_URL: http://localhost:3001
+      MIGRATION_DATABASE_URL: postgresql://postgres:p01_migrate_only@127.0.0.1:5433/ai_sales_agent
+      DATABASE_URL: postgresql://app_runtime:p01_runtime_only@127.0.0.1:5433/ai_sales_agent
+      REDIS_URL: redis://127.0.0.1:6379
+      SUPABASE_URL: https://example.supabase.co
+      SUPABASE_JWT_SECRET: local-test-hs256-secret-not-for-prod
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ci_example
+      ALLOW_DB_SEED: "true"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test
+      - run: npx prisma migrate deploy
+        env:
+          MIGRATION_DATABASE_URL: postgresql://postgres:p01_migrate_only@127.0.0.1:5433/ai_sales_agent
+      - name: Provision app_runtime LOGIN (outside migrations)
+        run: WRITE_DATABASE_URL_FROM_MIGRATION_HOST=true npm run db:provision-runtime-role
+        env:
+          MIGRATION_DATABASE_URL: postgresql://postgres:p01_migrate_only@127.0.0.1:5433/ai_sales_agent
+          APP_RUNTIME_DB_PASSWORD: p01_runtime_only
+      - name: Integration tests as app_runtime
+        run: npm run test:integration
+        env:
+          DATABASE_URL: postgresql://app_runtime:p01_runtime_only@127.0.0.1:5433/ai_sales_agent

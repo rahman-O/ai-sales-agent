@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Organization {
+  id          String               @id @db.Uuid
+  name        String
+  members     OrganizationMember[]
+  resources   TestResource[]
+  staff       Staff[]
+  bookings    Booking[]
+  vectors     VectorRecord[]
+  auditEvents AuditEvent[]
+  outbox      OutboxEvent[]
+
+  @@map("organizations")
+}
+
+model User {
+  id          String               @id @db.Uuid
+  subject     String               @unique
+  memberships OrganizationMember[]
+
+  @@map("users")
+}
+
+model OrganizationMember {
+  organizationId String       @map("organization_id") @db.Uuid
+  userId         String       @map("user_id") @db.Uuid
+  role           String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@id([organizationId, userId])
+  @@map("organization_members")
+}
+
+model TestResource {
+  id             String       @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  value          String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@id([organizationId, id])
+  @@map("test_resources")
+}
+
+model Staff {
+  id             String       @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  name           String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  bookings       Booking[]
+
+  @@id([organizationId, id])
+  @@map("staff")
+}
+
+model Booking {
+  id             String       @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  staffId        String       @map("staff_id") @db.Uuid
+  startAt        DateTime     @map("start_at") @db.Timestamptz(6)
+  endAt          DateTime     @map("end_at") @db.Timestamptz(6)
+  status         String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  staff          Staff        @relation(fields: [organizationId, staffId], references: [organizationId, id])
+
+  @@id([organizationId, id])
+  @@index([organizationId, staffId, startAt])
+  @@map("bookings")
+}
+
+model VectorRecord {
+  id             String                  @db.Uuid
+  organizationId String                  @map("organization_id") @db.Uuid
+  label          String
+  embedding      Unsupported("vector(3)")
+  organization   Organization            @relation(fields: [organizationId], references: [id])
+
+  @@id([organizationId, id])
+  @@map("vector_records")
+}
+
+model AuditEvent {
+  id             String       @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  action         String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@id([organizationId, id])
+  @@map("audit_events")
+}
+
+model OutboxEvent {
+  id             String       @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  eventType      String       @map("event_type")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@id([organizationId, id])
+  @@map("outbox_events")
+}

@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: ai-sales-agent-compat-postgres
+    environment:
+      POSTGRES_DB: ai_sales_agent_compat
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: compat_admin_only
+    ports:
+      - "127.0.0.1:55432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ai_sales_agent_compat"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    tmpfs:
+      - /var/lib/postgresql/data
+

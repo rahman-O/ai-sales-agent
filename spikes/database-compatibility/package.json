@@ -1,0 +1,19 @@
+{
+  "name": "ai-sales-agent-database-compatibility-spike",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "prisma generate",
+    "migrate": "prisma migrate deploy",
+    "test": "node --experimental-strip-types test/run.mjs"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "7.10.0",
+    "@prisma/client": "7.10.0",
+    "pg": "8.16.3"
+  },
+  "devDependencies": {
+    "prisma": "7.10.0"
+  }
+}
