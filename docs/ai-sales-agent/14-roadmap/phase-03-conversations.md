@@ -1,6 +1,6 @@
 # Phase 03 — Durable customers and conversations
 
-Status: NOT STARTED. Relative complexity: L. Proposed accountable owner: engineering lead with product reviewer. Dates and staffing are unestimated.
+Status: IN_PROGRESS — BLOCKED on hosted acceptance (local gates green). Relative complexity: L.
 
 ## 1. Objective
 

@@ -1,0 +1,5 @@
+# Local: host Redis already binds 6379 — publish container Redis on 6380.
+services:
+  redis:
+    ports: !override
+      - "127.0.0.1:6380:6379"

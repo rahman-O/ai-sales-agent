@@ -12,5 +12,6 @@ Architecture status is independent of implementation status. Only ADR-005 is ACC
 - [ADR-008: Shared schema with scoped commands and RLS](ADR-008-tenant-isolation.md) — PROPOSED.
 - [ADR-009: Internal booking authority](ADR-009-booking-authority.md) — PROPOSED.
 - [ADR-010: Explicit outbound uncertainty](ADR-010-outbound-uncertainty.md) — PROPOSED.
+- [ADR-011: Narrow privileged work-claim for FORCE RLS workers](ADR-011-privileged-work-claim.md) — ACCEPTED (P03).
 
 Use the [template](ADR-template.md). A changed decision must explain affected contracts, tests, roadmap tasks and migration; preserve superseded records.

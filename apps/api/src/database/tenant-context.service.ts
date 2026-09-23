@@ -67,14 +67,19 @@ export class TenantContextService {
 
   async writeOutbox(
     tx: TenantTxClient,
-    input: { organizationId: string; eventType: string; payloadJson: unknown },
+    input: { organizationId: string; eventType: string; payloadJson: unknown; eventId?: string },
   ) {
+    const envelope = input.payloadJson as { eventId?: string } | null;
+    const id = input.eventId ?? envelope?.eventId ?? randomUUID();
     return tx.outboxEvent.create({
       data: {
-        id: randomUUID(),
+        id,
         organizationId: input.organizationId,
         eventType: input.eventType,
         payloadJson: input.payloadJson as object,
+        publicationStatus: 'PENDING',
+        publicationAttempts: 0,
+        availableAt: new Date(),
       },
     });
   }

@@ -1,10 +1,14 @@
 /**
  * Loads `.env` then `.env.local` into process.env without printing values.
  * `.env.local` always wins for keys it defines (including over inherited shell env).
- * Never logs secret contents.
+ * Never logs secret contents. Skips `NODE_ENV` (framework/runtime owns it).
+ *
+ * Keep in sync with `loadLocalEnv` in `@ai-sales-agent/config`.
  */
 import fs from 'node:fs';
 import path from 'node:path';
+
+const ENV_FILE_SKIP_KEYS = new Set(['NODE_ENV']);
 
 function parseFile(filePath: string): Record<string, string> {
   if (!fs.existsSync(filePath)) return {};
@@ -32,12 +36,13 @@ export function loadLocalEnv(cwd: string = process.cwd()): void {
   const fromLocal = parseFile(path.join(cwd, '.env.local'));
 
   for (const [key, value] of Object.entries(fromEnv)) {
+    if (ENV_FILE_SKIP_KEYS.has(key)) continue;
     if (process.env[key] === undefined) {
       process.env[key] = value;
     }
   }
-  // Local secrets/config always override shell and `.env`.
   for (const [key, value] of Object.entries(fromLocal)) {
+    if (ENV_FILE_SKIP_KEYS.has(key)) continue;
     process.env[key] = value;
   }
 }

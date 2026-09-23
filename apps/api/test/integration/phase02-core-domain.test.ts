@@ -34,7 +34,17 @@ test('Phase 02 RLS, relational integrity, merge and concurrency', async () => {
 
     await context(c, orgA, user);
     await c.query(`INSERT INTO customers(id,organization_id,display_name) VALUES($1,$3,'Canonical'),($2,$3,'Source')`, [customerA, customerSource, orgA]);
-    await c.query(`INSERT INTO customer_identities(id,organization_id,customer_id,channel,external_address) VALUES($1,$2,$3,'whatsapp','+9647700000001')`, [randomUUID(), orgA, customerSource]);
+    const connA = randomUUID();
+    await c.query(
+      `INSERT INTO channel_connections(id,organization_id,provider,external_channel_id,status)
+       VALUES($1,$2,'whatsapp',$3,'ACTIVE')`,
+      [connA, orgA, `fixture:${orgA}:whatsapp`],
+    );
+    await c.query(
+      `INSERT INTO customer_identities(id,organization_id,customer_id,channel_connection_id,channel,external_address)
+       VALUES($1,$2,$3,$4,'whatsapp','+9647700000001')`,
+      [randomUUID(), orgA, customerSource, connA],
+    );
     await c.query(`INSERT INTO locations(id,organization_id,name,timezone) VALUES($1,$2,'Baghdad','Asia/Baghdad')`, [locationA, orgA]);
     await c.query(`INSERT INTO services(id,organization_id,location_id,name,duration_minutes,amount_minor,currency) VALUES($1,$2,$3,'Cleaning',30,50000,'IQD')`, [serviceA, orgA, locationA]);
     await c.query(`INSERT INTO staff_members(id,organization_id,location_id,display_name) VALUES($1,$2,$3,'Dr Test')`, [staffA, orgA, locationA]);
@@ -62,8 +72,18 @@ test('Phase 02 RLS, relational integrity, merge and concurrency', async () => {
     const raceAddress = '+9647700000002';
     async function bind(client: PoolClient, customerId: string) {
       await context(client, orgA, user);
-      try { await client.query(`INSERT INTO customer_identities(id,organization_id,customer_id,channel,external_address) VALUES($1,$2,$3,'whatsapp',$4)`, [randomUUID(), orgA, customerId, raceAddress]); await client.query('COMMIT'); return 'won'; }
-      catch { await client.query('ROLLBACK'); return 'lost'; }
+      try {
+        await client.query(
+          `INSERT INTO customer_identities(id,organization_id,customer_id,channel_connection_id,channel,external_address)
+           VALUES($1,$2,$3,$4,'whatsapp',$5)`,
+          [randomUUID(), orgA, customerId, connA, raceAddress],
+        );
+        await client.query('COMMIT');
+        return 'won';
+      } catch {
+        await client.query('ROLLBACK');
+        return 'lost';
+      }
     }
     const a = await runtime.connect(), b = await runtime.connect();
     try { const result = await Promise.all([bind(a, customerA), bind(b, customerA)]); assert.equal(result.filter(x => x === 'won').length, 1); } finally { a.release(); b.release(); }

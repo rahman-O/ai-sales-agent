@@ -57,13 +57,48 @@ export class CustomersService {
     return this.tenants.runInTenantContext(organizationId, actor, async tx => {
       const customer = await tx.customer.findUnique({ where: { organizationId_id: { organizationId, id: customerId } } });
       if (!customer || customer.archivedAt || customer.mergedIntoId) throw new NotFoundException();
-      const existing = await tx.customerIdentity.findUnique({ where: { organizationId_channel_externalAddress: { organizationId, ...address } } });
+      const externalChannelId = `fixture:${organizationId}:${address.channel}`;
+      let connection = await tx.channelConnection.findUnique({
+        where: { provider_externalChannelId: { provider: address.channel, externalChannelId } },
+      });
+      if (!connection) {
+        connection = await tx.channelConnection.create({
+          data: {
+            id: randomUUID(),
+            organizationId,
+            provider: address.channel,
+            externalChannelId,
+            status: 'ACTIVE',
+          },
+        });
+      } else if (connection.organizationId !== organizationId) {
+        throw new ConflictException('Channel connection bound elsewhere');
+      }
+      const existing = await tx.customerIdentity.findUnique({
+        where: {
+          organizationId_channelConnectionId_externalAddress: {
+            organizationId,
+            channelConnectionId: connection.id,
+            externalAddress: address.externalAddress,
+          },
+        },
+      });
       if (existing) {
         if (existing.customerId !== customerId || existing.revokedAt) throw new ConflictException('Identity already bound');
         return existing;
       }
-      const identity = await tx.customerIdentity.create({ data: { id: randomUUID(), organizationId, customerId, ...address } });
-      await this.audit(tx, actor, organizationId, 'customer.identity_bound', identity.id, { customerId, channel: address.channel }); return identity;
+      const identity = await tx.customerIdentity.create({
+        data: {
+          id: randomUUID(),
+          organizationId,
+          customerId,
+          channelConnectionId: connection.id,
+          channel: address.channel,
+          externalAddress: address.externalAddress,
+        },
+      });
+      await this.audit(tx, actor, organizationId, 'customer.identity_bound', identity.id, { customerId, channel: address.channel });
+      return identity;
     });
   }
   async merge(actor: ActorContext, organizationId: string, canonicalId: string, sourceId: string, evidenceReference: string) {
@@ -76,6 +111,8 @@ export class CustomersService {
         SELECT id, archived_at, merged_into_id FROM customers WHERE organization_id=${organizationId}::uuid AND id IN (${canonicalId}::uuid, ${sourceId}::uuid) ORDER BY id FOR UPDATE`;
       if (locked.length !== 2 || locked.some((x: { archived_at: Date | null; merged_into_id: string | null }) => x.archived_at || x.merged_into_id)) throw new ConflictException('Customer merge state conflict');
       await tx.customerIdentity.updateMany({ where: { organizationId, customerId: sourceId }, data: { customerId: canonicalId } });
+      // P03: keep Conversation.customerId aligned with identity canonical ownership
+      await tx.conversation.updateMany({ where: { organizationId, customerId: sourceId }, data: { customerId: canonicalId, version: { increment: 1 } } });
       await tx.customer.update({ where: { organizationId_id: { organizationId, id: sourceId } }, data: { mergedIntoId: canonicalId, archivedAt: new Date(), version: { increment: 1 } } });
       const canonical = await tx.customer.update({ where: { organizationId_id: { organizationId, id: canonicalId } }, data: { version: { increment: 1 } } });
       await this.audit(tx, actor, organizationId, 'customer.merged', canonicalId, { sourceCustomerId: sourceId, evidenceReference: evidence });

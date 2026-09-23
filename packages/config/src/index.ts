@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const nodeEnv = z.enum(['development', 'test', 'production']);
 
@@ -38,6 +40,56 @@ export const migrationEnvSchema = z.object({
 export type ServerEnv = z.infer<typeof serverEnvSchema>;
 export type PublicEnv = z.infer<typeof publicEnvSchema>;
 export type MigrationEnv = z.infer<typeof migrationEnvSchema>;
+
+function parseEnvFile(filePath: string): Record<string, string> {
+  if (!fs.existsSync(filePath)) return {};
+  const out: Record<string, string> = {};
+  for (const line of fs.readFileSync(filePath, 'utf8').split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eq = trimmed.indexOf('=');
+    if (eq < 0) continue;
+    const key = trimmed.slice(0, eq).trim();
+    let value = trimmed.slice(eq + 1).trim();
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+    out[key] = value;
+  }
+  return out;
+}
+
+/** Keys never applied from project env files (framework/runtime owns them). */
+const ENV_FILE_SKIP_KEYS = new Set(['NODE_ENV']);
+
+/**
+ * Canonical local env loader: `.env` then `.env.local` (local wins).
+ * Never logs secret values. Used by Nest, worker, Prisma config, and scripts.
+ * Skips `NODE_ENV` so Next.js / Node tooling can set it per command.
+ */
+export function loadLocalEnv(cwd: string = process.cwd()): void {
+  const fromEnv = parseEnvFile(path.join(cwd, '.env'));
+  const fromLocal = parseEnvFile(path.join(cwd, '.env.local'));
+  for (const [key, value] of Object.entries(fromEnv)) {
+    if (ENV_FILE_SKIP_KEYS.has(key)) continue;
+    if (process.env[key] === undefined) process.env[key] = value;
+  }
+  for (const [key, value] of Object.entries(fromLocal)) {
+    if (ENV_FILE_SKIP_KEYS.has(key)) continue;
+    process.env[key] = value;
+  }
+}
+
+export function countEnvLocalKey(key: string, cwd: string = process.cwd()): number {
+  const filePath = path.join(cwd, '.env.local');
+  if (!fs.existsSync(filePath)) return 0;
+  const text = fs.readFileSync(filePath, 'utf8');
+  const re = new RegExp(`^${key}=`, 'gm');
+  return [...text.matchAll(re)].length;
+}
 
 export function loadServerEnv(env: NodeJS.ProcessEnv = process.env): ServerEnv {
   // Nest must never fall back to migration credentials.

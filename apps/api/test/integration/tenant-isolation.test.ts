@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import test from 'node:test';
 import * as jose from 'jose';
-import { Pool } from 'pg';
+import { createAppPool } from '../../src/database/pg-pool.js';
 
 const runtimeUrl = process.env.DATABASE_URL;
 const jwtSecret = process.env.SUPABASE_JWT_SECRET ?? 'local-test-hs256-secret-not-for-prod';
@@ -12,7 +12,7 @@ assert.ok(runtimeUrl, 'DATABASE_URL (app_runtime) required');
 assert.ok(!runtimeUrl.includes('postgres:p01_migrate'), 'Must use app_runtime, not migration owner');
 
 function pool() {
-  return new Pool({ connectionString: runtimeUrl, max: 1 });
+  return createAppPool(runtimeUrl!, { max: 1 });
 }
 
 test('runtime role is not superuser and cannot bypass RLS', async () => {
@@ -228,7 +228,7 @@ test('idempotent org create: second key reuse conflicts; exactly one OWNER membe
 });
 
 test('concurrent idempotent org create allows only one winner', async () => {
-  const p = new Pool({ connectionString: runtimeUrl, max: 2 });
+  const p = createAppPool(runtimeUrl!, { max: 2 });
   const userId = randomUUID();
   const key = `key-${randomUUID()}`;
   const name = `Race ${randomUUID()}`;

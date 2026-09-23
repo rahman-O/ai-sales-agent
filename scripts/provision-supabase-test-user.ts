@@ -69,6 +69,32 @@ async function main() {
   if (adminKey.startsWith('sb_publishable_') || adminKey.includes('example')) {
     throw new Error('SUPABASE_TEST_ADMIN_KEY does not look like an admin/server key');
   }
+  {
+    // Smart-punctuation paste (em/en dash, NBSP) breaks Authorization ByteString headers.
+    let nonAsciiAt = -1;
+    let nonAsciiCode = 0;
+    for (let i = 0; i < adminKey.length; i++) {
+      const c = adminKey.charCodeAt(i);
+      if (c > 127) {
+        nonAsciiAt = i;
+        nonAsciiCode = c;
+        break;
+      }
+    }
+    if (nonAsciiAt >= 0) {
+      const kind =
+        nonAsciiCode === 8212
+          ? 'EM_DASH'
+          : nonAsciiCode === 8211
+            ? 'EN_DASH'
+            : nonAsciiCode === 160
+              ? 'NBSP'
+              : `U+${nonAsciiCode.toString(16).toUpperCase()}`;
+      throw new Error(
+        `SUPABASE_TEST_ADMIN_KEY contains non-ASCII at index ${nonAsciiAt} (${kind}). Re-copy the service_role/secret key from Supabase Dashboard → Project Settings → API (plain ASCII only). Do not paste from chat/docs that may convert hyphens.`,
+      );
+    }
+  }
 
   // Generate password locally — never print.
   const password = randomBytes(24).toString('base64url');
@@ -158,12 +184,16 @@ async function main() {
   );
 
   // Immediate credential proof via minimal probe (reloads .env.local).
-  const probe = spawnSync('npx', ['tsx', 'scripts/probe-auth-minimal.ts'], {
-    cwd,
-    env: process.env,
-    encoding: 'utf8',
-    shell: true,
-  });
+  // Fixed argv only — no shell (avoids DEP0190); paths are repo-local constants.
+  const probe = spawnSync(
+    process.execPath,
+    ['--import', 'tsx', 'scripts/probe-auth-minimal.ts'],
+    {
+      cwd,
+      env: process.env,
+      encoding: 'utf8',
+    },
+  );
   if (probe.stdout) process.stdout.write(probe.stdout);
   if (probe.stderr) process.stderr.write(probe.stderr);
   if (probe.status !== 0) {
