@@ -1,4 +1,5 @@
 import { loadLocalEnv, loadServerEnv } from '@ai-sales-agent/config';
+import { runConversationAgent } from '@ai-sales-agent/agent-adapters';
 import { Queue, Worker } from 'bullmq';
 import { Redis } from 'ioredis';
 import pg from 'pg';
@@ -96,8 +97,18 @@ async function main() {
     return rows.length;
   }
 
+  /**
+   * P04: acquire lease; AI_ACTIVE + ingress backlog → agent orchestrator.
+   * Non-AI modes hold processed_sequence (do not auto-advance).
+   * Cursor advances only inside agent finalize (success/handoff).
+   */
   async function drainConversation(organizationId: string, conversationId: string, workerId: string) {
     const client = await pool.connect();
+    let leaseFence = 0;
+    let ownershipEpoch = 0;
+    let processedSequence = 0;
+    let nextSequence = 1;
+    let mode = '';
     try {
       await client.query('BEGIN');
       await client.query(`SELECT set_config('app.current_organization_id', $1, true)`, [
@@ -110,6 +121,7 @@ async function main() {
         ownership_epoch: number;
         processed_sequence: number;
         next_sequence: number;
+        mode: string;
       }>(
         `UPDATE conversations
          SET lease_owner = $3,
@@ -120,43 +132,37 @@ async function main() {
          WHERE organization_id = $1::uuid
            AND id = $2::uuid
            AND (lease_expires_at IS NULL OR lease_expires_at <= now() OR lease_owner = $3)
-         RETURNING lease_fence, ownership_epoch, processed_sequence, next_sequence`,
+         RETURNING lease_fence, ownership_epoch, processed_sequence, next_sequence, mode`,
         [organizationId, conversationId, workerId],
       );
       if (!lease.rows[0]) {
         await client.query('ROLLBACK');
         return { skipped: true };
       }
-      const { lease_fence, ownership_epoch, processed_sequence, next_sequence } = lease.rows[0];
-      if (processed_sequence + 1 >= next_sequence) {
+      leaseFence = lease.rows[0].lease_fence;
+      ownershipEpoch = lease.rows[0].ownership_epoch;
+      processedSequence = lease.rows[0].processed_sequence;
+      nextSequence = lease.rows[0].next_sequence;
+      mode = lease.rows[0].mode;
+
+      if (processedSequence + 1 >= nextSequence) {
         await client.query('COMMIT');
         return { drained: 0 };
       }
 
-      // P03 foundation: mark contiguous pending ingress as processed (no AI).
-      const through = next_sequence - 1;
-      const updated = await client.query(
-        `UPDATE conversations
-         SET processed_sequence = $4,
-             updated_at = now(),
-             version = version + 1
-         WHERE organization_id = $1::uuid
-           AND id = $2::uuid
-           AND lease_owner = $3
-           AND lease_fence = $5
-           AND ownership_epoch = $6
-           AND lease_expires_at > now()
-         RETURNING id`,
-        [organizationId, conversationId, workerId, through, lease_fence, ownership_epoch],
-      );
-      if (!updated.rowCount) {
-        await client.query('ROLLBACK');
-        return { rejected: true };
+      // MODE/CURSOR: non-AI modes must not auto-advance processed_sequence.
+      if (mode !== 'AI_ACTIVE') {
+        await client.query('COMMIT');
+        return {
+          held: true,
+          mode,
+          pendingIngress: nextSequence - 1 - processedSequence,
+          leaseFence,
+          ownershipEpoch,
+        };
       }
 
-      // ConsumerReceipt for wake event if present is recorded by job handler when eventId known.
       await client.query('COMMIT');
-      return { drained: through - processed_sequence, leaseFence: lease_fence, ownershipEpoch: ownership_epoch };
     } catch (e) {
       try {
         await client.query('ROLLBACK');
@@ -167,6 +173,25 @@ async function main() {
     } finally {
       client.release();
     }
+
+    const targetIngressSequence = nextSequence - 1;
+    const result = await runConversationAgent({
+      pool,
+      organizationId,
+      conversationId,
+      workerId,
+      leaseFence,
+      ownershipEpoch,
+      targetIngressSequence,
+    });
+    return {
+      drained: result.terminal === 'SUCCEEDED' || result.terminal === 'HANDOFF_REQUESTED' ? 1 : 0,
+      terminal: result.terminal,
+      reason: result.reason,
+      leaseFence,
+      ownershipEpoch,
+      targetIngressSequence,
+    };
   }
 
   const workerId = `worker-${process.pid}`;

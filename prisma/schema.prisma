@@ -39,6 +39,12 @@ model Organization {
   webhookReceipts    WebhookReceipt[]
   consumerReceipts   ConsumerReceipt[]
   outboundAttempts   OutboundAttempt[]
+  agentConfigs       AgentConfig[]
+  agentRuns          AgentRun[]
+  toolCalls          ToolCall[]
+  commandOperations  CommandOperation[]
+  usageEvents        UsageEvent[]
+  conversationSummaries ConversationSummary[]
 
   @@map("organizations")
 }
@@ -206,6 +212,8 @@ model Conversation {
   channelConnection        ChannelConnection @relation(fields: [organizationId, channelConnectionId], references: [organizationId, id])
   identity                 CustomerIdentity  @relation(fields: [organizationId, identityId], references: [organizationId, id])
   messages                 Message[]
+  agentRuns                AgentRun[]
+  conversationSummaries    ConversationSummary[]
 
   @@unique([organizationId, channelConnectionId, identityId])
   @@unique([organizationId, id])
@@ -361,4 +369,131 @@ model IdempotencyRecord {
 
   @@unique([actorUserId, operation, idempotencyKey])
   @@map("idempotency_records")
+}
+
+model AgentConfig {
+  id             String     @id @default(uuid()) @db.Uuid
+  organizationId String     @map("organization_id") @db.Uuid
+  version        Int
+  status         String     @default("DRAFT")
+  promptVersion  String     @map("prompt_version")
+  modelProfile   String     @map("model_profile")
+  toolAllowlist  Json       @map("tool_allowlist")
+  budgetsJson    Json       @map("budgets_json")
+  localeDefault  String?    @map("locale_default")
+  createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  activatedAt    DateTime?  @map("activated_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  agentRuns      AgentRun[]
+
+  @@unique([organizationId, version])
+  @@unique([organizationId, id])
+  @@map("agent_configs")
+}
+
+model AgentRun {
+  id                     String        @id @default(uuid()) @db.Uuid
+  organizationId         String        @map("organization_id") @db.Uuid
+  conversationId         String        @map("conversation_id") @db.Uuid
+  runKey                 String        @map("run_key")
+  targetIngressSequence  Int           @map("target_ingress_sequence")
+  ownershipEpoch         Int           @map("ownership_epoch")
+  leaseFence             Int           @map("lease_fence")
+  agentConfigId          String        @map("agent_config_id") @db.Uuid
+  promptVersion          String        @map("prompt_version")
+  modelProfile           String        @map("model_profile")
+  status                 String        @default("RUNNING")
+  terminalReason         String?       @map("terminal_reason")
+  modelCalls             Int           @default(0) @map("model_calls")
+  toolCalls              Int           @default(0) @map("tool_calls")
+  finalOutboundMessageId String?       @unique @map("final_outbound_message_id") @db.Uuid
+  startedAt              DateTime      @default(now()) @map("started_at") @db.Timestamptz(6)
+  finishedAt             DateTime?     @map("finished_at") @db.Timestamptz(6)
+  organization           Organization  @relation(fields: [organizationId], references: [id])
+  conversation           Conversation  @relation(fields: [organizationId, conversationId], references: [organizationId, id])
+  agentConfig            AgentConfig   @relation(fields: [organizationId, agentConfigId], references: [organizationId, id])
+  toolCallRows           ToolCall[]
+  commandOperations      CommandOperation[]
+  usageEvents            UsageEvent[]
+
+  @@unique([organizationId, runKey])
+  @@unique([organizationId, id])
+  @@index([organizationId, conversationId, startedAt])
+  @@map("agent_runs")
+}
+
+model ToolCall {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  agentRunId     String       @map("agent_run_id") @db.Uuid
+  ordinal        Int
+  toolName       String       @map("tool_name")
+  toolVersion    String       @map("tool_version")
+  argsHash       String       @map("args_hash")
+  authzResult    String       @map("authz_result")
+  operationId    String?      @map("operation_id") @db.Uuid
+  resultCode     String       @map("result_code")
+  durationMs     Int          @map("duration_ms")
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  agentRun       AgentRun     @relation(fields: [organizationId, agentRunId], references: [organizationId, id])
+
+  @@unique([agentRunId, ordinal])
+  @@unique([organizationId, id])
+  @@map("tool_calls")
+}
+
+model CommandOperation {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  operationKey   String       @map("operation_key")
+  agentRunId     String       @map("agent_run_id") @db.Uuid
+  status         String       @default("IN_PROGRESS")
+  resultJson     Json?        @map("result_json")
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  completedAt    DateTime?    @map("completed_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  agentRun       AgentRun     @relation(fields: [organizationId, agentRunId], references: [organizationId, id])
+
+  @@unique([organizationId, operationKey])
+  @@unique([organizationId, id])
+  @@map("command_operations")
+}
+
+model UsageEvent {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  agentRunId     String       @map("agent_run_id") @db.Uuid
+  provider       String
+  model          String
+  inputTokens    Int?         @map("input_tokens")
+  outputTokens   Int?         @map("output_tokens")
+  estimated      Boolean      @default(true)
+  latencyMs      Int          @map("latency_ms")
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  agentRun       AgentRun     @relation(fields: [organizationId, agentRunId], references: [organizationId, id])
+
+  @@unique([organizationId, id])
+  @@index([organizationId, agentRunId])
+  @@map("usage_events")
+}
+
+model ConversationSummary {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  conversationId String       @map("conversation_id") @db.Uuid
+  version        Int
+  sourceWatermark Int         @map("source_watermark")
+  summaryText    String       @map("summary_text")
+  policyVersion  String       @map("policy_version")
+  modelProfile   String       @map("model_profile")
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  conversation   Conversation @relation(fields: [organizationId, conversationId], references: [organizationId, id])
+
+  @@unique([conversationId, version])
+  @@unique([organizationId, id])
+  @@index([organizationId, conversationId, version(sort: Desc)])
+  @@map("conversation_summaries")
 }

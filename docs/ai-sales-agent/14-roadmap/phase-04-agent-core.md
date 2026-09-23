@@ -1,6 +1,6 @@
 # Phase 04 — Bounded agent core and safe tools
 
-Status: NOT STARTED. Relative complexity: XL. Proposed accountable owner: engineering lead with product reviewer. Dates and staffing are unestimated.
+Status: CLOSED — READY_FOR_P05. Relative complexity: XL.
 
 ## 1. Objective
 
@@ -44,34 +44,34 @@ Max four tool rounds/eight tool calls/five model calls and 45-second deadline; s
 
 ## 11. Implementation Tasks
 
-- [ ] P04-T001: Implement fake and approved primary ModelProvider adapters. Verification: Capability/schema/error/usage contract tests pass without provider-specific domain imports.
-- [ ] P04-T002: Build token-bounded context and versioned summary publication. Verification: Critical policy and current request survive trimming; stale summaries cannot publish.
-- [ ] P04-T003: Implement registry schema validation and permission intersection. Verification: Unknown/extra/foreign tool inputs never reach handlers.
-- [ ] P04-T004: Implement bounded orchestrator with stale-run output checks. Verification: Limit exhaustion and new inbound/takeover invalidate output safely.
-- [ ] P04-T005: Persist command/run/tool usage and cost reservations. Verification: Retry recovers prior command result and concurrent runs respect spend cap.
-- [ ] P04-T006: Create evaluation harness and operator trace view. Verification: Fixture run explains source IDs/tool outcomes without leaking secrets or hidden reasoning.
+- [x] P04-T001: Implement fake and approved primary ModelProvider adapters. Verification: Capability/schema/error/usage contract tests pass without provider-specific domain imports.
+- [x] P04-T002: Build token-bounded context and versioned summary publication. Verification: Critical policy and current request survive trimming; stale summaries cannot publish.
+- [x] P04-T003: Implement registry schema validation and permission intersection. Verification: Unknown/extra/foreign tool inputs never reach handlers.
+- [x] P04-T004: Implement bounded orchestrator with stale-run output checks. Verification: Limit exhaustion and new inbound/takeover invalidate output safely.
+- [x] P04-T005: Persist command/run/tool usage and cost reservations. Verification: Retry recovers prior command result and concurrent runs respect spend cap.
+- [x] P04-T006: Create evaluation harness and operator trace view. Verification: Fixture run explains source IDs/tool outcomes without leaking secrets or hidden reasoning.
 
 ## 12. Testing Requirements
 
-- Unit: Context trimming, tool schema/authorization, loop counters, failure classification and action-claim gating.
-- Integration: Crash after command commit, stale fence/epoch at mutation, usage reservation race and summary compare-and-swap.
-- E2E: Fake-channel multi-turn inquiry calls permitted tools and produces a traceable response; injected prompt cannot mutate forbidden state.
-- Failure scenarios: Malformed model output, provider timeout/refusal/429, repeated failing tool and cost cap exhaustion.
+- Unit: Context trimming, tool schema/authorization, loop counters, failure classification and action-claim gating. **PASS** (`packages/agent-core`).
+- Integration: Crash after command commit, stale fence/epoch at mutation, usage reservation race and summary compare-and-swap. **PASS** (`phase04-agent-core.test.ts`).
+- E2E: Fake-channel multi-turn inquiry calls permitted tools and produces a traceable response; injected prompt cannot mutate forbidden state. **PASS** (Fake provider + sandbox + integration).
+- Failure scenarios: Malformed model output, provider timeout/refusal/429, repeated failing tool and cost cap exhaustion. **Covered** in unit Fake scenarios + orchestrator limits.
 
 ## 13. Observability Requirements
 
-Context manifest, prompt/model versions, token estimates/actuals, latency spans, tool denials and final run reason.
+Context manifest, prompt/model versions, token estimates/actuals, latency spans, tool denials and final run reason. **PASS** (UsageEvent + ToolCall + redacted run trace API).
 
 ## 14. Security Considerations
 
-No arbitrary code/network/DB tools; tenant/actor injection from server only; redacted traces and approved provider processing.
+No arbitrary code/network/DB tools; tenant/actor injection from server only; redacted traces and approved provider processing. **PASS**.
 
 ## 15. Acceptance Criteria
 
-- [ ] All tool arguments are validated and authorized before execution.
-- [ ] Model cannot directly mutate business tables.
-- [ ] Limits and timeout behavior are deterministic and observable.
-- [ ] Action success is never claimed without committed backend evidence in release fixtures.
+- [x] All tool arguments are validated and authorized before execution.
+- [x] Model cannot directly mutate business tables.
+- [x] Limits and timeout behavior are deterministic and observable.
+- [x] Action success is never claimed without committed backend evidence in release fixtures.
 
 ## 16. Exit Criteria
 

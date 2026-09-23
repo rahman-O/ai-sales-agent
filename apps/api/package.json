@@ -13,6 +13,8 @@
     "test:integration": "node --import tsx --test test/integration/**/*.test.ts"
   },
   "dependencies": {
+    "@ai-sales-agent/agent-adapters": "*",
+    "@ai-sales-agent/agent-core": "*",
     "@ai-sales-agent/config": "*",
     "@ai-sales-agent/contracts": "*",
     "@nestjs/common": "11.2.6",

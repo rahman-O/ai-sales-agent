@@ -38,3 +38,5 @@ export interface MembershipDto {
   role: MemberRole;
   status: MemberStatus;
 }
+
+export * from './agent.js';

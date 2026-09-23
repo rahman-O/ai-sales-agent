@@ -11,6 +11,8 @@
     "lint": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@ai-sales-agent/agent-adapters": "*",
+    "@ai-sales-agent/agent-core": "*",
     "@ai-sales-agent/config": "*",
     "bullmq": "5.58.5",
     "ioredis": "5.7.0",

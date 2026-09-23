@@ -6,6 +6,7 @@ import { OrganizationsModule } from './organizations/organizations.module.js';
 import { CustomersModule } from './customers/customers.module.js';
 import { CatalogModule } from './catalog/catalog.module.js';
 import { ConversationsModule } from './conversations/conversations.module.js';
+import { AgentModule } from './agent/agent.module.js';
 import { HealthModule } from './health/health.module.js';
 import { RequestIdMiddleware } from './common/request-id.middleware.js';
 
@@ -18,6 +19,7 @@ import { RequestIdMiddleware } from './common/request-id.middleware.js';
     CustomersModule,
     CatalogModule,
     ConversationsModule,
+    AgentModule,
     HealthModule,
   ],
 })

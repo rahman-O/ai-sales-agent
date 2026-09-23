@@ -48,6 +48,11 @@ export class PrismaService implements OnModuleDestroy {
     return this.client.$queryRaw(strings, ...values);
   }
 
+  /** Shared app_runtime pool for adapters that use pg directly (agent). */
+  getPgPool(): Pool {
+    return this.pool;
+  }
+
   async onModuleDestroy() {
     await this.client.$disconnect();
     await this.pool.end();
