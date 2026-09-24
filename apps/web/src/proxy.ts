@@ -29,7 +29,16 @@ export async function proxy(request: NextRequest) {
 
   const { data } = await supabase.auth.getUser();
   const isProtected =
-    request.nextUrl.pathname.startsWith('/app') || request.nextUrl.pathname.startsWith('/api/backend');
+    request.nextUrl.pathname.startsWith('/app') ||
+    request.nextUrl.pathname.startsWith('/api/backend') ||
+    request.nextUrl.pathname.startsWith('/dashboard') ||
+    request.nextUrl.pathname.startsWith('/inbox') ||
+    request.nextUrl.pathname.startsWith('/leads') ||
+    request.nextUrl.pathname.startsWith('/bookings') ||
+    request.nextUrl.pathname.startsWith('/follow-ups') ||
+    request.nextUrl.pathname.startsWith('/knowledge') ||
+    request.nextUrl.pathname.startsWith('/schedule') ||
+    request.nextUrl.pathname.startsWith('/settings');
 
   if (isProtected && !data.user) {
     const login = new URL('/login', request.url);
@@ -41,5 +50,23 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/app/:path*', '/api/backend/:path*'],
+  matcher: [
+    '/app/:path*',
+    '/api/backend/:path*',
+    '/dashboard',
+    '/dashboard/:path*',
+    '/inbox',
+    '/inbox/:path*',
+    '/leads',
+    '/leads/:path*',
+    '/bookings',
+    '/bookings/:path*',
+    '/follow-ups',
+    '/follow-ups/:path*',
+    '/knowledge',
+    '/knowledge/:path*',
+    '/schedule',
+    '/schedule/:path*',
+    '/settings/:path*',
+  ],
 };

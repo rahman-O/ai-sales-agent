@@ -1,15 +1,39 @@
 # Follow-up execution and suppression
 
-FollowUp is a durable business schedule, while BullMQ is a wake-up mechanism. Store customer/conversation, purpose, related booking, due_at, generation, consent reference, semantic key and status. A database due-work sweeper recovers missing jobs. A worker claims a pending generation atomically and either creates one outbound intent or records a suppression reason.
+FollowUp is a durable business schedule. **OutboxEvent.available_at** is the primary durable timer (`FollowUpDue`); BullMQ is wake-up only (ADR-004 / ADR-011). PostgreSQL remains source of truth.
 
-Proposed lifecycle: SCHEDULED → CLAIMED → ENQUEUED → SENT; terminal alternatives SUPPRESSED, CANCELLED, FAILED or UNKNOWN. SENT means provider acceptance, with delivery tracked on the linked Message. A crash before intent commit leaves reclaimable scheduled work; a crash after commit recovers the same intent by operation key. Do not create another intent when a prior send is UNKNOWN.
+## Lifecycle
 
-Eligibility at intent creation and dispatch requires current consent for purpose/channel, an active customer/channel, a still-relevant booking/lead, current generation, AI_ACTIVE mode and no newer customer inbound since scheduling for sales follow-ups. Booking reminders may survive unrelated contact only if the approved purpose policy explicitly permits it. Cancellation/reschedule invalidates the old generation. Opt-out and mode changes suppress all not-yet-dispatching eligible proactive intents.
+`SCHEDULED` → `PROCESSING` → (`DISPATCHED` | `SUPPRESSED` | `FAILED`); `SCHEDULED` → `CANCELLED`.
 
-Default quiet hours: 20:00–09:00 in organization timezone; postpone to the next allowed time only if still before the reminder deadline and appointment. Default appointment reminder is 24 hours before start, at most one per booking version; no automatic sales follow-up until product approves its consent wording and cadence. Scheduling horizon is 30 days with at most three pending reminders per conversation. These are proposed product defaults for P00 approval, not provider rules.
+**DISPATCHED** means one logical outbound Message was created and handed to the P08 pipeline — **not** provider acceptance. Provider delivery lives on `Message.deliveryState`.
 
-Consent updates and dispatch claims use a consistent transaction lock order (conversation, customer consent projection, follow-up, outbound record) and compare versions so a committed revocation blocks later claims. External sends already DISPATCHING cannot reliably be recalled; expose the same in-flight exception as [takeover](../03-domain/conversation-state-machine.md). Honor revocation for all subsequent work.
+Exactly-once: unique `outbound_message_id` + transactional Message + `OutboundMessageReady` + FollowUp update. PROCESSING lease is worker coordination only.
 
-Operator endpoints: GET/POST /v1/organizations/{organizationId}/followups and POST /followups/{id}/cancel, with Idempotency-Key and expectedVersion for changes. OPERATOR/ADMIN/OWNER may schedule approved purposes; only ADMIN/OWNER change purpose/cadence policy. Scheduling arbitrary generated marketing text is unsupported.
+## Scheduling
 
-Acceptance: duplicate due jobs yield one intent; opt-out wins against any later dispatch claim; old-generation jobs cannot send; Redis loss does not lose schedules; no approved template means suppression/escalation rather than free-form outside-window send. [Phase 10](../14-roadmap/phase-10-followups.md) owns implementation and evidence.
+On create/reschedule (same TX): persist FollowUp (`version++`) and insert `FollowUpDue` with `available_at = nextEligibleAt`, payload `{ followUpId, followUpVersion }`. Stale version → NO-OP. Cancel does not require deleting old events/jobs.
+
+`scheduledFor` = original business due. Quiet hours adjust **`nextEligibleAt` only**. Booking reminders past deadline → `MISSED_ALLOWED_WINDOW`.
+
+Low-frequency repair may re-insert a missing due event; it is not the normal scheduler.
+
+## Eligibility (execution TX)
+
+Lock order: **Conversation → FollowUp** (same serialization boundary as P03 inbound).
+
+Checks include: still SCHEDULED/claimable, channel health, outreach basis, template/provider eligibility, lead/booking snapshots, customer inbound sequence vs baseline, and for AUTOMATED: `AI_ACTIVE` + null owner + `ownershipEpoch == baselineOwnershipEpoch`.
+
+Human takeover/resume invalidates AUTOMATED follow-ups (`CONVERSATION_AUTHORITY_CHANGED`). Do not rebase onto a new epoch.
+
+## Consent / outreach
+
+ConsentRecord is **deferred**. P10 does not implement comprehensive consent/compliance. Organization `followUpEnabled` is **not** customer consent. Automated outreach requires an explicit **outreach basis** (`CUSTOMER_INITIATED_CONVERSATION` | `TRANSACTIONAL_BOOKING` | `EXPLICIT_OPT_IN` | `OPERATOR_SCHEDULED`). General marketing/broadcast remains prohibited.
+
+## Templates
+
+Immutable `MessageTemplateVersion` with separate `providerStatus`. Internal APPROVED ≠ Meta approval. Outside 24h requires provider-eligible TEMPLATE send mode; adapter builds components from frozen schema + validated params (no raw Meta JSON from client/LLM).
+
+## Operator / agent
+
+Staff: GET/POST follow-ups, cancel; template settings. Agent tools opt-in via AgentConfig; ActionGate + epoch/watermark. [Phase 10](../14-roadmap/phase-10-followups.md).

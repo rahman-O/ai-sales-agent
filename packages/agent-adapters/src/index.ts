@@ -8,3 +8,5 @@ export * from './booking-tools.js';
 export * from './messaging/messaging-channel.js';
 export * from './messaging/meta-whatsapp.channel.js';
 export * from './messaging/outbound-dispatch.js';
+export * from './followups/quiet-hours.js';
+export * from './followups/execute-followup.js';

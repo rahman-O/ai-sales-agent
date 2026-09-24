@@ -96,6 +96,12 @@ export interface OutboundSendIntent {
   toE164: string;
   text: string;
   credentialRef: string | null;
+  sendMode?: 'FREE_FORM' | 'TEMPLATE';
+  template?: {
+    name: string;
+    languageCode: string;
+    components: Array<{ type: string; parameters: Array<{ type: string; text: string }> }>;
+  };
 }
 
 export type SendResult =

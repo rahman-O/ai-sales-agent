@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { OperatorNav } from '@/components/OperatorNav';
 
 type Conversation = {
   id: string;
@@ -152,6 +153,7 @@ export default function InboxPage() {
 
   return (
     <main style={{ fontFamily: 'Georgia, serif', maxWidth: 960, margin: '2rem auto', padding: 16 }}>
+      <OperatorNav current="/inbox" />
       <h1 style={{ fontSize: '1.75rem', marginBottom: 8 }}>Inbox</h1>
       <p style={{ color: '#444', marginTop: 0 }}>
         Human takeover — claim, reply, resume. Delivery states DISPATCHING / UNKNOWN are visible;

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { OperatorNav } from '@/components/OperatorNav';
 
 type Lead = {
   id: string;
@@ -81,6 +82,7 @@ export default function LeadsPage() {
 
   return (
     <main style={{ fontFamily: 'Georgia, serif', maxWidth: 800, margin: '2rem auto', padding: 16 }}>
+      <OperatorNav current="/leads" />
       <h1 style={{ fontSize: '1.75rem', marginBottom: 8 }}>Leads</h1>
       <p style={{ color: '#444', marginTop: 0 }}>
         Open opportunities only — no BOOKED/WON in this phase. Qualification is derived.

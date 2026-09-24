@@ -18,7 +18,8 @@ export default async function AppHomePage() {
         Bearer access token.
       </p>
       <p>
-        <Link href="/unauthorized">Unauthorized</Link> · <Link href="/login">Logout via login page</Link>
+        <Link href="/dashboard">Dashboard</Link> · <Link href="/unauthorized">Unauthorized</Link> ·{' '}
+        <Link href="/login">Logout via login page</Link>
       </p>
     </main>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { OperatorNav } from '@/components/OperatorNav';
 
 type Booking = {
   id: string;
@@ -47,6 +48,7 @@ export default function BookingsPage() {
 
   return (
     <main style={{ fontFamily: 'Georgia, serif', maxWidth: 800, margin: '2rem auto', padding: 16 }}>
+      <OperatorNav current="/bookings" />
       <h1 style={{ fontSize: '1.75rem' }}>Bookings</h1>
       <p style={{ color: '#444' }}>Confirmed appointments — backend is source of truth.</p>
       <label style={{ display: 'block', marginBottom: 12 }}>

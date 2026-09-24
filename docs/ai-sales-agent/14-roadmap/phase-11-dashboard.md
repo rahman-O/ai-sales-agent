@@ -1,6 +1,8 @@
 # Phase 11 — Operational UI and dashboard
 
-Status: NOT STARTED. Relative complexity: L. Proposed accountable owner: engineering lead with product reviewer. Dates and staffing are unestimated.
+Status: CLOSED. Relative complexity: L. Proposed accountable owner: engineering lead with product reviewer. Dates and staffing are unestimated.
+
+Closure: [phase-11-closure.md](phase-11-closure.md).
 
 ## 1. Objective
 

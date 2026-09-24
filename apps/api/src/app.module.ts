@@ -11,6 +11,9 @@ import { KnowledgeModule } from './knowledge/knowledge.module.js';
 import { LeadsModule } from './leads/leads.module.js';
 import { BookingsModule } from './bookings/bookings.module.js';
 import { MessagingModule } from './messaging/messaging.module.js';
+import { FollowUpsModule } from './followups/followups.module.js';
+import { TemplatesModule } from './templates/templates.module.js';
+import { DashboardModule } from './dashboard/dashboard.module.js';
 import { HealthModule } from './health/health.module.js';
 import { RequestIdMiddleware } from './common/request-id.middleware.js';
 
@@ -28,6 +31,9 @@ import { RequestIdMiddleware } from './common/request-id.middleware.js';
     KnowledgeModule,
     LeadsModule,
     BookingsModule,
+    FollowUpsModule,
+    TemplatesModule,
+    DashboardModule,
     HealthModule,
   ],
 })

@@ -39,6 +39,7 @@ export async function dispatchOutboundMessage(
   const msg = await c.query(
     `SELECT m.id, m.conversation_id, m.channel_connection_id, m.content_text, m.delivery_state,
             m.provider_message_id, m.direction, m.origin, m.authority_epoch,
+            m.send_mode, m.template_params_json,
             cc.provider, cc.external_channel_id, cc.status AS channel_status,
             cc.health_status, cc.credential_ref,
             conv.mode AS conversation_mode, conv.ownership_epoch AS conversation_epoch,
@@ -119,7 +120,8 @@ export async function dispatchOutboundMessage(
   const window = evaluateFreeFormWindow(
     row.last_customer_inbound_at ? new Date(row.last_customer_inbound_at) : null,
   );
-  if (!window.allowed) {
+  const sendMode = String(row.send_mode ?? 'FREE_FORM');
+  if (!window.allowed && sendMode !== 'TEMPLATE') {
     await c.query(
       `UPDATE messages SET delivery_state='FAILED'
        WHERE organization_id=$1 AND id=$2 AND delivery_state IN ('PENDING','DISPATCHING')`,
@@ -192,6 +194,14 @@ export async function dispatchOutboundMessage(
   );
 
   const channel = new MetaWhatsAppChannel();
+  const templateMeta =
+    sendMode === 'TEMPLATE' && row.template_params_json
+      ? (row.template_params_json as {
+          providerTemplateName?: string;
+          providerLanguage?: string;
+          components?: Array<{ type: string; parameters: Array<{ type: string; text: string }> }>;
+        })
+      : null;
   const result = await channel.send(
     {
       organizationId,
@@ -201,6 +211,15 @@ export async function dispatchOutboundMessage(
       toE164: row.external_address,
       text: row.content_text,
       credentialRef: row.credential_ref,
+      sendMode: sendMode === 'TEMPLATE' ? 'TEMPLATE' : 'FREE_FORM',
+      template:
+        templateMeta?.providerTemplateName
+          ? {
+              name: String(templateMeta.providerTemplateName),
+              languageCode: String(templateMeta.providerLanguage ?? 'ar'),
+              components: templateMeta.components ?? [],
+            }
+          : undefined,
     },
     { fetchImpl: opts?.fetchImpl, env: opts?.env },
   );

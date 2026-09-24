@@ -1,5 +1,9 @@
 import { loadLocalEnv, loadServerEnv } from '@ai-sales-agent/config';
-import { dispatchOutboundMessage, runConversationAgent } from '@ai-sales-agent/agent-adapters';
+import {
+  dispatchOutboundMessage,
+  executeFollowUp,
+  runConversationAgent,
+} from '@ai-sales-agent/agent-adapters';
 import { Queue, Worker } from 'bullmq';
 import { Redis } from 'ioredis';
 import pg from 'pg';
@@ -9,6 +13,7 @@ const CONVERSATION_QUEUE = 'conversation-wake';
 const CONSUMER_NAME = 'conversation-drain';
 const KNOWLEDGE_CONSUMER = 'knowledge-ingest';
 const OUTBOUND_CONSUMER = 'outbound-dispatch';
+const FOLLOWUP_CONSUMER = 'followup-execute';
 
 type ClaimRow = {
   organization_id: string;
@@ -242,8 +247,8 @@ async function main() {
           const existing = await client.query(
             `SELECT 1 FROM consumer_receipts
              WHERE event_id = $1::uuid
-               AND consumer_name IN ($2, $3, $4)`,
-            [eventId, CONSUMER_NAME, KNOWLEDGE_CONSUMER, OUTBOUND_CONSUMER],
+               AND consumer_name IN ($2, $3, $4, $5)`,
+            [eventId, CONSUMER_NAME, KNOWLEDGE_CONSUMER, OUTBOUND_CONSUMER, FOLLOWUP_CONSUMER],
           );
           if (existing.rowCount) {
             await client.query('COMMIT');
@@ -262,7 +267,12 @@ async function main() {
           const eventType = row?.event_type ?? '';
           const payloadJson = (row?.payload_json ?? {}) as Record<string, unknown>;
           const nested = payloadJson.payload as
-            | { conversationId?: string; messageId?: string }
+            | {
+                conversationId?: string;
+                messageId?: string;
+                followUpId?: string;
+                followUpVersion?: number;
+              }
             | undefined;
           const conversationId =
             nested?.conversationId ??
@@ -270,6 +280,12 @@ async function main() {
             (payloadJson as { aggregateId?: string }).aggregateId;
           const outboundMessageId =
             nested?.messageId ?? (payloadJson as { messageId?: string }).messageId;
+          const followUpId =
+            nested?.followUpId ??
+            (eventType === 'FollowUpDue'
+              ? (payloadJson as { aggregateId?: string }).aggregateId
+              : undefined);
+          const followUpVersion = nested?.followUpVersion;
 
           if (eventType.startsWith('knowledge.')) {
             await client.query('COMMIT');
@@ -305,6 +321,43 @@ async function main() {
               c2.release();
             }
             return { ok: true, knowledge: handled };
+          }
+
+          if (eventType === 'FollowUpDue' && followUpId) {
+            await client.query('COMMIT');
+            const executed = await executeFollowUp({
+              pool,
+              organizationId,
+              followUpId: String(followUpId),
+              followUpVersion:
+                followUpVersion != null ? Number(followUpVersion) : undefined,
+              workerId,
+            });
+            const c2 = await pool.connect();
+            try {
+              await c2.query('BEGIN');
+              await c2.query(`SELECT set_config('app.current_organization_id', $1, true)`, [
+                organizationId,
+              ]);
+              await c2.query(`SELECT set_config('app.current_user_id', $1, true)`, [workerId]);
+              await c2.query(
+                `INSERT INTO consumer_receipts (organization_id, consumer_name, event_id)
+                 VALUES ($1::uuid, $2, $3::uuid)
+                 ON CONFLICT (consumer_name, event_id) DO NOTHING`,
+                [organizationId, FOLLOWUP_CONSUMER, eventId],
+              );
+              await c2.query('COMMIT');
+            } catch (e) {
+              try {
+                await c2.query('ROLLBACK');
+              } catch {
+                /* ignore */
+              }
+              throw e;
+            } finally {
+              c2.release();
+            }
+            return { ok: true, followUp: executed };
           }
 
           if (eventType === 'OutboundMessageReady' && outboundMessageId) {
@@ -399,11 +452,24 @@ async function main() {
     console.error(JSON.stringify({ msg: 'worker_job_failed', jobId: job?.id, error: String(err) }));
   });
 
-  // Relay loop + sweeper (Redis loss: DB remains source of pending work).
+  // Relay loop + sweeper + low-frequency PROCESSING lease reclaim.
+  let repairTick = 0;
   const tick = async () => {
     try {
       const relayed = await relayOnce();
       const due = await sweepDueConversations();
+      repairTick += 1;
+      if (repairTick % 12 === 0) {
+        try {
+          await pool.query(
+            `UPDATE follow_ups
+             SET status='SCHEDULED', processing_owner=NULL, lease_until=NULL, updated_at=now()
+             WHERE status='PROCESSING' AND lease_until IS NOT NULL AND lease_until < now()`,
+          );
+        } catch {
+          /* RLS may block unscoped — ignore */
+        }
+      }
       if (relayed || due) {
         console.log(JSON.stringify({ msg: 'worker_tick', relayed, due }));
       }

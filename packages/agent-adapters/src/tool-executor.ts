@@ -1,4 +1,5 @@
 import type { Pool, PoolClient } from 'pg';
+import { randomUUID } from 'node:crypto';
 import {
   buildOperationKey,
   hashNormalizedArgs,
@@ -13,6 +14,7 @@ import {
   FakeEmbeddingProvider,
   resolveEmbeddingProvider,
 } from '@ai-sales-agent/embeddings';
+import { computeNextEligibleAt } from './followups/quiet-hours.js';
 import {
   toolEnsureLead,
   toolGetLead,
@@ -261,6 +263,43 @@ const DEFS: ToolDefinition[] = [
       required: ['bookingId', 'expectedVersion', 'slotToken'],
     },
   },
+  {
+    name: 'scheduleLeadFollowUp',
+    version: TOOL_VERSION,
+    description: 'Schedule LEAD_NO_RESPONSE follow-up using org policy delay (opt-in P10)',
+    classification: 'mutate',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        leadId: { type: 'string' },
+        templateVersionId: { type: 'string' },
+      },
+      required: ['leadId', 'templateVersionId'],
+    },
+  },
+  {
+    name: 'cancelFollowUp',
+    version: TOOL_VERSION,
+    description: 'Cancel a SCHEDULED follow-up for this conversation customer',
+    classification: 'mutate',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        followUpId: { type: 'string' },
+        expectedVersion: { type: 'number' },
+      },
+      required: ['followUpId', 'expectedVersion'],
+    },
+  },
+  {
+    name: 'getFollowUps',
+    version: TOOL_VERSION,
+    description: 'List active follow-ups for conversation customer',
+    classification: 'read',
+    inputSchema: { type: 'object', additionalProperties: false, properties: {} },
+  },
 ];
 
 async function withTenant<T>(
@@ -303,7 +342,9 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
           name === 'transitionLead' ||
           name === 'createBooking' ||
           name === 'cancelBooking' ||
-          name === 'rescheduleBooking'
+          name === 'rescheduleBooking' ||
+          name === 'scheduleLeadFollowUp' ||
+          name === 'cancelFollowUp'
         ) {
           return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'sandbox_blocks_mutate' };
         }
@@ -550,6 +591,127 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
             return { ok: true, code: 'OK', data: result.data, operationId: claim.operationId };
           }
 
+          if (name === 'scheduleLeadFollowUp') {
+            const leadId = String(args.leadId ?? '');
+            const templateVersionId = String(args.templateVersionId ?? '');
+            const lead = await c.query<{ id: string; status: string; customer_id: string }>(
+              `SELECT id, status, customer_id FROM leads
+               WHERE organization_id=$1 AND id=$2 AND customer_id=$3`,
+              [ctx.organizationId, leadId, ctx.customerId],
+            );
+            if (!lead.rows[0] || ['DISQUALIFIED', 'ARCHIVED'].includes(lead.rows[0].status)) {
+              return { ok: false, code: 'NOT_FOUND' };
+            }
+            const policy = await c.query<{
+              follow_up_enabled: boolean;
+              default_no_response_delay_minutes: number;
+              timezone: string;
+              quiet_hours_start_minute: number;
+              quiet_hours_end_minute: number;
+              max_pending_per_customer: number;
+            }>(
+              `SELECT * FROM organization_follow_up_policies WHERE organization_id=$1`,
+              [ctx.organizationId],
+            );
+            const pol = policy.rows[0];
+            if (!pol?.follow_up_enabled) {
+              return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'follow_up_disabled' };
+            }
+            const pending = await c.query<{ n: number }>(
+              `SELECT count(*)::int AS n FROM follow_ups
+               WHERE organization_id=$1 AND customer_id=$2 AND status IN ('SCHEDULED','PROCESSING')`,
+              [ctx.organizationId, ctx.customerId],
+            );
+            if (Number(pending.rows[0]?.n ?? 0) >= Number(pol.max_pending_per_customer)) {
+              return { ok: false, code: 'CONFLICT', safeMessage: 'MAX_PENDING_FOLLOW_UPS' };
+            }
+            const delayMs = Number(pol.default_no_response_delay_minutes) * 60_000;
+            const scheduledFor = new Date(Date.now() + delayMs);
+            const nextEligibleAt = computeNextEligibleAt({
+              scheduledFor,
+              timezone: pol.timezone,
+              quietStartMinute: pol.quiet_hours_start_minute,
+              quietEndMinute: pol.quiet_hours_end_minute,
+            });
+            const followUpId = randomUUID();
+            const baselineIngress = Number(row.next_sequence) - 1;
+            const dedupKey = `LEAD_NO_RESPONSE:${leadId}::${ctx.conversationId}:${baselineIngress}`;
+            await c.query(
+              `INSERT INTO follow_ups(
+                 id, organization_id, customer_id, lead_id, conversation_id, channel_connection_id,
+                 template_version_id, status, trigger_type, origin_kind, outreach_basis, send_mode,
+                 scheduled_for, next_eligible_at, timezone, dedup_key, operation_key,
+                 baseline_inbound_sequence, baseline_ownership_epoch,
+                 created_by_type, created_by_agent_run_id
+               ) VALUES (
+                 $1,$2,$3,$4,$5,(SELECT channel_connection_id FROM conversations WHERE id=$5),
+                 $6,'SCHEDULED','LEAD_NO_RESPONSE','AUTOMATED','CUSTOMER_INITIATED_CONVERSATION','TEMPLATE',
+                 $7,$8,$9,$10,$11,$12,$13,'AGENT',$14
+               )`,
+              [
+                followUpId,
+                ctx.organizationId,
+                ctx.customerId,
+                leadId,
+                ctx.conversationId,
+                templateVersionId,
+                scheduledFor.toISOString(),
+                nextEligibleAt.toISOString(),
+                pol.timezone,
+                dedupKey,
+                `followup:${followUpId}`,
+                baselineIngress,
+                ctx.ownershipEpoch,
+                ctx.agentRunId,
+              ],
+            );
+            const eventId = randomUUID();
+            await c.query(
+              `INSERT INTO outbox_events(id, organization_id, event_type, payload_json, available_at)
+               VALUES ($1,$2,'FollowUpDue',$3::jsonb,$4)`,
+              [
+                eventId,
+                ctx.organizationId,
+                JSON.stringify({
+                  eventId,
+                  eventType: 'FollowUpDue',
+                  organizationId: ctx.organizationId,
+                  aggregateId: followUpId,
+                  payload: { followUpId, followUpVersion: 1 },
+                }),
+                nextEligibleAt.toISOString(),
+              ],
+            );
+            const data = { followUpId, status: 'SCHEDULED', nextEligibleAt };
+            await c.query(
+              `UPDATE command_operations SET status='SUCCEEDED', result_json=$3::jsonb, completed_at=now()
+               WHERE organization_id=$1 AND id=$2`,
+              [ctx.organizationId, claim.operationId, JSON.stringify(data)],
+            );
+            return { ok: true, code: 'OK', data, operationId: claim.operationId };
+          }
+
+          if (name === 'cancelFollowUp') {
+            const followUpId = String(args.followUpId ?? '');
+            const expectedVersion = Number(args.expectedVersion);
+            const upd = await c.query(
+              `UPDATE follow_ups SET
+                 status='CANCELLED', cancelled_at=now(), result_reason_code='MANUAL_CANCEL',
+                 version=version+1, updated_at=now()
+               WHERE organization_id=$1 AND id=$2 AND customer_id=$3
+                 AND version=$4 AND status IN ('SCHEDULED','PROCESSING')
+               RETURNING id, status, version`,
+              [ctx.organizationId, followUpId, ctx.customerId, expectedVersion],
+            );
+            if (!upd.rows[0]) return { ok: false, code: 'CONFLICT' };
+            await c.query(
+              `UPDATE command_operations SET status='SUCCEEDED', result_json=$3::jsonb, completed_at=now()
+               WHERE organization_id=$1 AND id=$2`,
+              [ctx.organizationId, claim.operationId, JSON.stringify(upd.rows[0])],
+            );
+            return { ok: true, code: 'OK', data: upd.rows[0], operationId: claim.operationId };
+          }
+
           return { ok: false, code: 'TOOL_NOT_FOUND' };
         });
       }
@@ -624,6 +786,16 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
           const result = await toolGetBookings(c, ctx.organizationId, ctx.customerId);
           if (!result.ok) return { ok: false, code: result.code };
           return { ok: true, code: 'OK', data: result.data };
+        }
+        if (name === 'getFollowUps') {
+          const r = await c.query(
+            `SELECT id, status, trigger_type, scheduled_for, next_eligible_at, version, result_reason_code
+             FROM follow_ups
+             WHERE organization_id=$1 AND customer_id=$2
+             ORDER BY created_at DESC LIMIT 20`,
+            [ctx.organizationId, ctx.customerId],
+          );
+          return { ok: true, code: 'OK', data: { followUps: r.rows } };
         }
         if (name === 'searchKnowledge') {
           const query = typeof args.query === 'string' ? args.query.trim() : '';

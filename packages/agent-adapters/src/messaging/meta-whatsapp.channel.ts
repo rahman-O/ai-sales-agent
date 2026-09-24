@@ -251,13 +251,27 @@ export class MetaWhatsAppChannel {
     }
 
     const url = `https://graph.facebook.com/${version}/${encodeURIComponent(intent.phoneNumberId)}/messages`;
-    const body = JSON.stringify({
-      messaging_product: 'whatsapp',
-      recipient_type: 'individual',
-      to: intent.toE164.replace(/^\+/, ''),
-      type: 'text',
-      text: { body: intent.text.slice(0, 4096) },
-    });
+    const bodyPayload =
+      intent.sendMode === 'TEMPLATE' && intent.template
+        ? {
+            messaging_product: 'whatsapp',
+            recipient_type: 'individual',
+            to: intent.toE164.replace(/^\+/, ''),
+            type: 'template',
+            template: {
+              name: intent.template.name,
+              language: { code: intent.template.languageCode },
+              components: intent.template.components,
+            },
+          }
+        : {
+            messaging_product: 'whatsapp',
+            recipient_type: 'individual',
+            to: intent.toE164.replace(/^\+/, ''),
+            type: 'text',
+            text: { body: intent.text.slice(0, 4096) },
+          };
+    const body = JSON.stringify(bodyPayload);
 
     const fetchImpl = opts?.fetchImpl ?? fetch;
     let res: Response;

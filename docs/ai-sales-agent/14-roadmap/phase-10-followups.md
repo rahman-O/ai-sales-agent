@@ -1,6 +1,6 @@
 # Phase 10 — Consent-aware follow-up engine
 
-Status: NOT STARTED. Relative complexity: M. Proposed accountable owner: engineering lead with product reviewer. Dates and staffing are unestimated.
+Status: CLOSED (see [phase-10-closure.md](phase-10-closure.md) and [phase-10-scope-manifest.md](phase-10-scope-manifest.md)). Relative complexity: M.
 
 ## 1. Objective
 

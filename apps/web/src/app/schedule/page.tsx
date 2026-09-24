@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { OperatorNav } from '@/components/OperatorNav';
 
 type Rule = {
   id: string;
@@ -58,6 +59,7 @@ export default function SchedulePage() {
 
   return (
     <main style={{ fontFamily: 'Georgia, serif', maxWidth: 720, margin: '2rem auto', padding: 16 }}>
+      <OperatorNav current="/schedule" />
       <h1 style={{ fontSize: '1.75rem' }}>Schedule</h1>
       <p style={{ color: '#444' }}>Weekly staff availability rules (ISO DOW 1=Mon … 7=Sun).</p>
       <label style={{ display: 'block', marginBottom: 8 }}>

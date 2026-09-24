@@ -6,7 +6,8 @@ export default function HomePage() {
       <h1>AI Sales Agent</h1>
       <p>Phase 01 foundation — staff shell.</p>
       <p>
-        <Link href="/login">Login</Link> · <Link href="/app">App</Link>
+        <Link href="/login">Login</Link> · <Link href="/dashboard">Dashboard</Link> ·{' '}
+        <Link href="/app">App</Link>
       </p>
     </main>
   );

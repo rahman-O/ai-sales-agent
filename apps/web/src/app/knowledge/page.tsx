@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { OperatorNav } from '@/components/OperatorNav';
 
 type Doc = {
   id: string;
@@ -96,6 +97,7 @@ export default function KnowledgePage() {
 
   return (
     <main style={{ fontFamily: 'Georgia, serif', maxWidth: 720, margin: '2rem auto', padding: 16 }}>
+      <OperatorNav current="/knowledge" />
       <h1 style={{ fontSize: '1.75rem', marginBottom: 8 }}>Knowledge</h1>
       <p style={{ color: '#444', marginTop: 0 }}>
         Upload → review → publish. RAG evidence is never authoritative for prices or bookings.

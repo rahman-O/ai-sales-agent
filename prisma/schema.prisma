@@ -54,6 +54,10 @@ model Organization {
   staffAvailabilityExceptions StaffAvailabilityException[]
   bookings              Booking[]
   bookingActivities     BookingActivity[]
+  messageTemplates      MessageTemplate[]
+  messageTemplateVersions MessageTemplateVersion[]
+  followUpPolicy        OrganizationFollowUpPolicy?
+  followUps             FollowUp[]
 
   @@map("organizations")
 }
@@ -73,6 +77,7 @@ model Customer {
   conversations   Conversation[]
   leads           Lead[]
   bookings        Booking[]
+  followUps       FollowUp[]
 
   @@unique([organizationId, id])
   @@index([organizationId, updatedAt, id])
@@ -98,6 +103,7 @@ model ChannelConnection {
   conversations      Conversation[]
   messages           Message[]
   webhookReceipts    WebhookReceipt[]
+  followUps          FollowUp[]
 
   @@unique([provider, externalChannelId])
   @@unique([organizationId, id])
@@ -253,6 +259,7 @@ model Conversation {
   sourceLeads              Lead[]           @relation("LeadSourceConversation")
   sourceLeadActivities     LeadActivity[]   @relation("LeadActivitySourceConversation")
   sourceBookings           Booking[]        @relation("BookingSourceConversation")
+  followUps                FollowUp[]
 
   @@unique([organizationId, channelConnectionId, identityId])
   @@unique([organizationId, id])
@@ -281,13 +288,18 @@ model Message {
   deliveryState       String            @default("ACCEPTED") @map("delivery_state")
   /// Conversation ownership_epoch at outbound create; AI dispatch requires match.
   authorityEpoch      Int?              @map("authority_epoch")
+  sendMode            String            @default("FREE_FORM") @map("send_mode")
+  templateVersionId   String?           @map("template_version_id") @db.Uuid
+  templateParamsJson  Json?             @map("template_params_json")
   createdAt           DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
   organization        Organization      @relation(fields: [organizationId], references: [id])
   conversation        Conversation      @relation(fields: [organizationId, conversationId], references: [organizationId, id])
   channelConnection   ChannelConnection @relation(fields: [organizationId, channelConnectionId], references: [organizationId, id])
+  templateVersion     MessageTemplateVersion? @relation(fields: [organizationId, templateVersionId], references: [organizationId, id])
   outboundAttempts    OutboundAttempt[]
   sourceLeads         Lead[]            @relation("LeadSourceMessage")
   sourceBookings      Booking[]         @relation("BookingSourceMessage")
+  followUpOutbound    FollowUp[]        @relation("FollowUpOutboundMessage")
 
   @@unique([organizationId, id])
   @@unique([conversationId, timelineSequence])
@@ -465,6 +477,7 @@ model AgentRun {
   createdLeads           Lead[]          @relation("LeadCreatedByAgentRun")
   leadActivities         LeadActivity[]  @relation("LeadActivitySourceAgentRun")
   createdBookings        Booking[]       @relation("BookingCreatedByAgentRun")
+  createdFollowUps       FollowUp[]      @relation("FollowUpCreatedByAgentRun")
 
   @@unique([organizationId, runKey])
   @@unique([organizationId, id])
@@ -667,6 +680,7 @@ model Lead {
   createdByAgentRun     AgentRun?           @relation("LeadCreatedByAgentRun", fields: [organizationId, createdByAgentRunId], references: [organizationId, id])
   activities            LeadActivity[]
   bookings              Booking[]
+  followUps             FollowUp[]
 
   @@unique([organizationId, id])
   @@index([organizationId, status, updatedAt(sort: Desc)])
@@ -778,6 +792,7 @@ model Booking {
   sourceMessage           Message?     @relation("BookingSourceMessage", fields: [organizationId, sourceMessageId], references: [organizationId, id])
   createdByAgentRun       AgentRun?    @relation("BookingCreatedByAgentRun", fields: [organizationId, createdByAgentRunId], references: [organizationId, id])
   activities              BookingActivity[]
+  followUps               FollowUp[]
 
   @@unique([organizationId, id])
   @@index([organizationId, staffMemberId, startsAt])
@@ -801,3 +816,122 @@ model BookingActivity {
   @@index([organizationId, bookingId, createdAt])
   @@map("booking_activities")
 }
+
+/// P10 — WhatsApp / channel message template (internal lifecycle).
+model MessageTemplate {
+  id              String                   @id @default(uuid()) @db.Uuid
+  organizationId  String                   @map("organization_id") @db.Uuid
+  channelType     String                   @default("whatsapp") @map("channel_type")
+  provider        String                   @default("meta_whatsapp")
+  internalName    String                   @map("internal_name")
+  internalStatus  String                   @default("DRAFT") @map("internal_status")
+  activeVersionId String?                  @map("active_version_id") @db.Uuid
+  createdAt       DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(6)
+  archivedAt      DateTime?                @map("archived_at") @db.Timestamptz(6)
+  organization    Organization             @relation(fields: [organizationId], references: [id])
+  versions        MessageTemplateVersion[] @relation("TemplateVersions")
+  activeVersion   MessageTemplateVersion?  @relation("TemplateActiveVersion", fields: [organizationId, activeVersionId], references: [organizationId, id])
+
+  @@unique([organizationId, id])
+  @@unique([organizationId, internalName])
+  @@map("message_templates")
+}
+
+/// P10 — immutable template version (provider identity frozen).
+model MessageTemplateVersion {
+  id                     String            @id @default(uuid()) @db.Uuid
+  organizationId         String            @map("organization_id") @db.Uuid
+  templateId             String            @map("template_id") @db.Uuid
+  version                Int
+  providerTemplateName   String            @map("provider_template_name")
+  providerLanguageCode   String            @default("ar") @map("provider_language_code")
+  category               String?
+  parameterSchema        Json              @default("{}") @map("parameter_schema")
+  bodyPreview            String?           @map("body_preview")
+  providerStatus         String            @default("UNKNOWN") @map("provider_status")
+  providerLastVerifiedAt DateTime?         @map("provider_last_verified_at") @db.Timestamptz(6)
+  createdAt              DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  organization           Organization      @relation(fields: [organizationId], references: [id])
+  template               MessageTemplate   @relation("TemplateVersions", fields: [organizationId, templateId], references: [organizationId, id])
+  activeForTemplates     MessageTemplate[] @relation("TemplateActiveVersion")
+  messages               Message[]
+  followUps              FollowUp[]
+
+  @@unique([organizationId, id])
+  @@unique([templateId, version])
+  @@map("message_template_versions")
+}
+
+model OrganizationFollowUpPolicy {
+  organizationId                 String       @id @map("organization_id") @db.Uuid
+  followUpEnabled                Boolean      @default(false) @map("follow_up_enabled")
+  defaultNoResponseDelayMinutes  Int          @default(1440) @map("default_no_response_delay_minutes")
+  maxPendingPerCustomer          Int          @default(3) @map("max_pending_per_customer")
+  quietHoursStartMinute          Int          @default(1200) @map("quiet_hours_start_minute")
+  quietHoursEndMinute            Int          @default(540) @map("quiet_hours_end_minute")
+  timezone                       String       @default("Asia/Baghdad")
+  updatedAt                      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization                   Organization @relation(fields: [organizationId], references: [id])
+
+  @@map("organization_follow_up_policies")
+}
+
+/// P10 — durable scheduled outreach. DISPATCHED ≠ provider delivery.
+model FollowUp {
+  id                            String            @id @default(uuid()) @db.Uuid
+  organizationId                String            @map("organization_id") @db.Uuid
+  customerId                    String            @map("customer_id") @db.Uuid
+  leadId                        String?           @map("lead_id") @db.Uuid
+  conversationId                String?           @map("conversation_id") @db.Uuid
+  bookingId                     String?           @map("booking_id") @db.Uuid
+  channelConnectionId           String?           @map("channel_connection_id") @db.Uuid
+  templateVersionId             String?           @map("template_version_id") @db.Uuid
+  status                        String            @default("SCHEDULED")
+  triggerType                   String            @map("trigger_type")
+  originKind                    String            @map("origin_kind")
+  outreachBasis                 String            @map("outreach_basis")
+  sendMode                      String            @default("TEMPLATE") @map("send_mode")
+  scheduledFor                  DateTime          @map("scheduled_for") @db.Timestamptz(6)
+  nextEligibleAt                DateTime          @map("next_eligible_at") @db.Timestamptz(6)
+  timezone                      String
+  dedupKey                      String            @map("dedup_key")
+  operationKey                  String            @map("operation_key")
+  version                       Int               @default(1)
+  baselineInboundSequence       Int?              @map("baseline_inbound_sequence")
+  baselineLastCustomerInboundAt DateTime?         @map("baseline_last_customer_inbound_at") @db.Timestamptz(6)
+  baselineOwnershipEpoch        Int?              @map("baseline_ownership_epoch")
+  expectedBookingStartsAt       DateTime?         @map("expected_booking_starts_at") @db.Timestamptz(6)
+  expectedBookingVersion        Int?              @map("expected_booking_version")
+  payloadData                   Json              @default("{}") @map("payload_data")
+  outboundMessageId             String?           @map("outbound_message_id") @db.Uuid
+  processingOwner               String?           @map("processing_owner")
+  processingStartedAt           DateTime?         @map("processing_started_at") @db.Timestamptz(6)
+  leaseUntil                    DateTime?         @map("lease_until") @db.Timestamptz(6)
+  executedAt                    DateTime?         @map("executed_at") @db.Timestamptz(6)
+  cancelledAt                   DateTime?         @map("cancelled_at") @db.Timestamptz(6)
+  suppressedAt                  DateTime?         @map("suppressed_at") @db.Timestamptz(6)
+  resultReasonCode              String?           @map("result_reason_code")
+  createdByType                 String            @map("created_by_type")
+  createdByUserId               String?           @map("created_by_user_id") @db.Uuid
+  createdByAgentRunId           String?           @map("created_by_agent_run_id") @db.Uuid
+  createdAt                     DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                     DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization                  Organization      @relation(fields: [organizationId], references: [id])
+  customer                      Customer          @relation(fields: [organizationId, customerId], references: [organizationId, id])
+  lead                          Lead?             @relation(fields: [organizationId, leadId], references: [organizationId, id])
+  conversation                  Conversation?     @relation(fields: [organizationId, conversationId], references: [organizationId, id])
+  booking                       Booking?          @relation(fields: [organizationId, bookingId], references: [organizationId, id])
+  channelConnection             ChannelConnection? @relation(fields: [organizationId, channelConnectionId], references: [organizationId, id])
+  templateVersion               MessageTemplateVersion? @relation(fields: [organizationId, templateVersionId], references: [organizationId, id])
+  outboundMessage               Message?          @relation("FollowUpOutboundMessage", fields: [organizationId, outboundMessageId], references: [organizationId, id])
+  createdByAgentRun             AgentRun?         @relation("FollowUpCreatedByAgentRun", fields: [organizationId, createdByAgentRunId], references: [organizationId, id])
+
+  @@unique([organizationId, id])
+  @@unique([organizationId, operationKey])
+  @@unique([organizationId, outboundMessageId])
+  @@index([organizationId, status, nextEligibleAt])
+  @@index([organizationId, customerId, createdAt(sort: Desc)])
+  @@map("follow_ups")
+}
+

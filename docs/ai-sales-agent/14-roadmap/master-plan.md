@@ -15,7 +15,7 @@ Status: PROPOSED roadmap. Phase 00 technical readiness: **READY_FOR_P01**. Phase
 - [Phase 08 — WhatsApp transport integration](phase-08-whatsapp.md): L; **CLOSED** (see [phase-08-closure](phase-08-closure.md)).
 - [Phase 09 — Human takeover and safe resume](phase-09-human-handoff.md): L; NOT STARTED.
 - [Phase 10 — Consent-aware follow-up engine](phase-10-followups.md): M; NOT STARTED.
-- [Phase 11 — Operational UI and dashboard](phase-11-dashboard.md): L; NOT STARTED.
+- [Phase 11 — Operational UI and dashboard](phase-11-dashboard.md): L; CLOSED ([closure](phase-11-closure.md)).
 - [Phase 12 — Usage, funnel and business outcomes](phase-12-analytics.md): M; NOT STARTED.
 - [Phase 13 — Security, performance and resilience validation](phase-13-hardening.md): XL; NOT STARTED.
 - [Phase 14 — Pilot readiness and controlled launch](phase-14-pilot-readiness.md): M; NOT STARTED.
