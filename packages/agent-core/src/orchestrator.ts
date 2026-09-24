@@ -1,4 +1,4 @@
-import { P04_TOOL_NAMES, type AgentDecision, type AgentRunTerminalStatus } from '@ai-sales-agent/contracts';
+import { ALL_REGISTERED_TOOL_NAMES, type AgentDecision, type AgentRunTerminalStatus } from '@ai-sales-agent/contracts';
 import { buildContextMessages } from './context-builder.js';
 import { parseAgentDecision } from './fake-provider.js';
 import { assertFinalResponseSafe } from './output-claim.js';
@@ -96,8 +96,8 @@ export async function runAgentOrchestrator(
 
   const allow = new Set(
     snap.toolAllowlist.length
-      ? snap.toolAllowlist.filter((n) => (P04_TOOL_NAMES as readonly string[]).includes(n))
-      : [...P04_TOOL_NAMES],
+      ? snap.toolAllowlist.filter((n) => (ALL_REGISTERED_TOOL_NAMES as readonly string[]).includes(n))
+      : [...ALL_REGISTERED_TOOL_NAMES].filter((n) => n !== 'searchKnowledge'),
   );
   const toolDefs = deps.tools.listTools().filter((t) => allow.has(t.name));
 

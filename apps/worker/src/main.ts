@@ -1,11 +1,14 @@
 import { loadLocalEnv, loadServerEnv } from '@ai-sales-agent/config';
-import { runConversationAgent } from '@ai-sales-agent/agent-adapters';
+import { dispatchOutboundMessage, runConversationAgent } from '@ai-sales-agent/agent-adapters';
 import { Queue, Worker } from 'bullmq';
 import { Redis } from 'ioredis';
 import pg from 'pg';
+import { handleKnowledgeOutboxEvent } from './knowledge-jobs.js';
 
 const CONVERSATION_QUEUE = 'conversation-wake';
 const CONSUMER_NAME = 'conversation-drain';
+const KNOWLEDGE_CONSUMER = 'knowledge-ingest';
+const OUTBOUND_CONSUMER = 'outbound-dispatch';
 
 type ClaimRow = {
   organization_id: string;
@@ -109,6 +112,7 @@ async function main() {
     let processedSequence = 0;
     let nextSequence = 1;
     let mode = '';
+    let aiEligibleAfter = 0;
     try {
       await client.query('BEGIN');
       await client.query(`SELECT set_config('app.current_organization_id', $1, true)`, [
@@ -122,6 +126,7 @@ async function main() {
         processed_sequence: number;
         next_sequence: number;
         mode: string;
+        ai_eligible_after_sequence: number;
       }>(
         `UPDATE conversations
          SET lease_owner = $3,
@@ -132,7 +137,8 @@ async function main() {
          WHERE organization_id = $1::uuid
            AND id = $2::uuid
            AND (lease_expires_at IS NULL OR lease_expires_at <= now() OR lease_owner = $3)
-         RETURNING lease_fence, ownership_epoch, processed_sequence, next_sequence, mode`,
+         RETURNING lease_fence, ownership_epoch, processed_sequence, next_sequence, mode,
+                   ai_eligible_after_sequence`,
         [organizationId, conversationId, workerId],
       );
       if (!lease.rows[0]) {
@@ -144,6 +150,7 @@ async function main() {
       processedSequence = lease.rows[0].processed_sequence;
       nextSequence = lease.rows[0].next_sequence;
       mode = lease.rows[0].mode;
+      aiEligibleAfter = Number(lease.rows[0].ai_eligible_after_sequence ?? 0);
 
       if (processedSequence + 1 >= nextSequence) {
         await client.query('COMMIT');
@@ -151,12 +158,27 @@ async function main() {
       }
 
       // MODE/CURSOR: non-AI modes must not auto-advance processed_sequence.
+      // HUMAN_ACTIVE is legacy and treated as non-AI.
       if (mode !== 'AI_ACTIVE') {
         await client.query('COMMIT');
         return {
           held: true,
           mode,
           pendingIngress: nextSequence - 1 - processedSequence,
+          leaseFence,
+          ownershipEpoch,
+        };
+      }
+
+      const targetIngressSequence = nextSequence - 1;
+      // P09: paused-period backlog below eligibility cursor must not start AgentRuns.
+      if (targetIngressSequence <= aiEligibleAfter) {
+        await client.query('COMMIT');
+        return {
+          drained: 0,
+          heldForEligibility: true,
+          aiEligibleAfterSequence: aiEligibleAfter,
+          targetIngressSequence,
           leaseFence,
           ownershipEpoch,
         };
@@ -175,6 +197,11 @@ async function main() {
     }
 
     const targetIngressSequence = nextSequence - 1;
+    if (mode !== 'AI_ACTIVE' || targetIngressSequence <= aiEligibleAfter) {
+      // Early returns already handled above; defensive guard.
+      return { drained: 0 };
+    }
+
     const result = await runConversationAgent({
       pool,
       organizationId,
@@ -213,20 +240,103 @@ async function main() {
           await client.query(`SELECT set_config('app.current_user_id', $1, true)`, [workerId]);
 
           const existing = await client.query(
-            `SELECT 1 FROM consumer_receipts WHERE consumer_name = $1 AND event_id = $2::uuid`,
-            [CONSUMER_NAME, eventId],
+            `SELECT 1 FROM consumer_receipts
+             WHERE event_id = $1::uuid
+               AND consumer_name IN ($2, $3, $4)`,
+            [eventId, CONSUMER_NAME, KNOWLEDGE_CONSUMER, OUTBOUND_CONSUMER],
           );
           if (existing.rowCount) {
             await client.query('COMMIT');
             return { duplicate: true };
           }
 
-          const payload = await client.query<{ payload_json: { payload?: { conversationId?: string } } }>(
-            `SELECT payload_json FROM outbox_events WHERE organization_id = $1::uuid AND id = $2::uuid`,
+          const payload = await client.query<{
+            event_type: string;
+            payload_json: Record<string, unknown>;
+          }>(
+            `SELECT event_type, payload_json FROM outbox_events
+             WHERE organization_id = $1::uuid AND id = $2::uuid`,
             [organizationId, eventId],
           );
-          const conversationId = payload.rows[0]?.payload_json?.payload?.conversationId
-            ?? (payload.rows[0]?.payload_json as { aggregateId?: string } | undefined)?.aggregateId;
+          const row = payload.rows[0];
+          const eventType = row?.event_type ?? '';
+          const payloadJson = (row?.payload_json ?? {}) as Record<string, unknown>;
+          const nested = payloadJson.payload as
+            | { conversationId?: string; messageId?: string }
+            | undefined;
+          const conversationId =
+            nested?.conversationId ??
+            (payloadJson as { conversationId?: string }).conversationId ??
+            (payloadJson as { aggregateId?: string }).aggregateId;
+          const outboundMessageId =
+            nested?.messageId ?? (payloadJson as { messageId?: string }).messageId;
+
+          if (eventType.startsWith('knowledge.')) {
+            await client.query('COMMIT');
+            const handled = await handleKnowledgeOutboxEvent({
+              pool,
+              organizationId,
+              eventType,
+              payload: payloadJson,
+              workerUserId: workerId,
+            });
+            const c2 = await pool.connect();
+            try {
+              await c2.query('BEGIN');
+              await c2.query(`SELECT set_config('app.current_organization_id', $1, true)`, [
+                organizationId,
+              ]);
+              await c2.query(`SELECT set_config('app.current_user_id', $1, true)`, [workerId]);
+              await c2.query(
+                `INSERT INTO consumer_receipts (organization_id, consumer_name, event_id)
+                 VALUES ($1::uuid, $2, $3::uuid)
+                 ON CONFLICT (consumer_name, event_id) DO NOTHING`,
+                [organizationId, KNOWLEDGE_CONSUMER, eventId],
+              );
+              await c2.query('COMMIT');
+            } catch (e) {
+              try {
+                await c2.query('ROLLBACK');
+              } catch {
+                /* ignore */
+              }
+              throw e;
+            } finally {
+              c2.release();
+            }
+            return { ok: true, knowledge: handled };
+          }
+
+          if (eventType === 'OutboundMessageReady' && outboundMessageId) {
+            await client.query('COMMIT');
+            const c2 = await pool.connect();
+            try {
+              await c2.query('BEGIN');
+              await c2.query(`SELECT set_config('app.current_organization_id', $1, true)`, [
+                organizationId,
+              ]);
+              await c2.query(`SELECT set_config('app.current_user_id', $1, true)`, [workerId]);
+              const dispatched = await dispatchOutboundMessage(c2, organizationId, outboundMessageId);
+              await c2.query(
+                `INSERT INTO consumer_receipts (organization_id, consumer_name, event_id)
+                 VALUES ($1::uuid, $2, $3::uuid)
+                 ON CONFLICT (consumer_name, event_id) DO NOTHING`,
+                [organizationId, OUTBOUND_CONSUMER, eventId],
+              );
+              await c2.query('COMMIT');
+              return { ok: true, outbound: dispatched };
+            } catch (e) {
+              try {
+                await c2.query('ROLLBACK');
+              } catch {
+                /* ignore */
+              }
+              throw e;
+            } finally {
+              c2.release();
+            }
+          }
+
           if (conversationId) {
             await client.query('COMMIT');
             await drainConversation(organizationId, conversationId, workerId);

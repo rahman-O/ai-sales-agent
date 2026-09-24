@@ -84,19 +84,19 @@ Deletion/lifecycle: Invalidate on source deletion; expire with messages. Audit: 
 
 ## Lead
 
-Owner module: leads. organization_id, customer_id, source_conversation_id, service interest key, stage, qualification policy/facts, owner, version.
+Owner module: leads. organization_id, customer_id, status (NEW|ENGAGED|QUALIFIED|NURTURE|DISQUALIFIED|ARCHIVED — no WON/BOOKED in P06), optional primary_service_id/location_id, assignment via organization_members composite FK, qualification fields, source conversation/message provenance, optimistic version. `qualificationState` is **derived**, not stored.
 
-Constraints and indexes: Partial unique open opportunity key per customer/interest; stage/time index.
+Constraints: partial unique one OPEN generic per (org, customer); one OPEN per (org, customer, service). Indexes on (org, status, updated_at), (org, customer).
 
-Deletion/lifecycle: Archive terminal opportunities; retain stage history then privacy purge. Audit: Creation, qualification, stage, merge and reassignment.
+Deletion/lifecycle: soft archive; never delete activity history. Audit: create, qualification, status, assign, merge.
+
+## LeadActivity
+
+Owner module: leads. Append-only CRM events (LEAD_CREATED, STATUS_CHANGED, QUALIFICATION_UPDATED, SERVICE_INTEREST_CHANGED, ASSIGNED, UNASSIGNED, NOTE_ADDED, CONVERSATION_LINKED, MERGED_DUPLICATE). Replaces LeadStageHistory for P06. app_runtime: SELECT+INSERT only.
 
 ## LeadStageHistory
 
-Owner module: leads. organization_id, lead_id, old/new stage, reason, source event and actor.
-
-Constraints and indexes: Unique (organization_id,lead_id,aggregate version); chronological index.
-
-Deletion/lifecycle: Append-only, expires with approved business history. Audit: It is the domain transition evidence; audit references its ID.
+Superseded for P06 by LeadActivity. Do not introduce a separate stage-history table in this phase.
 
 ## Location
 

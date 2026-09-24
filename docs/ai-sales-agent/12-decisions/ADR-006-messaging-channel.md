@@ -1,21 +1,21 @@
 # ADR-006 — MessagingChannel boundary
 
-Status: PROPOSED. Date: 2026-09-23. Proposed accountable owner: technical lead.
+Status: **ACCEPTED**. Date: 2026-09-24. Accountable: engineering.
 
 ## Context
 
-The platform must safely turn tenant-specific conversations into auditable business actions within a small initial operating footprint. Repository inspection found no existing architecture to migrate.
+The platform must safely turn tenant-specific conversations into auditable business actions. P03 delivered FakeMessagingChannel + durable ingress; P08 adds Meta WhatsApp Cloud API as the first production adapter.
 
 ## Decision
 
-Normalize messages/policy results in adapters; keep WhatsApp details outside the agent domain.
+Normalize messages/policy results in adapters; keep WhatsApp details outside the agent domain. Domain persists via existing `persistInbound` / Message / OutboundAttempt / outbox. Agent tools remain domain tools only — no `sendWhatsAppMessage`.
 
-## Alternatives and consequences
+## Consequences
 
-Putting provider payloads in agent/domain code couples future channels to business logic. A universal integration framework is unnecessary.
+- Fake and Meta adapters share the same TypeScript `MessagingChannel` contract
+- Provider payloads never leak into Lead/Booking/AgentConfig
+- Outbound send ownership is the worker; API only persists intent
 
-## Validation and review trigger
+## Supersession
 
-P03 fake adapter and P08 WhatsApp pass the same contract fixtures. Revisit only when a second channel shows a concrete mismatch.
-
-Approval record: pending architecture/product review. Supersession: none.
+Supersedes PROPOSED draft pending P08 validation.

@@ -1,9 +1,35 @@
 # Storage integration
 
-Define a narrow BlobStore adapter: issueUpload, verifyObject, readForIngestion, issueDownload and delete. Select Supabase Storage or equivalent in P00 based on region and private-access requirements. NestJS authorizes object metadata before issuing short-lived signed access; no public knowledge bucket.
+Define a narrow BlobStore adapter: `issueUpload`, `verifyObject`, `readForIngestion`, and `delete`.
 
-Keys use organization/document/version/random ID, never an untrusted filename as a path. Upload tokens bind expected key, media type, maximum bytes and short expiry. Finalization verifies actual object size/checksum/type and queues scanning. A signed upload is not approval for retrieval.
+## Production (required)
 
-Ingestion fetches only known object references, not arbitrary user URLs. Scan/quarantine failures leave the document unpublished. Track orphan uploads and clean them after 24 hours if no finalized metadata exists. Version object writes to avoid overwriting a published document in place.
+`SupabaseKnowledgeBlobStore` — private Supabase Storage bucket `knowledge` (override via `KNOWLEDGE_STORAGE_BUCKET`).
 
-Deletion is idempotent: database visibility is revoked first, then blobs and chunks are purged through durable work with retry. Database and object backups need coordinated version references; restore verification includes missing objects and stale signed URLs. [Knowledge architecture](../02-architecture/rag-architecture.md).
+Env (server-only):
+
+- `SUPABASE_URL`
+- `KNOWLEDGE_STORAGE_SERVICE_KEY` (preferred) or `SUPABASE_SERVICE_ROLE_KEY`
+- Optional: `KNOWLEDGE_STORAGE_BACKEND=supabase`
+
+**Fail closed** in `NODE_ENV=production` if credentials are missing or if `KNOWLEDGE_STORAGE_BACKEND=filesystem`.
+
+**Never** use `SUPABASE_TEST_ADMIN_KEY` as the storage credential.
+
+Trust rules:
+
+- ADMIN/OWNER authorize mutations in Nest before issuing uploads
+- Server-generated keys: `org/{organizationId}/doc/{documentId}/ver/{versionId}/{uuid}`
+- Client cannot select organization/document/version path
+- Bounded signed upload (`createSignedUploadUrl`, `upsert: false`)
+- Finalize downloads the exact object and verifies size, MIME magic, and SHA-256
+- Worker reads `object_key` only from tenant-authorized DB rows
+- Deletion is tenant-scoped via key prefix checks
+
+## Local development
+
+`FilesystemBlobStore` via `KNOWLEDGE_BLOB_ROOT` when not production.
+
+`POST .../knowledge/blob-put` is **forbidden** when `NODE_ENV=production` or when the active store is not filesystem (`isLocalDevBlobPutAllowed`).
+
+Implementation: `packages/storage/src/blob-store.ts`.

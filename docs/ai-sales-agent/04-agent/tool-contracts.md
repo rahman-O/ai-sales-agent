@@ -9,25 +9,29 @@ All schemas reject additional properties. IDs are UUIDs except opaque signed pro
 - getServiceDetails({serviceId}): duration, staff eligibility, description and active status; READ_CATALOG; archived service returns NOT_FOUND for agent use.
 - getServicePrice({serviceId}): amountMinor as string, currency, pricingVersion, effectiveAt and expiry; READ_CATALOG; unsupported variable pricing requires human quotation.
 - getCustomer({}): bound customer profile, allowed contact fields and consent; READ_SELF_CUSTOMER; no arbitrary customer enumeration.
-- getAvailableSlots({serviceId,from,to,staffId?}): at most 20 candidates with UTC/local times, timezone and schedule version; READ_AVAILABILITY. A slot is advisory until commit.
+- getAvailableSlots({serviceId,startDate,endDate?,locationId?,staffMemberId?,limit?}): at most 20 candidates with UTC/local times, timezone, and HMAC `slotToken` (v1); READ_AVAILABILITY. A slot/token is advisory until commit — not a hold.
 
 ## Customer and lead commands
 
 - createCustomer({displayName?,phone?}): idempotently ensure/update the inbound-bound contact, returning customer ID/version; WRITE_SELF_CUSTOMER. Transport establishes channel identity; tool-supplied phone cannot rebind identity or access another person. Existing customer wins identity uniqueness.
-- createLead({serviceId?,interestNote?,qualificationFacts?}): return open opportunity ID/stage/version; WRITE_SELF_LEAD. Facts use allowlisted fields and message evidence references validated against this conversation. Unique open opportunity key prevents duplicates.
-- updateLead({leadId,expectedVersion,patch}): patch permits service interest, allowed qualification facts, and nonterminal stage proposals only; WRITE_SELF_LEAD. Backend computes qualification and disallows BOOKED/WON or terminal reopening from model input. Return committed stage/version.
+- ensureLead({serviceId?,needSummary?,preferredContactChannel?,language?,locationId?}): idempotent OPEN lead for conversation customer; WRITE_SELF_LEAD. With serviceId: promote generic in place or collide-merge (`MERGED_DUPLICATE_OPEN_LEAD`). Without: reuse generic only; multiple OPEN without selector → `AMBIGUOUS_LEAD`. Never invent service IDs.
+- updateLeadQualification({leadId,expectedVersion,needSummary?,preferredContactChannel?,language?,locationId?,serviceId?}): patch allowlisted fields; cannot overwrite non-null human-owned values; cannot assign/archive/disqualify; stale version → `VERSION_CONFLICT`.
+- getLead({leadId?,serviceId?}): current OPEN lead for conversation customer. leadId must match customer; serviceId selects among OPEN; no selector with >1 OPEN → `AMBIGUOUS_LEAD`.
+- transitionLead({leadId,expectedVersion,toStatus}): AI may progress among NEW/ENGAGED/QUALIFIED/NURTURE only; **cannot** set ARCHIVED or DISQUALIFIED.
 
-## Booking proposal and commands
+P06 tools are **opt-in** via a new AgentConfig allowlist version; default ACTIVE configs stay P04-only (plus any prior explicit opts). No BOOKED/WON from tools.
 
-Add prepareBooking({serviceId,staffId,startAt,timezone}) as a required current safety boundary: backend creates a proposal with customer binding, calculated end/buffers, current price snapshot, expiry (default ten minutes), human-readable exact terms and server-generated proposal ID. It allocates nothing. Response generation presents these terms and asks for confirmation.
+## Booking commands (P07)
 
-Confirmation is server-recorded from an explicit reply to that proposal: interactive confirmation token where supported, or a narrow affirmative text parser when exactly one unexpired proposal is pending and no terms changed. Ambiguous/mixed replies ask again or hand off. The LLM cannot set a confirmed flag. Confirmation records the source inbound message and proposal hash.
+P07 tools are **opt-in** via a new AgentConfig allowlist; **DEFAULT_ALLOWLIST stays P04**. Never silently grant booking tools to existing ACTIVE configs.
 
-- createBooking({proposalId}): BOOK_SELF; requires unconsumed verified confirmation; returns booking ID, CONFIRMED, price/time snapshot and version only after transaction commit. Proposal ID is the semantic operation key. Recheck schedule/price versions; changed terms require a new proposal and confirmation. Conflict returns replacement-slot guidance with no mutation.
-- cancelBooking({bookingId,expectedVersion,reason,confirmationRef}): CANCEL_SELF; server-recorded confirmation must name the exact booking and action. Validate policy/cutoff, then return CANCELLED and version. Repeated same operation returns original result.
-- rescheduleBooking({bookingId,expectedVersion,proposalId}): RESCHEDULE_SELF; new proposal names original booking/version and replacement terms. Atomic update preserves original if conflict. Return new committed version; never implement as separate cancel and create operations.
+- getAvailableSlots — see Read tools; returns `slotToken` per candidate.
+- createBooking({slotToken,confirmationMessageId,leadId?}): BOOK_SELF. Requires HMAC-valid `slotToken` **and** server-proven `confirmationMessageId` (inbound message driving the current AgentRun, classified as explicit confirmation/selection — never an LLM `customerConfirmed` boolean). Full revalidation at commit; GiST occupied exclusion; conflict → `SLOT_UNAVAILABLE`. Optional `leadId` writes LeadActivity `BOOKING_CONFIRMED` only (no BOOKED/WON status).
+- getBookings({}): list conversation customer's bookings.
+- cancelBooking({bookingId,expectedVersion,reasonCode?}): CANCEL_SELF; versioned cancel → CANCELLED + LeadActivity when linked.
+- rescheduleBooking({bookingId,expectedVersion,slotToken}): RESCHEDULE_SELF; atomic update-in-place (self-conflict safe); conflict leaves original unchanged.
 
-For changes to an existing appointment, add prepareBookingChange({bookingId,expectedVersion,action,replacement?}), where action is CANCEL or RESCHEDULE. RESCHEDULE requires replacement service/staff/start/timezone; CANCEL forbids replacement. The backend creates an action-specific BookingProposal bound to the current booking version, customer and conversation. Its displayed terms name the original booking and either cancellation consequences or the replacement time/price. The same server confirmation mechanism records an explicit reply to those exact terms. cancelBooking accepts that confirmed proposal ID as confirmationRef; rescheduleBooking accepts it as proposalId. One confirmation cannot authorize a different action or two separate operations. Proposal generation is not permission to execute the change.
+Operator/API create attests via ADMIN/OWNER actor — not LLM boolean.
 
 ## Control and follow-up
 

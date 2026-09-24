@@ -1,6 +1,6 @@
 # Phase 09 — Human takeover and safe resume
 
-Status: NOT STARTED. Relative complexity: L. Proposed accountable owner: engineering lead with product reviewer. Dates and staffing are unestimated.
+Status: CLOSED (see [phase-09-closure.md](phase-09-closure.md) and [phase-09-scope-manifest.md](phase-09-scope-manifest.md)). Relative complexity: L.
 
 ## 1. Objective
 

@@ -45,6 +45,15 @@ model Organization {
   commandOperations  CommandOperation[]
   usageEvents        UsageEvent[]
   conversationSummaries ConversationSummary[]
+  knowledgeDocuments    KnowledgeDocument[]
+  knowledgeVersions     KnowledgeDocumentVersion[]
+  knowledgeChunks       KnowledgeChunk[]
+  leads                 Lead[]
+  leadActivities        LeadActivity[]
+  staffAvailabilityRules StaffAvailabilityRule[]
+  staffAvailabilityExceptions StaffAvailabilityException[]
+  bookings              Booking[]
+  bookingActivities     BookingActivity[]
 
   @@map("organizations")
 }
@@ -62,6 +71,8 @@ model Customer {
   organization    Organization       @relation(fields: [organizationId], references: [id])
   identities      CustomerIdentity[]
   conversations   Conversation[]
+  leads           Lead[]
+  bookings        Booking[]
 
   @@unique([organizationId, id])
   @@index([organizationId, updatedAt, id])
@@ -69,20 +80,24 @@ model Customer {
 }
 
 model ChannelConnection {
-  id                String             @id @default(uuid()) @db.Uuid
-  organizationId    String             @map("organization_id") @db.Uuid
-  provider          String
-  externalChannelId String             @map("external_channel_id")
-  status            String             @default("ACTIVE")
-  credentialRef     String?            @map("credential_ref")
-  policyJson        Json?              @map("policy_json")
-  createdAt         DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt         DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
-  organization      Organization       @relation(fields: [organizationId], references: [id])
-  identities        CustomerIdentity[]
-  conversations     Conversation[]
-  messages          Message[]
-  webhookReceipts   WebhookReceipt[]
+  id                 String             @id @default(uuid()) @db.Uuid
+  organizationId     String             @map("organization_id") @db.Uuid
+  provider           String
+  externalChannelId  String             @map("external_channel_id")
+  status             String             @default("ACTIVE")
+  credentialRef      String?            @map("credential_ref")
+  policyJson         Json?              @map("policy_json")
+  displayPhoneNumber String?            @map("display_phone_number")
+  wabaId             String?            @map("waba_id")
+  lastVerifiedAt     DateTime?          @map("last_verified_at") @db.Timestamptz(6)
+  healthStatus       String             @default("ACTIVE") @map("health_status")
+  createdAt          DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization       Organization       @relation(fields: [organizationId], references: [id])
+  identities         CustomerIdentity[]
+  conversations      Conversation[]
+  messages           Message[]
+  webhookReceipts    WebhookReceipt[]
 
   @@unique([provider, externalChannelId])
   @@unique([organizationId, id])
@@ -123,6 +138,10 @@ model Location {
   organization   Organization  @relation(fields: [organizationId], references: [id])
   services       Service[]
   staffMembers   StaffMember[]
+  leads          Lead[]
+  availabilityRules StaffAvailabilityRule[]
+  availabilityExceptions StaffAvailabilityException[]
+  bookings       Booking[]
 
   @@unique([organizationId, id])
   @@index([organizationId, active])
@@ -140,6 +159,9 @@ model Service {
   amountMinor         BigInt         @map("amount_minor")
   currency            String         @db.Char(3)
   pricingVersion      Int            @default(1) @map("pricing_version")
+  bookingEnabled      Boolean        @default(true) @map("booking_enabled")
+  minimumLeadMinutes  Int            @default(60) @map("minimum_lead_minutes")
+  maximumAdvanceDays  Int            @default(30) @map("maximum_advance_days")
   active              Boolean        @default(true)
   version             Int            @default(1)
   archivedAt          DateTime?      @map("archived_at") @db.Timestamptz(6)
@@ -148,6 +170,8 @@ model Service {
   organization        Organization   @relation(fields: [organizationId], references: [id])
   location            Location       @relation(fields: [organizationId, locationId], references: [organizationId, id])
   staff               ServiceStaff[]
+  leads               Lead[]
+  bookings            Booking[]
 
   @@unique([organizationId, id])
   @@index([organizationId, active, name])
@@ -168,6 +192,9 @@ model StaffMember {
   organization   Organization   @relation(fields: [organizationId], references: [id])
   location       Location       @relation(fields: [organizationId, locationId], references: [organizationId, id])
   services       ServiceStaff[]
+  availabilityRules StaffAvailabilityRule[]
+  availabilityExceptions StaffAvailabilityException[]
+  bookings       Booking[]
 
   @@unique([organizationId, id])
   @@index([organizationId, locationId, active])
@@ -194,30 +221,43 @@ model Conversation {
   channelConnectionId      String            @map("channel_connection_id") @db.Uuid
   identityId               String            @map("identity_id") @db.Uuid
   mode                     String            @default("AI_ACTIVE")
+  /// Stores organization_members.user_id (despite column name).
   ownerMemberId            String?           @map("owner_member_id") @db.Uuid
   ownershipEpoch           Int               @default(0) @map("ownership_epoch")
   nextSequence             Int               @default(1) @map("next_sequence")
   processedSequence        Int               @default(0) @map("processed_sequence")
   nextTimelineSequence     Int               @default(1) @map("next_timeline_sequence")
+  /// Inbound at or below this ingress must not start autonomous AgentRuns after resume.
+  aiEligibleAfterSequence  Int               @default(0) @map("ai_eligible_after_sequence")
+  pausedAt                 DateTime?         @map("paused_at") @db.Timestamptz(6)
+  pauseReasonCode          String?           @map("pause_reason_code")
+  pauseReasonText          String?           @map("pause_reason_text")
+  resumedAt                DateTime?         @map("resumed_at") @db.Timestamptz(6)
   leaseOwner               String?           @map("lease_owner")
   leaseFence               Int               @default(0) @map("lease_fence")
   leaseExpiresAt           DateTime?         @map("lease_expires_at") @db.Timestamptz(6)
   version                  Int               @default(1)
   lastMessageAt            DateTime?         @map("last_message_at") @db.Timestamptz(6)
   providerEventWatermarkAt DateTime?         @map("provider_event_watermark_at") @db.Timestamptz(6)
+  lastCustomerInboundAt    DateTime?         @map("last_customer_inbound_at") @db.Timestamptz(6)
   createdAt                DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
   organization             Organization      @relation(fields: [organizationId], references: [id])
   customer                 Customer          @relation(fields: [organizationId, customerId], references: [organizationId, id])
   channelConnection        ChannelConnection @relation(fields: [organizationId, channelConnectionId], references: [organizationId, id])
   identity                 CustomerIdentity  @relation(fields: [organizationId, identityId], references: [organizationId, id])
+  ownerMember              OrganizationMember? @relation("ConversationOwner", fields: [organizationId, ownerMemberId], references: [organizationId, userId])
   messages                 Message[]
   agentRuns                AgentRun[]
   conversationSummaries    ConversationSummary[]
+  sourceLeads              Lead[]           @relation("LeadSourceConversation")
+  sourceLeadActivities     LeadActivity[]   @relation("LeadActivitySourceConversation")
+  sourceBookings           Booking[]        @relation("BookingSourceConversation")
 
   @@unique([organizationId, channelConnectionId, identityId])
   @@unique([organizationId, id])
   @@index([organizationId, mode, lastMessageAt(sort: Desc), id])
+  @@index([organizationId, mode, ownerMemberId, lastMessageAt(sort: Desc), id])
   @@index([organizationId, leaseExpiresAt])
   @@map("conversations")
 }
@@ -239,11 +279,15 @@ model Message {
   providerEventAt     DateTime?         @map("provider_event_at") @db.Timestamptz(6)
   receivedAt          DateTime          @default(now()) @map("received_at") @db.Timestamptz(6)
   deliveryState       String            @default("ACCEPTED") @map("delivery_state")
+  /// Conversation ownership_epoch at outbound create; AI dispatch requires match.
+  authorityEpoch      Int?              @map("authority_epoch")
   createdAt           DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
   organization        Organization      @relation(fields: [organizationId], references: [id])
   conversation        Conversation      @relation(fields: [organizationId, conversationId], references: [organizationId, id])
   channelConnection   ChannelConnection @relation(fields: [organizationId, channelConnectionId], references: [organizationId, id])
   outboundAttempts    OutboundAttempt[]
+  sourceLeads         Lead[]            @relation("LeadSourceMessage")
+  sourceBookings      Booking[]         @relation("BookingSourceMessage")
 
   @@unique([organizationId, id])
   @@unique([conversationId, timelineSequence])
@@ -278,6 +322,9 @@ model OrganizationMember {
   updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
   organization   Organization @relation(fields: [organizationId], references: [id])
   user           User         @relation(fields: [userId], references: [id])
+  assignedLeads       Lead[]         @relation("LeadAssignee")
+  assignedByLeads     Lead[]         @relation("LeadAssigner")
+  ownedConversations  Conversation[] @relation("ConversationOwner")
 
   @@id([organizationId, userId])
   @@index([organizationId, role, status])
@@ -415,6 +462,9 @@ model AgentRun {
   toolCallRows           ToolCall[]
   commandOperations      CommandOperation[]
   usageEvents            UsageEvent[]
+  createdLeads           Lead[]          @relation("LeadCreatedByAgentRun")
+  leadActivities         LeadActivity[]  @relation("LeadActivitySourceAgentRun")
+  createdBookings        Booking[]       @relation("BookingCreatedByAgentRun")
 
   @@unique([organizationId, runKey])
   @@unique([organizationId, id])
@@ -496,4 +546,258 @@ model ConversationSummary {
   @@unique([organizationId, id])
   @@index([organizationId, conversationId, version(sort: Desc)])
   @@map("conversation_summaries")
+}
+
+model KnowledgeDocument {
+  id                      String                     @id @default(uuid()) @db.Uuid
+  organizationId          String                     @map("organization_id") @db.Uuid
+  title                   String
+  activePublishedVersionId String?                   @map("active_published_version_id") @db.Uuid
+  archivedAt              DateTime?                  @map("archived_at") @db.Timestamptz(6)
+  deletedAt               DateTime?                  @map("deleted_at") @db.Timestamptz(6)
+  createdAt               DateTime                   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime                   @updatedAt @map("updated_at") @db.Timestamptz(6)
+  version                 Int                        @default(1)
+  organization            Organization               @relation(fields: [organizationId], references: [id])
+  versions                KnowledgeDocumentVersion[]
+  chunks                  KnowledgeChunk[]
+
+  @@unique([organizationId, id])
+  @@index([organizationId, updatedAt(sort: Desc)])
+  @@map("knowledge_documents")
+}
+
+model KnowledgeDocumentVersion {
+  id                       String             @id @default(uuid()) @db.Uuid
+  organizationId           String             @map("organization_id") @db.Uuid
+  documentId               String             @map("document_id") @db.Uuid
+  versionNumber            Int                @map("version_number")
+  objectKey                String             @map("object_key")
+  contentChecksum          String             @map("content_checksum")
+  mimeType                 String             @map("mime_type")
+  byteSize                 Int                @map("byte_size")
+  extractedText            String?            @map("extracted_text")
+  pipelineStatus           String             @default("PENDING_UPLOAD") @map("pipeline_status")
+  reviewStatus             String             @default("PENDING") @map("review_status")
+  reviewedByUserId         String?            @map("reviewed_by_user_id") @db.Uuid
+  reviewedAt               DateTime?          @map("reviewed_at") @db.Timestamptz(6)
+  failureReason            String?            @map("failure_reason")
+  expectedChunkCount       Int?               @map("expected_chunk_count")
+  embeddingProfileId       String             @default("qwen3_embed_06b_1024_v1") @map("embedding_profile_id")
+  embeddingModel           String             @default("Qwen/Qwen3-Embedding-0.6B") @map("embedding_model")
+  embeddingModelRevision   String             @default("97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3") @map("embedding_model_revision")
+  embeddingDimension       Int                @default(1024) @map("embedding_dimension")
+  queryInstructionVersion  String             @default("qwen3_dental_retrieve_en_v1") @map("query_instruction_version")
+  normalizationMode        String             @default("tei_normalize_true_l2") @map("normalization_mode")
+  maxDistance              Float              @default(0.558746) @map("max_distance")
+  createdAt                DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization             Organization       @relation(fields: [organizationId], references: [id])
+  document                 KnowledgeDocument  @relation(fields: [organizationId, documentId], references: [organizationId, id])
+  chunks                   KnowledgeChunk[]
+
+  @@unique([organizationId, id])
+  @@unique([organizationId, documentId, versionNumber])
+  @@unique([organizationId, documentId, id])
+  @@index([organizationId, documentId, versionNumber(sort: Desc)])
+  @@map("knowledge_document_versions")
+}
+
+model KnowledgeChunk {
+  id                 String                    @id @default(uuid()) @db.Uuid
+  organizationId     String                    @map("organization_id") @db.Uuid
+  documentId         String                    @map("document_id") @db.Uuid
+  documentVersionId  String                    @map("document_version_id") @db.Uuid
+  chunkIndex         Int                       @map("chunk_index")
+  content            String
+  contentHash        String                    @map("content_hash")
+  tokenCount         Int?                      @map("token_count")
+  /// Locked P05 dimension — written/read via raw SQL for pgvector.
+  embedding          Unsupported("vector(1024)")?
+  embeddingProfileId String                    @default("qwen3_embed_06b_1024_v1") @map("embedding_profile_id")
+  provenanceJson     Json                      @default("{}") @map("provenance_json")
+  createdAt          DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  organization       Organization              @relation(fields: [organizationId], references: [id])
+  document           KnowledgeDocument         @relation(fields: [organizationId, documentId], references: [organizationId, id])
+  documentVersion    KnowledgeDocumentVersion  @relation(fields: [organizationId, documentId, documentVersionId], references: [organizationId, documentId, id])
+
+  @@unique([organizationId, id])
+  @@unique([organizationId, documentVersionId, chunkIndex])
+  @@index([organizationId, documentVersionId, chunkIndex])
+  @@map("knowledge_chunks")
+}
+
+/// P06 — sales opportunity (contact truth stays on Customer).
+model Lead {
+  id                    String              @id @default(uuid()) @db.Uuid
+  organizationId        String              @map("organization_id") @db.Uuid
+  customerId            String              @map("customer_id") @db.Uuid
+  status                String              @default("NEW")
+  primaryServiceId      String?             @map("primary_service_id") @db.Uuid
+  locationId            String?             @map("location_id") @db.Uuid
+  assignedUserId        String?             @map("assigned_user_id") @db.Uuid
+  assignedAt            DateTime?           @map("assigned_at") @db.Timestamptz(6)
+  assignedByUserId      String?             @map("assigned_by_user_id") @db.Uuid
+  preferredContactChannel String?           @map("preferred_contact_channel")
+  language              String?
+  urgency               String?
+  needSummary           String?             @map("need_summary")
+  sourceType            String              @default("INBOUND_CONVERSATION") @map("source_type")
+  sourceConversationId  String?             @map("source_conversation_id") @db.Uuid
+  sourceMessageId       String?             @map("source_message_id") @db.Uuid
+  createdByUserId       String?             @map("created_by_user_id") @db.Uuid
+  createdByAgentRunId   String?             @map("created_by_agent_run_id") @db.Uuid
+  statusReasonCode      String?             @map("status_reason_code")
+  statusReasonText      String?             @map("status_reason_text")
+  statusChangedAt       DateTime            @default(now()) @map("status_changed_at") @db.Timestamptz(6)
+  statusChangedByType   String?             @map("status_changed_by_type")
+  statusChangedById     String?             @map("status_changed_by_id") @db.Uuid
+  version               Int                 @default(1)
+  createdAt             DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
+  archivedAt            DateTime?           @map("archived_at") @db.Timestamptz(6)
+  organization          Organization        @relation(fields: [organizationId], references: [id])
+  customer              Customer            @relation(fields: [organizationId, customerId], references: [organizationId, id])
+  primaryService        Service?            @relation(fields: [organizationId, primaryServiceId], references: [organizationId, id])
+  location              Location?           @relation(fields: [organizationId, locationId], references: [organizationId, id])
+  assignee              OrganizationMember? @relation("LeadAssignee", fields: [organizationId, assignedUserId], references: [organizationId, userId])
+  assigner              OrganizationMember? @relation("LeadAssigner", fields: [organizationId, assignedByUserId], references: [organizationId, userId])
+  sourceConversation    Conversation?       @relation("LeadSourceConversation", fields: [organizationId, sourceConversationId], references: [organizationId, id])
+  sourceMessage         Message?            @relation("LeadSourceMessage", fields: [organizationId, sourceMessageId], references: [organizationId, id])
+  createdByAgentRun     AgentRun?           @relation("LeadCreatedByAgentRun", fields: [organizationId, createdByAgentRunId], references: [organizationId, id])
+  activities            LeadActivity[]
+  bookings              Booking[]
+
+  @@unique([organizationId, id])
+  @@index([organizationId, status, updatedAt(sort: Desc)])
+  @@index([organizationId, customerId])
+  @@map("leads")
+}
+
+/// P06 — append-only CRM activity (app_runtime SELECT+INSERT only).
+model LeadActivity {
+  id                   String        @id @default(uuid()) @db.Uuid
+  organizationId       String        @map("organization_id") @db.Uuid
+  leadId               String        @map("lead_id") @db.Uuid
+  type                 String
+  actorType            String        @map("actor_type")
+  actorId              String?       @map("actor_id") @db.Uuid
+  sourceConversationId String?       @map("source_conversation_id") @db.Uuid
+  sourceAgentRunId     String?       @map("source_agent_run_id") @db.Uuid
+  metadataJson         Json          @default("{}") @map("metadata_json")
+  createdAt            DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  organization         Organization  @relation(fields: [organizationId], references: [id])
+  lead                 Lead          @relation(fields: [organizationId, leadId], references: [organizationId, id])
+  sourceConversation   Conversation? @relation("LeadActivitySourceConversation", fields: [organizationId, sourceConversationId], references: [organizationId, id])
+  sourceAgentRun       AgentRun?     @relation("LeadActivitySourceAgentRun", fields: [organizationId, sourceAgentRunId], references: [organizationId, id])
+
+  @@unique([organizationId, id])
+  @@index([organizationId, leadId, createdAt])
+  @@map("lead_activities")
+}
+
+model StaffAvailabilityRule {
+  id             String      @id @default(uuid()) @db.Uuid
+  organizationId String      @map("organization_id") @db.Uuid
+  staffMemberId  String      @map("staff_member_id") @db.Uuid
+  locationId     String      @map("location_id") @db.Uuid
+  dayOfWeek      Int         @map("day_of_week") @db.SmallInt
+  localStartTime DateTime    @map("local_start_time") @db.Time(6)
+  localEndTime   DateTime    @map("local_end_time") @db.Time(6)
+  effectiveFrom  DateTime?   @map("effective_from") @db.Date
+  effectiveTo    DateTime?   @map("effective_to") @db.Date
+  isActive       Boolean     @default(true) @map("is_active")
+  createdAt      DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  staffMember    StaffMember  @relation(fields: [organizationId, staffMemberId], references: [organizationId, id])
+  location       Location     @relation(fields: [organizationId, locationId], references: [organizationId, id])
+
+  @@unique([organizationId, id])
+  @@index([organizationId, staffMemberId, dayOfWeek])
+  @@map("staff_availability_rules")
+}
+
+model StaffAvailabilityException {
+  id             String      @id @default(uuid()) @db.Uuid
+  organizationId String      @map("organization_id") @db.Uuid
+  staffMemberId  String      @map("staff_member_id") @db.Uuid
+  locationId     String      @map("location_id") @db.Uuid
+  localDate      DateTime    @map("local_date") @db.Date
+  localStartTime DateTime?   @map("local_start_time") @db.Time(6)
+  localEndTime   DateTime?   @map("local_end_time") @db.Time(6)
+  type           String
+  reasonCode     String?     @map("reason_code")
+  createdAt      DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  staffMember    StaffMember  @relation(fields: [organizationId, staffMemberId], references: [organizationId, id])
+  location       Location     @relation(fields: [organizationId, locationId], references: [organizationId, id])
+
+  @@unique([organizationId, id])
+  @@index([organizationId, staffMemberId, localDate])
+  @@map("staff_availability_exceptions")
+}
+
+model Booking {
+  id                      String       @id @default(uuid()) @db.Uuid
+  organizationId          String       @map("organization_id") @db.Uuid
+  customerId              String       @map("customer_id") @db.Uuid
+  serviceId               String       @map("service_id") @db.Uuid
+  locationId              String       @map("location_id") @db.Uuid
+  staffMemberId           String       @map("staff_member_id") @db.Uuid
+  leadId                  String?      @map("lead_id") @db.Uuid
+  sourceConversationId    String?      @map("source_conversation_id") @db.Uuid
+  sourceMessageId         String?      @map("source_message_id") @db.Uuid
+  startsAt                DateTime     @map("starts_at") @db.Timestamptz(6)
+  endsAt                  DateTime     @map("ends_at") @db.Timestamptz(6)
+  occupiedStartsAt        DateTime     @map("occupied_starts_at") @db.Timestamptz(6)
+  occupiedEndsAt          DateTime     @map("occupied_ends_at") @db.Timestamptz(6)
+  timezone                String
+  durationMinutes         Int          @map("duration_minutes")
+  bufferBeforeMinutes     Int          @default(0) @map("buffer_before_minutes")
+  bufferAfterMinutes      Int          @default(0) @map("buffer_after_minutes")
+  status                  String       @default("CONFIRMED")
+  cancellationReasonCode  String?      @map("cancellation_reason_code")
+  cancellationReasonText  String?      @map("cancellation_reason_text")
+  serviceNameSnapshot     String?      @map("service_name_snapshot")
+  staffDisplayNameSnapshot String?     @map("staff_display_name_snapshot")
+  createdByType           String       @map("created_by_type")
+  createdByUserId         String?      @map("created_by_user_id") @db.Uuid
+  createdByAgentRunId     String?      @map("created_by_agent_run_id") @db.Uuid
+  version                 Int          @default(1)
+  createdAt               DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization            Organization @relation(fields: [organizationId], references: [id])
+  customer                Customer     @relation(fields: [organizationId, customerId], references: [organizationId, id])
+  service                 Service      @relation(fields: [organizationId, serviceId], references: [organizationId, id])
+  location                Location     @relation(fields: [organizationId, locationId], references: [organizationId, id])
+  staffMember             StaffMember  @relation(fields: [organizationId, staffMemberId], references: [organizationId, id])
+  lead                    Lead?        @relation(fields: [organizationId, leadId], references: [organizationId, id])
+  sourceConversation      Conversation? @relation("BookingSourceConversation", fields: [organizationId, sourceConversationId], references: [organizationId, id])
+  sourceMessage           Message?     @relation("BookingSourceMessage", fields: [organizationId, sourceMessageId], references: [organizationId, id])
+  createdByAgentRun       AgentRun?    @relation("BookingCreatedByAgentRun", fields: [organizationId, createdByAgentRunId], references: [organizationId, id])
+  activities              BookingActivity[]
+
+  @@unique([organizationId, id])
+  @@index([organizationId, staffMemberId, startsAt])
+  @@index([organizationId, customerId, startsAt])
+  @@map("bookings")
+}
+
+model BookingActivity {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  bookingId      String       @map("booking_id") @db.Uuid
+  type           String
+  actorType      String       @map("actor_type")
+  actorId        String?      @map("actor_id") @db.Uuid
+  metadataJson   Json         @default("{}") @map("metadata_json")
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  booking        Booking      @relation(fields: [organizationId, bookingId], references: [organizationId, id])
+
+  @@unique([organizationId, id])
+  @@index([organizationId, bookingId, createdAt])
+  @@map("booking_activities")
 }

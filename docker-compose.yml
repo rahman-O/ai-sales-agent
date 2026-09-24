@@ -27,5 +27,41 @@ services:
       timeout: 2s
       retries: 30
 
+  # Private local embeddings (TEI 1.9). Do NOT use cpu-1.7.x (MKL issues).
+  # Override image via TEI_IMAGE for arm64: ghcr.io/huggingface/text-embeddings-inference:cpu-arm64-1.9
+  tei:
+    image: ${TEI_IMAGE:-ghcr.io/huggingface/text-embeddings-inference:cpu-1.9}
+    container_name: ai-sales-agent-tei
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - tei_hf_cache:/data
+    command:
+      - "--model-id"
+      - "Qwen/Qwen3-Embedding-0.6B"
+      - "--revision"
+      - "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3"
+      - "--dtype"
+      - "float32"
+      - "--max-batch-tokens"
+      - "2048"
+      - "--max-concurrent-requests"
+      - "4"
+    environment:
+      - HF_HUB_ENABLE_HF_TRANSFER=0
+    # Compose (non-swarm): mem_limit is honored; deploy.resources is not.
+    mem_limit: 12g
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -qO- http://127.0.0.1:80/health >/dev/null 2>&1 || wget -qO- http://127.0.0.1:80/info >/dev/null 2>&1 || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 120s
+
 volumes:
   p01_pg_data:
+  tei_hf_cache:

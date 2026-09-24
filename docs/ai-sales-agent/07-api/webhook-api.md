@@ -1,15 +1,23 @@
 # Webhook API
 
-Proposed routes; none are implemented. Shared transport/error/version rules: [API principles](api-principles.md).
-
-## Authority and base
-
-Base: `/v1/webhooks/whatsapp`. Public transport route authenticated by provider signature, not staff session.
+Base: `/v1/webhooks/whatsapp/meta`. Public transport route authenticated by Meta signature / verify token — not staff session.
 
 ## Contracts
 
-GET / handles subscription challenge with exact verification-token match. POST / accepts bounded raw bytes, verifies signature, maps provider account/phone IDs, and persists canonical events plus outbox. Response is success only after durable acceptance or durable quarantine. Delivery status callbacks use the same verified ingestion path.
+### GET /
 
-## Invariants, failure and verification
+Subscription challenge. Application-level `META_WHATSAPP_VERIFY_TOKEN` only (not ChannelConnection-scoped). Return `hub.challenge` only when `hub.mode=subscribe` and token matches; otherwise 403. Never echo challenge on failure.
 
-Missing/invalid signatures return 401/403; oversize 413; malformed payload 400; DB failure 503. Signed supported duplicates return success after dedup. No LLM work in request path. Test mixed batches, partial retries, unknown channel mapping, status-before-message and late event timestamps.
+### POST /
+
+1. Verify `X-Hub-Signature-256` against **raw request body bytes** + `META_WHATSAPP_APP_SECRET` (constant-time).
+2. Parse JSON only after signature success.
+3. Extract `phone_number_id` → ChannelConnection (`provider=meta_whatsapp`) → organizationId.
+4. Normalize inbound/status events; persist via P03 `persistInbound` / delivery apply.
+5. ACK after durable acceptance (or bounded unknown-channel diagnostic). No LLM in request path.
+
+Unknown `phone_number_id`: no tenant Message; bounded structured log/diagnostic only.
+
+## Invariants
+
+Missing/invalid signatures → 401/403; oversize → 413; DB failure → 503. Signed duplicates succeed after dedup. Templates deferred (P10); outside 24h free-form → POLICY_REJECTED at dispatch.

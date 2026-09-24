@@ -1,24 +1,12 @@
 import { createHash } from 'node:crypto';
+import {
+  contentDigest,
+  fixtureExternalChannelId,
+  type NormalizedInboundMessage,
+} from './messaging-channel.js';
 
-export function contentDigest(text: string): string {
-  return createHash('sha256').update(text, 'utf8').digest('hex');
-}
-
-export function fixtureExternalChannelId(organizationId: string, provider: string): string {
-  return `fixture:${organizationId}:${provider}`;
-}
-
-export interface NormalizedInboundMessage {
-  organizationId: string;
-  channelConnectionId: string;
-  provider: string;
-  senderAddress: string;
-  providerMessageId: string;
-  eventIdentity: string;
-  text: string;
-  providerEventAt: Date | null;
-  payloadDigest: string;
-}
+export { contentDigest, fixtureExternalChannelId };
+export type { NormalizedInboundMessage };
 
 /**
  * Provider-neutral fake channel for P03 development ingress.
@@ -53,8 +41,12 @@ export class FakeMessagingChannel {
       providerMessageId: input.providerMessageId.trim(),
       eventIdentity: `msg:${input.providerMessageId.trim()}`,
       text,
+      contentType: 'text',
       providerEventAt: input.providerEventAt ? new Date(input.providerEventAt) : null,
       payloadDigest: digest,
     };
   }
 }
+
+// keep createHash import used via contentDigest re-export path
+void createHash;

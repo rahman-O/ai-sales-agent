@@ -6,7 +6,10 @@ import { loadLocalEnv, loadServerEnv } from '@ai-sales-agent/config';
 async function bootstrap() {
   loadLocalEnv();
   const env = loadServerEnv(process.env);
-  const app = await NestFactory.create(AppModule, { logger: ['error', 'warn', 'log'] });
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log'],
+    rawBody: true,
+  });
   app.setGlobalPrefix('v1', { exclude: ['health/live', 'health/ready'] });
   app.enableCors({
     origin: env.APP_URL,

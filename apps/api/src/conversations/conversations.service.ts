@@ -1,5 +1,6 @@
 import {
   ForbiddenException,
+  GoneException,
   Injectable,
   NotFoundException,
   ServiceUnavailableException,
@@ -43,16 +44,41 @@ export class ConversationsService {
       }),
     );
     if (!m || (m as { status: string }).status !== 'ACTIVE') throw new NotFoundException();
+    return m as { role: string; status: string };
   }
 
-  async listInbox(actor: ActorContext, organizationId: string, cursor?: string, limit = 50) {
+  async getOne(actor: ActorContext, organizationId: string, conversationId: string) {
     await this.authorize(actor, organizationId);
-    const take = Math.min(Math.max(limit, 1), 100);
-    const c = decodeCursor(cursor);
+    return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
+      const conv = await tx.conversation.findUnique({
+        where: { organizationId_id: { organizationId, id: conversationId } },
+      });
+      if (!conv) throw new NotFoundException();
+      return conv;
+    });
+  }
+
+  async listInbox(
+    actor: ActorContext,
+    organizationId: string,
+    opts: {
+      cursor?: string;
+      limit?: number;
+      mode?: string;
+      unassignedOnly?: boolean;
+      assignedToMe?: boolean;
+    } = {},
+  ) {
+    await this.authorize(actor, organizationId);
+    const take = Math.min(Math.max(opts.limit ?? 50, 1), 100);
+    const c = decodeCursor(opts.cursor);
     return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
       const rows = await tx.conversation.findMany({
         where: {
           organizationId,
+          ...(opts.mode ? { mode: opts.mode } : {}),
+          ...(opts.unassignedOnly ? { mode: 'AI_PAUSED', ownerMemberId: null } : {}),
+          ...(opts.assignedToMe ? { ownerMemberId: actor.userId } : {}),
           ...(c
             ? {
                 OR: [
@@ -121,34 +147,22 @@ export class ConversationsService {
     return this.events.subscribe(organizationId, actor.userId);
   }
 
+  /**
+   * Legacy P03 primitive — HARDENED in P09.
+   * Public callers must use takeover/claim/reassign/release/resume-ai.
+   * Always rejects arbitrary mode mutation (including HUMAN_ACTIVE).
+   */
   async transitionMode(
-    actor: ActorContext,
-    organizationId: string,
-    conversationId: string,
-    mode: 'AI_ACTIVE' | 'AI_PAUSED' | 'HUMAN_ACTIVE' | 'CLOSED',
-    expectedVersion: number,
-  ) {
-    await this.authorize(actor, organizationId);
-    return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
-      const result = await tx.conversation.updateMany({
-        where: { organizationId, id: conversationId, version: expectedVersion },
-        data: { mode, ownershipEpoch: { increment: 1 }, version: { increment: 1 } },
-      });
-      if (!result.count) throw new NotFoundException();
-      const row = await tx.conversation.findUniqueOrThrow({
-        where: { organizationId_id: { organizationId, id: conversationId } },
-      });
-      await this.tenants.writeAudit(tx, {
-        organizationId,
-        actorUserId: actor.userId,
-        action: 'conversation.mode_changed',
-        targetType: 'Conversation',
-        targetId: conversationId,
-        metadataJson: { mode, ownershipEpoch: row.ownershipEpoch },
-        requestId: actor.requestId,
-      });
-      this.events.publish(organizationId, { type: 'conversation.updated', conversationId });
-      return row;
+    _actor: ActorContext,
+    _organizationId: string,
+    _conversationId: string,
+    _mode: string,
+    _expectedVersion: number,
+  ): Promise<never> {
+    throw new GoneException({
+      code: 'MODE_ENDPOINT_REMOVED',
+      message:
+        'Arbitrary mode mutation removed. Use takeover, claim, reassign, release, or resume-ai.',
     });
   }
 

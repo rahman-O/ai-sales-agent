@@ -13,6 +13,7 @@ import {
 import { normalizeContact } from '../domain/value-objects.js';
 import { domainEvent } from '../domain/domain-event.js';
 import { FakeMessagingChannel, contentDigest, fixtureExternalChannelId } from './fake-channel.js';
+import type { NormalizedInboundMessage } from './messaging-channel.js';
 import { ConversationEventsHub } from '../conversations/conversation-events.hub.js';
 
 @Injectable()
@@ -109,7 +110,7 @@ export class InboundMessagingService {
   async persistInbound(
     tx: TenantTxClient,
     actor: ActorContext,
-    inbound: ReturnType<FakeMessagingChannel['normalizeDevInbound']>,
+    inbound: NormalizedInboundMessage,
   ) {
     const organizationId = inbound.organizationId;
 
@@ -151,7 +152,10 @@ export class InboundMessagingService {
 
     let address;
     try {
-      address = normalizeContact(inbound.provider, inbound.senderAddress);
+      address = normalizeContact(
+        inbound.provider === 'meta_whatsapp' ? 'whatsapp' : inbound.provider,
+        inbound.senderAddress,
+      );
     } catch (e) {
       throw new BadRequestException((e as Error).message);
     }
@@ -259,6 +263,7 @@ export class InboundMessagingService {
     }
 
     const messageId = randomUUID();
+    const inboundAt = providerEventAt ?? new Date();
     const message = await tx.message.create({
       data: {
         id: messageId,
@@ -271,7 +276,7 @@ export class InboundMessagingService {
         ingressSequence,
         timelineSequence,
         lateFlag,
-        contentType: 'text',
+        contentType: inbound.contentType || 'text',
         contentText: inbound.text,
         contentDigest: inbound.payloadDigest,
         providerEventAt,
@@ -292,6 +297,7 @@ export class InboundMessagingService {
       },
     });
 
+    // Projection only — advance on NEW accepted inbound (not replay)
     await tx.conversation.update({
       where: { organizationId_id: { organizationId, id: conversation.id } },
       data: {
@@ -300,9 +306,18 @@ export class InboundMessagingService {
         nextSequence: ingressSequence + 1,
         nextTimelineSequence: timelineSequence + 1,
         lastMessageAt: new Date(),
+        lastCustomerInboundAt: inboundAt,
         providerEventWatermarkAt: newWatermark,
         customerId: identity.customerId,
         version: { increment: 1 },
+        ...(ownershipEpochBump
+          ? {
+              pausedAt: new Date(),
+              pauseReasonCode: 'OTHER',
+              pauseReasonText: 'reopened_from_closed',
+              resumedAt: null,
+            }
+          : {}),
       },
     });
 
@@ -347,5 +362,3 @@ export class InboundMessagingService {
     return { replay: false as const, message, receipt };
   }
 }
-
-export { contentDigest };

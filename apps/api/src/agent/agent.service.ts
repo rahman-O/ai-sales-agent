@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { P04_TOOL_NAMES } from '@ai-sales-agent/contracts';
+import { P04_TOOL_NAMES, ALL_REGISTERED_TOOL_NAMES } from '@ai-sales-agent/contracts';
 import {
   FakeModelProvider,
   runAgentOrchestrator,
@@ -18,7 +18,9 @@ import {
   type ActorContext,
 } from '../database/tenant-context.service.js';
 
+/** Default allowlist stays P04-only — P05/P06/P07 tools require explicit new AgentConfig versions. */
 const DEFAULT_ALLOWLIST = [...P04_TOOL_NAMES];
+const ALLOWED_TOOL_SET = new Set<string>(ALL_REGISTERED_TOOL_NAMES);
 
 @Injectable()
 export class AgentService {
@@ -74,7 +76,7 @@ export class AgentService {
     const m = await this.membership(actor, organizationId);
     this.requireAdmin(m.role);
     const allow = (input.toolAllowlist ?? DEFAULT_ALLOWLIST).filter((n) =>
-      (P04_TOOL_NAMES as readonly string[]).includes(n),
+      ALLOWED_TOOL_SET.has(n),
     );
     return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
       const max = await tx.agentConfig.aggregate({

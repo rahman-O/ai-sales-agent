@@ -10,9 +10,9 @@ Status: PROPOSED roadmap. Phase 00 technical readiness: **READY_FOR_P01**. Phase
 - [Phase 03 — Durable customers and conversations](phase-03-conversations.md): L; NOT STARTED.
 - [Phase 04 — Bounded agent core and safe tools](phase-04-agent-core.md): XL; NOT STARTED.
 - [Phase 05 — Approved knowledge and RAG](phase-05-knowledge-rag.md): L; NOT STARTED.
-- [Phase 06 — Lead management and qualification](phase-06-leads-crm.md): M; NOT STARTED.
-- [Phase 07 — Services, availability and safe booking](phase-07-booking-tools.md): XL; NOT STARTED.
-- [Phase 08 — WhatsApp transport integration](phase-08-whatsapp.md): L; NOT STARTED.
+- [Phase 06 — Lead management and qualification](phase-06-leads-crm.md): M; CLOSED.
+- [Phase 07 — Services, availability and safe booking](phase-07-booking-tools.md): XL; **CLOSED** (see [phase-07-closure](phase-07-closure.md)).
+- [Phase 08 — WhatsApp transport integration](phase-08-whatsapp.md): L; **CLOSED** (see [phase-08-closure](phase-08-closure.md)).
 - [Phase 09 — Human takeover and safe resume](phase-09-human-handoff.md): L; NOT STARTED.
 - [Phase 10 — Consent-aware follow-up engine](phase-10-followups.md): M; NOT STARTED.
 - [Phase 11 — Operational UI and dashboard](phase-11-dashboard.md): L; NOT STARTED.

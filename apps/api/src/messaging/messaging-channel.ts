@@ -1,0 +1,20 @@
+/** Re-export shared messaging types from agent-adapters for Nest API. */
+export {
+  contentDigest,
+  fixtureExternalChannelId,
+  canTransitionDelivery,
+  mapMetaStatusToDelivery,
+  verifyMetaSignature256,
+  resolveMetaGraphApiVersion,
+  resolveAppVerifyToken,
+  resolveAppSecret,
+  resolveAccessToken,
+  statusEventDigest,
+  evaluateFreeFormWindow,
+  META_WHATSAPP_PROVIDER,
+  type NormalizedInboundMessage,
+  type NormalizedStatusEvent,
+  type DeliveryState,
+  type SendResult,
+  type TransportOutcomeClass,
+} from '@ai-sales-agent/agent-adapters';

@@ -1,6 +1,6 @@
 # Phase 05 — Approved knowledge and RAG
 
-Status: NOT STARTED. Relative complexity: L. Proposed accountable owner: engineering lead with product reviewer. Dates and staffing are unestimated.
+Status: IN_PROGRESS. Relative complexity: L.
 
 ## 1. Objective
 

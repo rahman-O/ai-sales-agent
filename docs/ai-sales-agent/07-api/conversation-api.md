@@ -1,15 +1,39 @@
 # Conversation API
 
-Proposed routes; none are implemented. Shared transport/error/version rules: [API principles](api-principles.md).
+Base: `/v1/organizations/{organizationId}/conversations`. Active `OWNER` / `ADMIN` / `MEMBER` membership required. Shared transport rules: [API principles](api-principles.md).
 
-## Authority and base
+## List / read
 
-Base: `/v1/organizations/{organizationId}/conversations`. OPERATOR/ADMIN/OWNER operational access; ANALYST denied transcripts.
+| Method | Path | Notes |
+|--------|------|-------|
+| GET | `/?mode=&unassignedOnly=&assignedToMe=&cursor=&limit=` | Inbox; default sort `lastMessageAt` desc |
+| GET | `/{id}` | Conversation detail |
+| GET | `/{id}/messages?cursor=` | Timeline |
+| GET | `/events` | SSE refetch hints only |
 
-## Contracts
+## Control (CAS = `expectedOwnershipEpoch`)
 
-GET /?mode=&cursor= lists inbox; GET /{id}/messages?cursor= retrieves ordered timeline; POST /{id}/messages {text,expectedEpoch} creates a human outbound intent only for an authorized owner/claim; POST /{id}/claim, /pause, /resume and /close use expectedVersion and reason; GET /events emits scoped refetch notifications. GET /{id}/runs returns redacted evidence for permitted operators.
+| Method | Path | Authz |
+|--------|------|-------|
+| POST | `/{id}/takeover` | MEMBER+ → claim self from `AI_ACTIVE` / unassigned pause; ADMIN/OWNER may force |
+| POST | `/{id}/claim` | MEMBER+ claim unassigned `AI_PAUSED` |
+| POST | `/{id}/reassign` | ADMIN/OWNER `{ ownerUserId }` |
+| POST | `/{id}/release` | Owner or ADMIN/OWNER; stays `AI_PAUSED` |
+| POST | `/{id}/resume-ai` | ADMIN/OWNER; sets eligibility cursor; no catch-up runs |
 
-## Invariants, failure and verification
+Body includes `expectedOwnershipEpoch`. Optional `reasonCode` / `reasonText` on takeover. Stale → **409** `OWNERSHIP_CHANGED`.
 
-Claim is compare-and-swap; competing claim returns 409. Pause/resume increments epoch and suppresses stale intents. A human message cannot bypass channel policy. Test in-flight model and dispatch races; expose DISPATCHING/UNKNOWN exceptions rather than claiming recall.
+Public **`POST /{id}/mode` is hardened** — rejects arbitrary mode sets (use control ops). `HUMAN_ACTIVE` is never accepted.
+
+## Human reply
+
+`POST /{id}/replies` with header `Idempotency-Key` and body `{ text, expectedOwnershipEpoch }`.
+
+- Requires `AI_PAUSED`; assignee match or ADMIN/OWNER override
+- Creates `OUTBOUND` / `OPERATOR` / `PENDING` Message + `OutboundMessageReady`
+- Idempotency scope: organization + conversation + actor + `conversation.human_reply`
+- Same key + same payload → same Message; same key + different payload → **409 CONFLICT**
+
+## Invariants
+
+Claim is compare-and-swap; competing claim returns 409. Control increments epoch and suppresses stale `PENDING` AI. Pre-dispatch requires AI mode+authority epoch match. Expose `DISPATCHING` / `UNKNOWN` rather than claiming recall.

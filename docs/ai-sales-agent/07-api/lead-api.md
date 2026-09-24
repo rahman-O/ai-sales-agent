@@ -1,15 +1,21 @@
-# Lead API
+# Lead API (P06)
 
-Proposed routes; none are implemented. Shared transport/error/version rules: [API principles](api-principles.md).
+Base: `/v1/organizations/{organizationId}/leads`.
 
-## Authority and base
+Roles (DB): **read** OWNER|ADMIN|MEMBER; **mutate/assign** OWNER|ADMIN. Docs that mention OPERATOR map to MEMBER for read.
 
-Base: `/v1/organizations/{organizationId}/leads`. OPERATOR/ADMIN/OWNER; aggregate-only view for ANALYST through analytics API.
+## Routes
 
-## Contracts
+| Method | Path | Notes |
+|--------|------|-------|
+| GET | `/` | List; filters `status`, `customerId`, `assignedUserId` |
+| POST | `/` | Ensure/create OPEN lead (`customerId`, optional `primaryServiceId`) |
+| GET | `/{leadId}` | Detail + derived `qualificationState` |
+| GET | `/{leadId}/activities` | Append-only history |
+| PATCH | `/{leadId}` | Qualification patch; **requires `expectedVersion`** → 409 `VERSION_CONFLICT` |
+| POST | `/{leadId}/transitions` | Human transitions; DISQUALIFIED/ARCHIVED need reason vocab |
+| POST | `/{leadId}/assign` | `assignedUserId` must be ACTIVE org member (composite FK) |
+| POST | `/{leadId}/unassign` | Clear assignment |
+| POST | `/{leadId}/notes` | `NOTE_ADDED` activity |
 
-GET /?stage=&owner=&cursor=; POST / {customerId,serviceId?,interestNote?}; GET /{id}; PATCH /{id} {expectedVersion,allowed facts}; POST /{id}/transitions {expectedVersion,target,reason}; GET /{id}/history. Stage side effects from booking use backend commands, not arbitrary PATCH fields.
-
-## Invariants, failure and verification
-
-Require qualification evidence before QUALIFIED, attendance before WON, and reason for LOST. Stale edits return 409 with safe refetch guidance. Prevent duplicate open opportunities. Test concurrent create, invalid stage jumps and references to another tenant customer.
+No WON/BOOKED in P06. Ambiguity codes: `AMBIGUOUS_LEAD` (409).

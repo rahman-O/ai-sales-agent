@@ -19,6 +19,7 @@
   "dependencies": {
     "@ai-sales-agent/agent-core": "*",
     "@ai-sales-agent/contracts": "*",
+    "@ai-sales-agent/embeddings": "*",
     "pg": "8.16.3"
   },
   "devDependencies": {

@@ -1,21 +1,21 @@
 # ADR-009 — Internal booking authority
 
-Status: PROPOSED. Date: 2026-09-23. Proposed accountable owner: technical lead. Note: PostgreSQL exclusion-constraint primitive validated in Phase 00 spike; clinic system-of-record decision (Q02) still required before treating this ADR as operationally ACCEPTED.
+Status: **ACCEPTED** (internal). Date: 2026-09-24. Accountable: engineering.
 
 ## Context
 
-The platform must safely turn tenant-specific conversations into auditable business actions within a small initial operating footprint. Repository inspection found no existing architecture to migrate.
+P07 requires an appointment system of record without external calendar sync.
 
 ## Decision
 
-MVP uses PostgreSQL as the appointment system of record with transactional non-overlap and confirmed proposals.
+PostgreSQL is the appointment system of record. Confirmed bookings use transactional GiST exclusion on occupied ranges (`btree_gist`). Availability search and HMAC slot tokens are advisory; create/reschedule always revalidate. External calendar authority is deferred (non-goal for P07).
 
-## Alternatives and consequences
+## Consequences
 
-External calendar authority requires synchronization/reconciliation before pilot; pretending both commit atomically is invalid.
+- Q02 resolved for P07 as INTERNAL
+- No Google/Outlook/Apple sync in this phase
+- Hosted migration role must support `CREATE EXTENSION btree_gist` (verified PASS before P07 migration)
 
-## Validation and review trigger
+## Supersession
 
-Product resolves Q02 in P00; if external authority is required, revise P07 and critical path before implementation.
-
-Approval record: pending architecture/product review. Supersession: none.
+Supersedes PROPOSED draft that waited on Q02/external calendar.

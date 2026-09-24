@@ -215,8 +215,9 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
         await c.query(
           `INSERT INTO messages(
              id, organization_id, conversation_id, channel_connection_id, direction, origin,
-             ingress_sequence, timeline_sequence, content_text, content_digest, delivery_state
-           ) VALUES ($1,$2,$3,$4,'OUTBOUND','AI',NULL,$5,$6,$7,'PENDING')`,
+             ingress_sequence, timeline_sequence, content_text, content_digest, delivery_state,
+             authority_epoch
+           ) VALUES ($1,$2,$3,$4,'OUTBOUND','AI',NULL,$5,$6,$7,'PENDING',$8)`,
           [
             messageId,
             input.organizationId,
@@ -225,6 +226,7 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
             timeline,
             input.outboundText,
             digest,
+            row.ownership_epoch,
           ],
         );
         await c.query(
@@ -252,9 +254,16 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
             eventId,
             input.organizationId,
             JSON.stringify({
-              conversationId: input.conversationId,
-              messageId,
-              agentRunId: input.agentRunId,
+              eventId,
+              eventType: 'OutboundMessageReady',
+              organizationId: input.organizationId,
+              aggregateType: 'Message',
+              aggregateId: messageId,
+              payload: {
+                conversationId: input.conversationId,
+                messageId,
+                agentRunId: input.agentRunId,
+              },
             }),
           ],
         );
@@ -302,9 +311,25 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
           throw new Error('fence_mismatch');
         }
         const newEpoch = row.ownership_epoch + 1;
+        const pauseCode =
+          input.reasonCode &&
+          [
+            'CUSTOMER_REQUESTED_HUMAN',
+            'AI_UNCERTAIN',
+            'POLICY_REQUIRES_HUMAN',
+            'BOOKING_EXCEPTION',
+            'OPERATOR_MANUAL_TAKEOVER',
+            'OTHER',
+          ].includes(input.reasonCode)
+            ? input.reasonCode
+            : 'AI_UNCERTAIN';
         await c.query(
           `UPDATE conversations SET
              mode='AI_PAUSED', ownership_epoch=$3, processed_sequence=GREATEST(processed_sequence,$4),
+             paused_at=COALESCE(paused_at, now()),
+             pause_reason_code=$8,
+             pause_reason_text=NULL,
+             resumed_at=NULL,
              updated_at=now()
            WHERE organization_id=$1 AND id=$2
              AND lease_owner=$5 AND lease_fence=$6 AND ownership_epoch=$7`,
@@ -316,6 +341,7 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
             input.leaseOwner,
             input.leaseFence,
             input.ownershipEpoch,
+            pauseCode,
           ],
         );
         const ackId = randomUUID();
@@ -324,8 +350,9 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
         await c.query(
           `INSERT INTO messages(
              id, organization_id, conversation_id, channel_connection_id, direction, origin,
-             ingress_sequence, timeline_sequence, content_text, content_digest, delivery_state
-           ) VALUES ($1,$2,$3,$4,'OUTBOUND','SYSTEM',NULL,$5,$6,$7,'PENDING')`,
+             ingress_sequence, timeline_sequence, content_text, content_digest, delivery_state,
+             authority_epoch
+           ) VALUES ($1,$2,$3,$4,'OUTBOUND','SYSTEM',NULL,$5,$6,$7,'PENDING',$8)`,
           [
             ackId,
             input.organizationId,
@@ -334,12 +361,34 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
             row.next_timeline_sequence,
             ackText,
             digest,
+            newEpoch,
           ],
         );
         await c.query(
           `UPDATE conversations SET next_timeline_sequence = next_timeline_sequence + 1, last_message_at=now()
            WHERE organization_id=$1 AND id=$2`,
           [input.organizationId, input.conversationId],
+        );
+        const outboundEventId = randomUUID();
+        await c.query(
+          `INSERT INTO outbox_events(id, organization_id, event_type, payload_json)
+           VALUES ($1,$2,'OutboundMessageReady',$3::jsonb)`,
+          [
+            outboundEventId,
+            input.organizationId,
+            JSON.stringify({
+              eventId: outboundEventId,
+              eventType: 'OutboundMessageReady',
+              organizationId: input.organizationId,
+              aggregateType: 'Message',
+              aggregateId: ackId,
+              payload: {
+                conversationId: input.conversationId,
+                messageId: ackId,
+                agentRunId: input.agentRunId,
+              },
+            }),
+          ],
         );
         const eventId = randomUUID();
         await c.query(
@@ -349,9 +398,14 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
             eventId,
             input.organizationId,
             JSON.stringify({
-              conversationId: input.conversationId,
-              reasonCode: input.reasonCode,
-              newEpoch,
+              eventType: 'HandoffRequested',
+              organizationId: input.organizationId,
+              aggregateId: input.conversationId,
+              payload: {
+                conversationId: input.conversationId,
+                reasonCode: input.reasonCode,
+                newEpoch,
+              },
             }),
           ],
         );

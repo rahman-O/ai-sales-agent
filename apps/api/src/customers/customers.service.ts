@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { TenantContextService, type ActorContext, type TenantTxClient } from '../database/tenant-context.service.js';
 import { normalizeContact } from '../domain/value-objects.js';
 import { domainEvent } from '../domain/domain-event.js';
+import { resolveLeadMergeInTx } from '../leads/lead-merge.js';
 
 @Injectable()
 export class CustomersService {
@@ -110,6 +111,15 @@ export class CustomersService {
       const locked = await tx.$queryRaw<Array<{ id: string; archived_at: Date | null; merged_into_id: string | null }>>`
         SELECT id, archived_at, merged_into_id FROM customers WHERE organization_id=${organizationId}::uuid AND id IN (${canonicalId}::uuid, ${sourceId}::uuid) ORDER BY id FOR UPDATE`;
       if (locked.length !== 2 || locked.some((x: { archived_at: Date | null; merged_into_id: string | null }) => x.archived_at || x.merged_into_id)) throw new ConflictException('Customer merge state conflict');
+      // P06: lock OPEN leads deterministically, archive collision losers, then reparent
+      await tx.$queryRaw`
+        SELECT id FROM leads
+        WHERE organization_id = ${organizationId}::uuid
+          AND customer_id IN (${canonicalId}::uuid, ${sourceId}::uuid)
+          AND status IN ('NEW', 'ENGAGED', 'QUALIFIED', 'NURTURE')
+        ORDER BY id
+        FOR UPDATE`;
+      await resolveLeadMergeInTx(tx, organizationId, canonicalId, sourceId);
       await tx.customerIdentity.updateMany({ where: { organizationId, customerId: sourceId }, data: { customerId: canonicalId } });
       // P03: keep Conversation.customerId aligned with identity canonical ownership
       await tx.conversation.updateMany({ where: { organizationId, customerId: sourceId }, data: { customerId: canonicalId, version: { increment: 1 } } });

@@ -52,6 +52,41 @@ export const P04_TOOL_NAMES = [
 
 export type P04ToolName = (typeof P04_TOOL_NAMES)[number];
 
+/** P05 tools — opt-in via new AgentConfig allowlist; never silently granted to old ACTIVE configs. */
+export const P05_TOOL_NAMES = ['searchKnowledge'] as const;
+
+export type P05ToolName = (typeof P05_TOOL_NAMES)[number];
+
+/** P06 tools — opt-in via new AgentConfig allowlist; never silently granted to old ACTIVE configs. */
+export const P06_TOOL_NAMES = [
+  'ensureLead',
+  'updateLeadQualification',
+  'getLead',
+  'transitionLead',
+] as const;
+
+export type P06ToolName = (typeof P06_TOOL_NAMES)[number];
+
+/** P07 tools — opt-in via new AgentConfig allowlist; never silently granted to old ACTIVE configs. */
+export const P07_TOOL_NAMES = [
+  'getAvailableSlots',
+  'createBooking',
+  'getBookings',
+  'cancelBooking',
+  'rescheduleBooking',
+] as const;
+
+export type P07ToolName = (typeof P07_TOOL_NAMES)[number];
+
+export const ALL_REGISTERED_TOOL_NAMES = [
+  ...P04_TOOL_NAMES,
+  ...P05_TOOL_NAMES,
+  ...P06_TOOL_NAMES,
+  ...P07_TOOL_NAMES,
+] as const;
+
+export type RegisteredToolName = (typeof ALL_REGISTERED_TOOL_NAMES)[number];
+
 export const AgentRunTerminalStatus = z.enum([
   'SUCCEEDED',
   'FAILED',

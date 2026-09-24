@@ -14,6 +14,11 @@
     "@ai-sales-agent/agent-adapters": "*",
     "@ai-sales-agent/agent-core": "*",
     "@ai-sales-agent/config": "*",
+    "@ai-sales-agent/embeddings": "*",
+    "@ai-sales-agent/knowledge-chunking": "*",
+    "@ai-sales-agent/storage": "*",
+    "@prisma/adapter-pg": "7.10.0",
+    "@prisma/client": "7.10.0",
     "bullmq": "5.58.5",
     "ioredis": "5.7.0",
     "pg": "8.16.3"
