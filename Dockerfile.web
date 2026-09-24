@@ -1,0 +1,53 @@
+# CANONICAL DEMO WEB RUNTIME — Next.js production server
+# Browser → http://localhost:3000 (BFF); server → http://api:3001
+# syntax=docker/dockerfile:1.7
+
+FROM node:24-bookworm AS build
+WORKDIR /app
+
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
+ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+ENV NEXT_TELEMETRY_DISABLED=1
+
+COPY package.json package-lock.json ./
+COPY apps/api/package.json apps/api/
+COPY apps/worker/package.json apps/worker/
+COPY apps/web/package.json apps/web/
+COPY packages/config/package.json packages/config/
+COPY packages/contracts/package.json packages/contracts/
+COPY packages/embeddings/package.json packages/embeddings/
+COPY packages/knowledge-chunking/package.json packages/knowledge-chunking/
+COPY packages/storage/package.json packages/storage/
+COPY packages/agent-core/package.json packages/agent-core/
+COPY packages/agent-adapters/package.json packages/agent-adapters/
+
+RUN npm ci
+
+COPY apps/web apps/web
+COPY packages/config packages/config
+COPY packages/contracts packages/contracts
+
+RUN npm run build -w @ai-sales-agent/config \
+  && npm run build -w @ai-sales-agent/contracts \
+  && npm run build -w @ai-sales-agent/web
+
+FROM node:24-bookworm-slim AS runtime
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+LABEL ai.sales.agent.component="web"
+LABEL ai.sales.agent.phase="pre-p14-demo"
+
+COPY --from=build /app/package.json /app/package-lock.json ./
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/apps/web ./apps/web
+COPY --from=build /app/packages/config ./packages/config
+COPY --from=build /app/packages/contracts ./packages/contracts
+
+EXPOSE 3000
+HEALTHCHECK --interval=10s --timeout=5s --retries=30 --start-period=30s \
+  CMD node -e "fetch('http://127.0.0.1:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+
+CMD ["npm", "run", "start", "-w", "@ai-sales-agent/web"]

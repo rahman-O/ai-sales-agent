@@ -2,7 +2,11 @@
 
 Date: 2026-09-24.
 
-## PHASE 08 STATUS: CLOSED
+## PHASE 08 ENGINEERING: CLOSED
+
+## P08 LIVE_PROVIDER_ACCEPTANCE: NOT_RUN
+
+Reason: Meta sandbox/provider action remains pending with a human owner. This does not reopen the engineering closure. It is carried forward as a P13/P14 pilot-readiness dependency.
 
 ## PROVIDER
 Meta WhatsApp Cloud API (`provider=meta_whatsapp`)
@@ -40,13 +44,13 @@ Meta WhatsApp Cloud API (`provider=meta_whatsapp`)
 | MEDIA | **DEFERRED** (inbound metadata only) |
 | SECRET BOUNDARY | **PASS** |
 | MINIMAL UI | **PASS** |
-| LIVE_PROVIDER_ACCEPTANCE | **NOT_RUN** (sandbox credentials unavailable) |
+| LIVE_PROVIDER_ACCEPTANCE | **NOT_RUN** (human Meta sandbox/provider action pending) |
 | P01–P07 REGRESSIONS | **PASS** — 17/17 integration (incl. phase08) |
 | BUILD / TYPECHECK (api, worker, web, adapters) | **PASS** |
 
 ## REMAINING BLOCKERS
 
-NONE (engineering). Live Meta sandbox remains a human action for LIVE_PROVIDER_ACCEPTANCE only.
+NONE (engineering). Live Meta sandbox/provider acceptance is a P13/P14 readiness dependency only.
 
 ## TECHNICALLY_READY_FOR_P09
 

@@ -1,4 +1,4 @@
-import { Injectable, OnModuleDestroy } from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy } from '@nestjs/common';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { pathToFileURL } from 'node:url';
 import path from 'node:path';
@@ -26,7 +26,7 @@ export class PrismaService implements OnModuleDestroy {
   readonly client: any;
   private readonly pool: Pool;
 
-  constructor(config: AppConfigService) {
+  constructor(@Inject(AppConfigService) config: AppConfigService) {
     this.pool = createAppPool(config.databaseUrl, {
       max: 2,
       connectionTimeoutMillis: 20_000,

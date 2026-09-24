@@ -1,6 +1,6 @@
 # Phase 12 — Usage, funnel and business outcomes
 
-Status: NOT STARTED. Relative complexity: M. Proposed accountable owner: engineering lead with product reviewer. Dates and staffing are unestimated.
+Status: **CLOSED**. Relative complexity: M. Proposed accountable owner: engineering lead with product reviewer. Dates and staffing are unestimated. See the [validation report](phase-12-validation-report.md), [discovery report](phase-12-discovery-report.md), and [locked metric definitions](phase-12-metric-definitions-lock.md).
 
 ## 1. Objective
 
@@ -16,7 +16,7 @@ P07 and P11 CLOSED; domain/usage events have been captured since prior phases. P
 
 ## 4. Scope
 
-Replay-safe daily projections, cohort funnel, cost/usage reconciliation, attendance/revenue evidence, scoped reports and exports.
+The authoritative resolved MVP scope is `analytics_overview:v1`: bounded direct SQL over existing evidence, cohort and event conversion, follow-up associations, response and delivery metrics, workload, agent/tool/token usage, completeness labels, and explicit unavailable states. Projections, exports, versioned cost tariffs, and attendance/revenue workflows are deferred.
 
 ## 5. Out of Scope
 
@@ -28,15 +28,15 @@ Analytics reads domain events/projections; no influence on transactional booking
 
 ## 7. Files / Modules Expected
 
-Likely implementation locations: apps/api/src/modules/analytics; apps/worker/analytics; apps/web/analytics; prisma/migrations.
+Implemented under `apps/api/src/analytics`, the web analytics route/page, and integration tests. No worker projection or Prisma migration was required for the resolved scope.
 
 ## 8. Data Model Changes
 
-Consumer receipts, projection tables, versioned tariff metadata and RevenueRecord; retain source event IDs and correction references.
+None. Existing evidence tables are queried directly within bounded tenant and date ranges.
 
 ## 9. APIs
 
-GET /analytics/funnel, /usage, /cost, /outcomes with cohort/date filters; POST /analytics/exports; POST /bookings/{id}/revenue-records for authorized verified manual outcome.
+`GET /organizations/{organizationId}/analytics/overview` with local-date, IANA timezone, and bounded-range filters.
 
 ## 10. Business Rules
 
@@ -44,12 +44,12 @@ Duplicate events do not double count; unknown outcomes stay unknown; currencies 
 
 ## 11. Implementation Tasks
 
-- [ ] P12-T001: Implement versioned event-to-fact projections. Verification: Full replay twice yields identical totals.
-- [ ] P12-T002: Implement cohort and attribution rules. Verification: Multiple bookings per lead do not inflate lead conversion.
-- [ ] P12-T003: Implement usage/tariff reconciliation. Verification: Timeout/fallback charges and duplicate imports reconcile correctly.
-- [ ] P12-T004: Add verified attendance/revenue correction workflow. Verification: Corrections preserve source/actor history and distinguish booked value.
-- [ ] P12-T005: Build scoped reports with freshness and sample size. Verification: Analyst sees aggregates without unauthorized transcript access.
-- [ ] P12-T006: Reconcile fixture and pilot sample to source IDs. Verification: Every reported conversion/cost can be traced to evidence.
+- [x] P12-T001: Lock definitions, completeness states, attribution labels, and bounded timezone semantics.
+- [x] P12-T002: Implement tenant-scoped overview aggregates and direct/associated conversion rules.
+- [x] P12-T003: Implement agent, tool and token usage; report cost as unavailable without a versioned tariff ledger.
+- [x] P12-T004: Keep attendance and verified revenue unavailable until authoritative facts exist.
+- [x] P12-T005: Build the ADMIN/OWNER-scoped aggregate API and operator UI without transcript or customer PII exposure.
+- [x] P12-T006: Validate deterministic synthetic data, tenant isolation, regressions and query plans.
 
 ## 12. Testing Requirements
 
@@ -68,10 +68,10 @@ Aggregate role boundaries, audited exports, small-cohort controls and PII-free f
 
 ## 15. Acceptance Criteria
 
-- [ ] Funnel counts reconcile to source events without duplicate effects.
-- [ ] Booked value, attendance and verified revenue remain distinct.
-- [ ] Missing usage/outcomes are labeled rather than treated as zero.
-- [ ] Exports and trace drill-down enforce tenant and role permissions.
+- [x] Funnel counts reconcile to existing source evidence with explicit denominators.
+- [x] Booking facts remain distinct from unavailable attendance and verified revenue.
+- [x] Missing usage/outcomes are labeled rather than treated as zero.
+- [x] Overview access enforces tenant and ADMIN/OWNER role permissions.
 
 ## 16. Exit Criteria
 

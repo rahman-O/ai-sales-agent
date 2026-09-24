@@ -1,6 +1,6 @@
 # Phase 05 — Approved knowledge and RAG
 
-Status: IN_PROGRESS. Relative complexity: L.
+Status: **CLOSED**. Relative complexity: L. See [closure](phase-05-closure.md).
 
 ## 1. Objective
 

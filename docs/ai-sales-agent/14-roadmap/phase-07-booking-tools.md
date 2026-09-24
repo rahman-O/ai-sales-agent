@@ -1,6 +1,6 @@
 # Phase 07 — Services, availability and safe booking
 
-Status: NOT STARTED. Relative complexity: XL. Proposed accountable owner: engineering lead with product reviewer. Dates and staffing are unestimated.
+Status: **CLOSED**. Relative complexity: XL. Proposed accountable owner: engineering lead with product reviewer. Dates and staffing are unestimated. See [closure](phase-07-closure.md).
 
 ## 1. Objective
 

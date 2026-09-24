@@ -24,6 +24,11 @@ export const serverEnvSchema = z.object({
     .string()
     .optional()
     .transform((v) => v === 'true'),
+  /** Global emergency AI disable (all orgs). Org-scoped column remains the primary pilot control. */
+  AI_EMERGENCY_DISABLE_ALL: z
+    .string()
+    .optional()
+    .transform((v) => v === 'true'),
 });
 
 /** Prisma CLI / seed privileged tooling only. */
@@ -65,20 +70,37 @@ function parseEnvFile(filePath: string): Record<string, string> {
 /** Keys never applied from project env files (framework/runtime owns them). */
 const ENV_FILE_SKIP_KEYS = new Set(['NODE_ENV']);
 
+/** When DEMO_FORCE_LOCAL_DB=1, do not let .env.local override DB connection targets. */
+const DEMO_LOCAL_DB_SKIP_FROM_ENV_LOCAL = new Set([
+  'DATABASE_URL',
+  'MIGRATION_DATABASE_URL',
+  'REDIS_URL',
+  'APP_RUNTIME_DB_HOST',
+  'APP_RUNTIME_DB_PASSWORD',
+  'APP_RUNTIME_DB_USER',
+  'APP_RUNTIME_DB_NAME',
+  'APP_RUNTIME_DB_PORT',
+  'APP_RUNTIME_DB_PARAMS',
+  'CONNECTION_MODE',
+]);
+
 /**
  * Canonical local env loader: `.env` then `.env.local` (local wins).
  * Never logs secret values. Used by Nest, worker, Prisma config, and scripts.
  * Skips `NODE_ENV` so Next.js / Node tooling can set it per command.
+ * PATH B: `DEMO_FORCE_LOCAL_DB=1` keeps Auth from `.env.local` but DB URLs from `.env`/shell.
  */
 export function loadLocalEnv(cwd: string = process.cwd()): void {
   const fromEnv = parseEnvFile(path.join(cwd, '.env'));
   const fromLocal = parseEnvFile(path.join(cwd, '.env.local'));
+  const forceLocalDb = process.env.DEMO_FORCE_LOCAL_DB === '1';
   for (const [key, value] of Object.entries(fromEnv)) {
     if (ENV_FILE_SKIP_KEYS.has(key)) continue;
     if (process.env[key] === undefined) process.env[key] = value;
   }
   for (const [key, value] of Object.entries(fromLocal)) {
     if (ENV_FILE_SKIP_KEYS.has(key)) continue;
+    if (forceLocalDb && DEMO_LOCAL_DB_SKIP_FROM_ENV_LOCAL.has(key)) continue;
     process.env[key] = value;
   }
 }

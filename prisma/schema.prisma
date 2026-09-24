@@ -24,6 +24,10 @@ model User {
 model Organization {
   id                 String              @id @default(uuid()) @db.Uuid
   name               String
+  /// When set, workers must not start new AgentRuns for this org (P13 emergency kill).
+  aiEmergencyDisabledAt      DateTime? @map("ai_emergency_disabled_at") @db.Timestamptz(6)
+  aiEmergencyDisabledReason  String?   @map("ai_emergency_disabled_reason")
+  aiEmergencyDisabledByUserId String?  @map("ai_emergency_disabled_by_user_id") @db.Uuid
   createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
   members            OrganizationMember[]

@@ -4,6 +4,7 @@ import {
   FakeModelProvider,
   resolveProductionProvider,
   runAgentOrchestrator,
+  tryCreateZeroCostDemoProvider,
   type ConversationSnapshot,
 } from '@ai-sales-agent/agent-core';
 import { createPgRunStore } from './pg-run-store.js';
@@ -185,18 +186,31 @@ export async function runConversationAgent(opts: {
 
   const prod = resolveProductionProvider(process.env);
   const allowFake = process.env.NODE_ENV !== 'production' || process.env.AI_ALLOW_FAKE === 'true';
-  const provider =
-    prod ??
-    (allowFake
-      ? new FakeModelProvider({
-          kind: 'final',
-          text: 'شكرًا على رسالتك. كيف يمكنني مساعدتك؟',
-        })
-      : null);
+  const targetInbound = snap.messages.find(
+    (m) => m.direction === 'INBOUND' && m.ingressSequence === snap.targetIngressSequence,
+  );
+  const wantsDemo = process.env.ZERO_COST_DEMO === '1';
+  const demoProvider = tryCreateZeroCostDemoProvider({
+    confirmationMessageId: targetInbound?.id ?? null,
+    serviceId: process.env.DEMO_SERVICE_ID?.trim() || null,
+    inboundText: targetInbound?.contentText ?? '',
+  });
+
+  let provider = prod;
+  if (!provider && wantsDemo) {
+    if (!demoProvider) {
+      return { terminal: 'FAILED', reason: 'scripted_demo_provider_unavailable' };
+    }
+    provider = demoProvider;
+  } else if (!provider && allowFake) {
+    provider = new FakeModelProvider({
+      kind: 'final',
+      text: 'شكرًا على رسالتك. كيف يمكنني مساعدتك؟',
+    });
+  }
   if (!provider) {
     return { terminal: 'FAILED', reason: 'no_production_provider' };
   }
-
   const result = await runAgentOrchestrator(snap, {
     provider,
     tools,

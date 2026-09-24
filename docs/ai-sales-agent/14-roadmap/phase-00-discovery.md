@@ -1,6 +1,6 @@
 # Phase 00 — Discovery and architecture validation
 
-Status: IN REVIEW — **TECHNICAL READY_FOR_P01**; pilot/product items deferred to later gates. Relative complexity: M. Proposed accountable owner: product and technical leads. See [closure report](phase-00-closure.md) and [technical readiness](phase-00-technical-readiness.md).
+Status: **CLOSED — READY_FOR_P01**; pilot/product items remain deferred to later gates. Relative complexity: M. Proposed accountable owner: product and technical leads. See [closure report](phase-00-closure.md) and [technical readiness](phase-00-technical-readiness.md).
 
 ## 1. Objective
 

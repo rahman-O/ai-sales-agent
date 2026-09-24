@@ -1,0 +1,214 @@
+# PRE-P14 local Docker demo stack — zero-cost, no Meta, no hosted DB.
+# Host seed/reset still targets 127.0.0.1:5433 (do not weaken assert-local-demo-db).
+#
+# Usage:
+#   npm run demo:up
+#   npm run demo:reseed
+#   npm run demo:verify
+#   open http://localhost:3000
+#
+# TEI (knowledge embeddings): include profile
+#   docker compose -f docker-compose.demo.yml --profile knowledge up -d
+
+name: ai-sales-demo
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: ai-sales-demo-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ai_sales_agent}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env.demo.local}
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - ai_sales_demo_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-ai_sales_agent}"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    networks:
+      - demo
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: ai-sales-demo-redis
+    ports:
+      - "127.0.0.1:6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    networks:
+      - demo
+
+  tei:
+    profiles: ["knowledge"]
+    image: ${TEI_IMAGE:-ghcr.io/huggingface/text-embeddings-inference:cpu-1.9}
+    container_name: ai-sales-demo-tei
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ai_sales_demo_hf_cache:/data
+    command:
+      - "--model-id"
+      - "Qwen/Qwen3-Embedding-0.6B"
+      - "--revision"
+      - "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3"
+      - "--dtype"
+      - "float32"
+      - "--max-batch-tokens"
+      - "2048"
+      - "--max-concurrent-requests"
+      - "4"
+    environment:
+      HF_HUB_ENABLE_HF_TRANSFER: "0"
+    mem_limit: 12g
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -qO- http://127.0.0.1:80/health >/dev/null 2>&1 || wget -qO- http://127.0.0.1:80/info >/dev/null 2>&1 || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 120s
+    networks:
+      - demo
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.migrate
+    container_name: ai-sales-demo-migrate
+    environment:
+      NODE_ENV: development
+      MIGRATION_DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ai_sales_agent}
+      APP_RUNTIME_DB_PASSWORD: ${APP_RUNTIME_DB_PASSWORD:?set APP_RUNTIME_DB_PASSWORD in .env.demo.local}
+      ALLOW_RUNTIME_ROLE_PROVISION: "true"
+      # provision script must not rewrite host .env.local inside container
+      WRITE_DATABASE_URL_FROM_MIGRATION_HOST: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - demo
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: ai-sales-demo-api
+    environment:
+      # Override image default production so Fake/ZERO_COST_DEMO gates work
+      NODE_ENV: development
+      DEMO_DB_TARGET: LOCAL
+      DEMO_FORCE_LOCAL_DB: "1"
+      AI_ALLOW_FAKE: "true"
+      ZERO_COST_DEMO: "1"
+      APP_URL: http://localhost:3000
+      API_URL: http://localhost:3001
+      DATABASE_URL: postgresql://app_runtime:${APP_RUNTIME_DB_PASSWORD}@postgres:5432/${POSTGRES_DB:-ai_sales_agent}
+      MIGRATION_DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ai_sales_agent}
+      REDIS_URL: redis://redis:6379
+      EMBEDDING_LOCAL_BASE_URL: http://tei:80
+      BOOKING_SLOT_TOKEN_SECRET: ${BOOKING_SLOT_TOKEN_SECRET:?set BOOKING_SLOT_TOKEN_SECRET in .env.demo.local}
+      SUPABASE_URL: ${SUPABASE_URL:?set SUPABASE_URL in .env.demo.local}
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:-}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:-}
+      PORT: "3001"
+    ports:
+      - "127.0.0.1:3001:3001"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://127.0.0.1:3001/health/live').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\"",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+    networks:
+      - demo
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: ai-sales-demo-worker
+    environment:
+      NODE_ENV: development
+      DEMO_DB_TARGET: LOCAL
+      DEMO_FORCE_LOCAL_DB: "1"
+      AI_ALLOW_FAKE: "true"
+      ZERO_COST_DEMO: "1"
+      APP_URL: http://localhost:3000
+      API_URL: http://localhost:3001
+      DATABASE_URL: postgresql://app_runtime:${APP_RUNTIME_DB_PASSWORD}@postgres:5432/${POSTGRES_DB:-ai_sales_agent}
+      MIGRATION_DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ai_sales_agent}
+      REDIS_URL: redis://redis:6379
+      EMBEDDING_LOCAL_BASE_URL: http://tei:80
+      BOOKING_SLOT_TOKEN_SECRET: ${BOOKING_SLOT_TOKEN_SECRET:?set BOOKING_SLOT_TOKEN_SECRET in .env.demo.local}
+      SUPABASE_URL: ${SUPABASE_URL:?set SUPABASE_URL in .env.demo.local}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    networks:
+      - demo
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      args:
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:?set NEXT_PUBLIC_SUPABASE_URL in .env.demo.local}
+        NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:?set NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY in .env.demo.local}
+    container_name: ai-sales-demo-web
+    environment:
+      NODE_ENV: production
+      APP_URL: http://localhost:3000
+      # Server-side BFF → Docker DNS (browser never sees this)
+      API_URL: http://api:3001
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://127.0.0.1:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\"",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    networks:
+      - demo
+
+volumes:
+  ai_sales_demo_postgres:
+  ai_sales_demo_hf_cache:
+
+networks:
+  demo:
+    name: ai-sales-demo-net

@@ -1,6 +1,6 @@
 # Phase 08 — WhatsApp transport integration
 
-Status: NOT STARTED. Relative complexity: L. Proposed accountable owner: engineering lead with product reviewer. Dates and staffing are unestimated.
+Status: **ENGINEERING CLOSED**. Relative complexity: L. Live provider acceptance is **NOT_RUN** pending human Meta sandbox/provider action; it is a P13/P14 readiness dependency. See [closure](phase-08-closure.md).
 
 ## 1. Objective
 

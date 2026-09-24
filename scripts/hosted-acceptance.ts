@@ -514,11 +514,11 @@ async function runAuthTrustChain(evidence: Evidence, migPool: Pool, runtimePool:
   // Fixed npm argv — no shell (avoids DEP0190).
   const build = spawnSync(
     process.platform === 'win32' ? 'npm.cmd' : 'npm',
-    ['run', 'build', '-w', '@ai-sales-agent/config', '-w', '@ai-sales-agent/contracts', '-w', '@ai-sales-agent/api'],
-    { cwd: process.cwd(), env: process.env, encoding: 'utf8' },
+    ['run', 'build', '-w', '@ai-sales-agent/config', '-w', '@ai-sales-agent/contracts', '-w', '@ai-sales-agent/embeddings', '-w', '@ai-sales-agent/knowledge-chunking', '-w', '@ai-sales-agent/storage', '-w', '@ai-sales-agent/agent-core', '-w', '@ai-sales-agent/agent-adapters', '-w', '@ai-sales-agent/api'],
+    { cwd: process.cwd(), env: process.env, encoding: 'utf8', shell: process.platform === 'win32' },
   );
   if (build.status !== 0) {
-    throw new Error(`api build failed: ${(build.stderr || build.stdout || '').slice(0, 300)}`);
+    throw new Error(`api build failed: ${(build.error?.message || build.stderr || build.stdout || '').slice(0, 300)}`);
   }
 
   // PORT wins over API_URL from .env.local (loadLocalEnv in child would otherwise clobber 3011→3001).

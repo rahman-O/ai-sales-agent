@@ -1,0 +1,26 @@
+# One-shot migrate + app_runtime password provision for demo compose
+# syntax=docker/dockerfile:1.7
+
+FROM node:24-bookworm
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+COPY apps/api/package.json apps/api/
+COPY apps/worker/package.json apps/worker/
+COPY apps/web/package.json apps/web/
+COPY packages/config/package.json packages/config/
+COPY packages/contracts/package.json packages/contracts/
+COPY packages/embeddings/package.json packages/embeddings/
+COPY packages/knowledge-chunking/package.json packages/knowledge-chunking/
+COPY packages/storage/package.json packages/storage/
+COPY packages/agent-core/package.json packages/agent-core/
+COPY packages/agent-adapters/package.json packages/agent-adapters/
+COPY prisma ./prisma
+COPY prisma.config.ts ./prisma.config.ts
+COPY scripts ./scripts
+COPY packages/config ./packages/config
+
+RUN npm ci
+
+# Local/demo Postgres has no Supabase rls_auto_enable(); stub so P13 revoke migration can apply.
+CMD ["sh", "-c", "npx tsx scripts/demo/prepare-local-migrate.ts && npx prisma migrate deploy && npx tsx scripts/db-provision-runtime-role.ts"]

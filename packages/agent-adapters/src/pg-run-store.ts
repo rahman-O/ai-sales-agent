@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import type { Pool, PoolClient } from 'pg';
 import type { RunStorePort } from '@ai-sales-agent/agent-core';
+import { shouldBlockNewAgentRuns } from './ai-emergency-kill.js';
 
 async function withTenant<T>(
   pool: Pool,
@@ -35,6 +36,18 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
   return {
     async createOrResumeRun(input) {
       return withTenant(pool, input.organizationId, systemUserId, async (c) => {
+        const orgKill = await c.query<{ ai_emergency_disabled_at: Date | null }>(
+          `SELECT ai_emergency_disabled_at FROM organizations WHERE id=$1`,
+          [input.organizationId],
+        );
+        const kill = shouldBlockNewAgentRuns({
+          env: process.env,
+          org: orgKill.rows[0] ?? null,
+        });
+        if (kill.blocked) {
+          throw new Error(`ai_emergency_kill:${kill.reason ?? 'ORG'}`);
+        }
+
         const existing = await c.query<{ id: string; status: string }>(
           `SELECT id, status FROM agent_runs WHERE organization_id=$1 AND run_key=$2`,
           [input.organizationId, input.runKey],

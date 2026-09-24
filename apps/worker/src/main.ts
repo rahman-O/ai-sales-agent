@@ -3,6 +3,7 @@ import {
   dispatchOutboundMessage,
   executeFollowUp,
   runConversationAgent,
+  shouldBlockNewAgentRuns,
 } from '@ai-sales-agent/agent-adapters';
 import { Queue, Worker } from 'bullmq';
 import { Redis } from 'ioredis';
@@ -39,7 +40,8 @@ async function main() {
       : undefined,
   });
 
-  const queue = new Queue(CONVERSATION_QUEUE, { connection });
+  // BullMQ and ioredis ship overlapping Redis typings under npm workspaces; runtime is fine.
+  const queue = new Queue(CONVERSATION_QUEUE, { connection: connection as never });
 
   async function claimOutbox(batch = 25): Promise<ClaimRow[]> {
     const { rows } = await pool.query<ClaimRow>(
@@ -205,6 +207,34 @@ async function main() {
     if (mode !== 'AI_ACTIVE' || targetIngressSequence <= aiEligibleAfter) {
       // Early returns already handled above; defensive guard.
       return { drained: 0 };
+    }
+
+    // P13: org/global emergency AI kill — inbound already durable; do not start AgentRuns.
+    const orgKill = await pool.query<{ ai_emergency_disabled_at: Date | null }>(
+      `SELECT ai_emergency_disabled_at FROM organizations WHERE id = $1::uuid`,
+      [organizationId],
+    );
+    const kill = shouldBlockNewAgentRuns({
+      env: process.env,
+      org: orgKill.rows[0] ?? null,
+    });
+    if (kill.blocked) {
+      console.log(
+        JSON.stringify({
+          msg: 'ai_emergency_kill_block_agent_run',
+          organizationId,
+          conversationId,
+          reason: kill.reason,
+        }),
+      );
+      return {
+        drained: 0,
+        heldForAiEmergencyKill: true,
+        killReason: kill.reason,
+        leaseFence,
+        ownershipEpoch,
+        targetIngressSequence,
+      };
     }
 
     const result = await runConversationAgent({
@@ -445,7 +475,7 @@ async function main() {
 
       return { ok: true, organizationId };
     },
-    { connection },
+    { connection: connection as never },
   );
 
   worker.on('failed', (job, err) => {
@@ -478,10 +508,34 @@ async function main() {
     }
   };
 
+  let stopping = false;
   await tick();
-  setInterval(() => {
-    void tick();
+  const interval = setInterval(() => {
+    if (!stopping) void tick();
   }, 5000);
+
+  const shutdown = async (signal: string) => {
+    if (stopping) return;
+    stopping = true;
+    clearInterval(interval);
+    console.log(JSON.stringify({ msg: 'worker_shutdown_started', signal }));
+    const force = setTimeout(() => process.exit(1), 30_000);
+    force.unref();
+    try {
+      // BullMQ stops fetching new jobs and waits for the current handler.
+      await worker.close();
+      await queue.close();
+      await connection.quit();
+      await pool.end();
+      console.log(JSON.stringify({ msg: 'worker_shutdown_complete', signal }));
+      process.exit(0);
+    } catch (error) {
+      console.error(JSON.stringify({ msg: 'worker_shutdown_failed', signal, error: String(error) }));
+      process.exit(1);
+    }
+  };
+  process.once('SIGTERM', () => void shutdown('SIGTERM'));
+  process.once('SIGINT', () => void shutdown('SIGINT'));
 
   console.log(JSON.stringify({ msg: 'worker_ready', queue: CONVERSATION_QUEUE }));
 }

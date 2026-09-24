@@ -1,0 +1,69 @@
+# CANONICAL_PILOT_RUNTIME_ARTIFACT — worker
+# BUILD installs Prisma CLI for generate of shared packages if needed; RUNTIME excludes CLI chain.
+# Worker executes via pg + BullMQ; generated Prisma client is not required for worker boot,
+# but workspace packages that depend on @prisma/client must resolve without the CLI.
+# syntax=docker/dockerfile:1.7
+
+FROM node:24-bookworm AS build
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+COPY apps/api/package.json apps/api/
+COPY apps/worker/package.json apps/worker/
+COPY apps/web/package.json apps/web/
+COPY packages/config/package.json packages/config/
+COPY packages/contracts/package.json packages/contracts/
+COPY packages/embeddings/package.json packages/embeddings/
+COPY packages/knowledge-chunking/package.json packages/knowledge-chunking/
+COPY packages/storage/package.json packages/storage/
+COPY packages/agent-core/package.json packages/agent-core/
+COPY packages/agent-adapters/package.json packages/agent-adapters/
+COPY prisma ./prisma
+
+RUN npm ci
+
+COPY apps/worker apps/worker
+COPY packages packages
+COPY scripts scripts
+
+RUN npx prisma generate \
+  && npm run build -w @ai-sales-agent/config \
+  && npm run build -w @ai-sales-agent/contracts \
+  && npm run build -w @ai-sales-agent/embeddings \
+  && npm run build -w @ai-sales-agent/knowledge-chunking \
+  && npm run build -w @ai-sales-agent/storage \
+  && npm run build -w @ai-sales-agent/agent-core \
+  && npm run build -w @ai-sales-agent/agent-adapters \
+  && npm run build -w @ai-sales-agent/worker
+
+RUN npm prune --omit=dev \
+  && rm -rf node_modules/prisma \
+            node_modules/@prisma/engines \
+            node_modules/@prisma/engines-version \
+            node_modules/@prisma/fetch-engine \
+            node_modules/@prisma/get-platform \
+            node_modules/@prisma/config \
+            node_modules/mysql2 \
+            node_modules/deepmerge-ts \
+            node_modules/tsx \
+            node_modules/typescript
+
+FROM node:24-bookworm-slim AS runtime
+WORKDIR /app
+ENV NODE_ENV=production
+LABEL CANONICAL_PILOT_RUNTIME_ARTIFACT="true"
+LABEL ai.sales.agent.component="worker"
+LABEL ai.sales.agent.phase="13"
+
+COPY --from=build /app/package.json /app/package-lock.json ./
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/apps/worker/package.json ./apps/worker/
+COPY --from=build /app/apps/worker/dist ./apps/worker/dist
+COPY --from=build /app/packages ./packages
+COPY --from=build /app/prisma/generated ./prisma/generated
+COPY --from=build /app/prisma/schema.prisma ./prisma/schema.prisma
+
+RUN node -e "const fs=require('fs'); const assert=!fs.existsSync('node_modules/prisma')&&!fs.existsSync('node_modules/mysql2')&&!fs.existsSync('node_modules/deepmerge-ts'); if(!assert){console.error('FORBIDDEN_RUNTIME_DEPS'); process.exit(1);} console.log('RUNTIME_DEP_ABSENCE_OK');" \
+  && test -f apps/worker/dist/main.js
+
+CMD ["node", "apps/worker/dist/main.js"]

@@ -10,3 +10,4 @@ export * from './messaging/meta-whatsapp.channel.js';
 export * from './messaging/outbound-dispatch.js';
 export * from './followups/quiet-hours.js';
 export * from './followups/execute-followup.js';
+export * from './ai-emergency-kill.js';

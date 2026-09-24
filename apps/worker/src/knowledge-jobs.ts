@@ -222,10 +222,10 @@ export async function handleKnowledgeOutboxEvent(input: {
       return r.rows;
     });
 
-    let provider = resolveEmbeddingProvider(process.env);
-    if (!provider && process.env.NODE_ENV === 'test' && process.env.AI_ALLOW_FAKE === 'true') {
-      provider = new FakeEmbeddingProvider(PROFILE.dimension);
-    }
+    const provider =
+      process.env.NODE_ENV === 'test' && process.env.AI_ALLOW_FAKE === 'true'
+        ? new FakeEmbeddingProvider(PROFILE.dimension)
+        : resolveEmbeddingProvider(process.env);
     if (!provider) {
       return { handled: true, result: { ok: false, reason: 'tei_unavailable' } };
     }

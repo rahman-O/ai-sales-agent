@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 const LINKS: Array<{ href: string; label: string }> = [
   { href: '/dashboard', label: 'Dashboard' },
+  { href: '/analytics', label: 'Analytics' },
   { href: '/inbox', label: 'Inbox' },
   { href: '/leads', label: 'Leads' },
   { href: '/bookings', label: 'Bookings' },

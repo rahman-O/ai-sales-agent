@@ -14,8 +14,10 @@ import { MessagingModule } from './messaging/messaging.module.js';
 import { FollowUpsModule } from './followups/followups.module.js';
 import { TemplatesModule } from './templates/templates.module.js';
 import { DashboardModule } from './dashboard/dashboard.module.js';
+import { AnalyticsModule } from './analytics/analytics.module.js';
 import { HealthModule } from './health/health.module.js';
 import { RequestIdMiddleware } from './common/request-id.middleware.js';
+import { SecurityHeadersAndRateLimitMiddleware } from './common/security.middleware.js';
 
 @Module({
   imports: [
@@ -34,11 +36,12 @@ import { RequestIdMiddleware } from './common/request-id.middleware.js';
     FollowUpsModule,
     TemplatesModule,
     DashboardModule,
+    AnalyticsModule,
     HealthModule,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RequestIdMiddleware).forRoutes('*');
+    consumer.apply(RequestIdMiddleware, SecurityHeadersAndRateLimitMiddleware).forRoutes('*');
   }
 }

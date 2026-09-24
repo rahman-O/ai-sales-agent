@@ -1,6 +1,8 @@
 # Phase 14 — Pilot readiness and controlled launch
 
-Status: NOT STARTED. Relative complexity: M. Proposed accountable owner: product and technical leads. Dates and staffing are unestimated.
+Status: **NOT STARTED**; **P14_AUTHORIZED: NO**. Relative complexity: M. Proposed accountable owner: product and technical leads. Dates and staffing are unestimated.
+
+Pre-P14 zero-cost discovery (read-only): [pre-p14-zero-cost-discovery.md](pre-p14-zero-cost-discovery.md). Strongest path today: **PATH B** (real app stack + Fake/dev WhatsApp transport). PATH A (real Meta) blocked. Estimated new spend for PATH B: **0**. This phase remains unauthorized.
 
 ## 1. Objective
 

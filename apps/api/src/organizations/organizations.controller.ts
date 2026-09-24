@@ -64,4 +64,19 @@ export class OrganizationsController {
   ) {
     return this.orgs.revokeMember(req.auth!, id, userId);
   }
+
+  /** P13: org-scoped emergency AI disable — blocks new AgentRuns; inbound + human inbox continue. */
+  @Post(':id/ai-emergency-disable')
+  disableAi(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: { reason?: string },
+  ) {
+    return this.orgs.setAiEmergencyDisable(req.auth!, id, true, body?.reason);
+  }
+
+  @Post(':id/ai-emergency-enable')
+  enableAi(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.orgs.setAiEmergencyDisable(req.auth!, id, false);
+  }
 }

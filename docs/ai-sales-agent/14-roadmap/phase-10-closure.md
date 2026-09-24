@@ -2,7 +2,11 @@
 
 Date: 2026-09-24.
 
-## PHASE 10 STATUS: CLOSED
+## PHASE 10 ENGINEERING: CLOSED
+
+## LIVE_TEMPLATE_ACCEPTANCE: NOT_RUN
+
+Reason: real Meta template approval and send verification remain external. This does not reopen the engineering closure. It is carried forward into P14 pilot-readiness gates.
 
 ## Scope delivered
 
@@ -42,7 +46,7 @@ Date: 2026-09-24.
 
 ## REMAINING BLOCKERS
 
-NONE (engineering). Live Meta template acceptance remains a human sandbox action.
+NONE (engineering). Live Meta template approval/send verification is a P14 readiness dependency only.
 
 ## TECHNICALLY_READY_FOR_P11
 

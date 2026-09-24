@@ -1,6 +1,6 @@
 # Phase 01 — Project foundation and tenant security
 
-Status: IN_PROGRESS — BLOCKED (local foundation PASS; Supabase Auth/DB external access blocked). Relative complexity: L. See [phase-01-closure.md](phase-01-closure.md).
+Status: **CLOSED**. Relative complexity: L. Hosted Auth and database acceptance have since passed; see [closure](phase-01-closure.md) and the current [Phase 12 validation baseline](phase-12-validation-report.md).
 
 
 ## 1. Objective

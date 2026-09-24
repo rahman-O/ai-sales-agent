@@ -32,6 +32,7 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/app') ||
     request.nextUrl.pathname.startsWith('/api/backend') ||
     request.nextUrl.pathname.startsWith('/dashboard') ||
+    request.nextUrl.pathname.startsWith('/analytics') ||
     request.nextUrl.pathname.startsWith('/inbox') ||
     request.nextUrl.pathname.startsWith('/leads') ||
     request.nextUrl.pathname.startsWith('/bookings') ||
@@ -55,6 +56,8 @@ export const config = {
     '/api/backend/:path*',
     '/dashboard',
     '/dashboard/:path*',
+    '/analytics',
+    '/analytics/:path*',
     '/inbox',
     '/inbox/:path*',
     '/leads',

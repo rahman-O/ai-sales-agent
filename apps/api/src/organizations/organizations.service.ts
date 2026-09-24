@@ -77,20 +77,26 @@ export class OrganizationsService {
           },
         });
 
-        const org = await tx.organization.create({
-          data: { id: randomUUID(), name },
-        });
+        // INSERT without RETURNING: org RLS USING requires membership (or tenant), so Prisma
+        // create()+RETURNING fails before the OWNER row exists. Bootstrap via raw insert.
+        const orgId = randomUUID();
+        await tx.$executeRaw`
+          INSERT INTO organizations (id, name, created_at, updated_at)
+          VALUES (${orgId}::uuid, ${name}, NOW(), NOW())
+        `;
 
-        await tx.$executeRaw`SELECT set_config('app.current_organization_id', ${org.id}, true)`;
+        await tx.$executeRaw`SELECT set_config('app.current_organization_id', ${orgId}, true)`;
 
         await tx.organizationMember.create({
           data: {
-            organizationId: org.id,
+            organizationId: orgId,
             userId: actor.userId,
             role: 'OWNER',
             status: 'ACTIVE',
           },
         });
+
+        const org = await tx.organization.findUniqueOrThrow({ where: { id: orgId } });
 
         await this.tenants.writeAudit(tx as never, {
           organizationId: org.id,
@@ -285,6 +291,86 @@ export class OrganizationsService {
       });
 
       return updated;
+    });
+  }
+
+  /**
+   * P13 emergency AI kill (org-scoped).
+   * Disable: set timestamp; worker refuses new AgentRuns.
+   * Enable: clear flag and advance ai_eligible_after_sequence so backlog is not unsafe-replayed.
+   */
+  async setAiEmergencyDisable(
+    actor: ActorContext,
+    organizationId: string,
+    disabled: boolean,
+    reason?: string,
+  ) {
+    const actorMembership = await this.requireActive(actor, organizationId);
+    if (actorMembership.role !== 'OWNER' && actorMembership.role !== 'ADMIN') {
+      throw new ForbiddenException();
+    }
+
+    return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
+      if (disabled) {
+        const org = await tx.organization.update({
+          where: { id: organizationId },
+          data: {
+            aiEmergencyDisabledAt: new Date(),
+            aiEmergencyDisabledReason: reason?.slice(0, 500) ?? 'operator_emergency',
+            aiEmergencyDisabledByUserId: actor.userId,
+          },
+        });
+        await this.tenants.writeAudit(tx, {
+          organizationId,
+          actorUserId: actor.userId,
+          action: 'ai.emergency_disabled',
+          targetType: 'Organization',
+          targetId: organizationId,
+          metadataJson: { reason: org.aiEmergencyDisabledReason },
+          requestId: actor.requestId,
+        });
+        return {
+          organizationId,
+          aiEmergencyDisabled: true,
+          aiEmergencyDisabledAt: org.aiEmergencyDisabledAt,
+          reason: org.aiEmergencyDisabledReason,
+        };
+      }
+
+      // Re-enable: fence backlog so paused-period ingress does not auto-start AgentRuns.
+      await tx.$executeRaw`
+        UPDATE conversations
+        SET ai_eligible_after_sequence = GREATEST(
+              ai_eligible_after_sequence,
+              GREATEST(next_sequence - 1, 0)
+            ),
+            updated_at = NOW()
+        WHERE organization_id = ${organizationId}::uuid
+          AND mode = 'AI_ACTIVE'
+      `;
+
+      const org = await tx.organization.update({
+        where: { id: organizationId },
+        data: {
+          aiEmergencyDisabledAt: null,
+          aiEmergencyDisabledReason: null,
+          aiEmergencyDisabledByUserId: null,
+        },
+      });
+      await this.tenants.writeAudit(tx, {
+        organizationId,
+        actorUserId: actor.userId,
+        action: 'ai.emergency_enabled',
+        targetType: 'Organization',
+        targetId: organizationId,
+        requestId: actor.requestId,
+      });
+      return {
+        organizationId,
+        aiEmergencyDisabled: false,
+        aiEmergencyDisabledAt: org.aiEmergencyDisabledAt,
+        backlogFenced: true,
+      };
     });
   }
 

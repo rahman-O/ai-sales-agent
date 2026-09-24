@@ -15,3 +15,6 @@ apps/web/.next/
 apps/api/dist/
 apps/worker/dist/
 prisma/generated/
+
+.env.demo.session
+.env.demo.local

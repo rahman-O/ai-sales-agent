@@ -20,4 +20,8 @@ export class AppConfigService {
   get redisUrl(): string {
     return this.env.REDIS_URL;
   }
+
+  get aiEmergencyDisableAll(): boolean {
+    return this.env.AI_EMERGENCY_DISABLE_ALL === true;
+  }
 }

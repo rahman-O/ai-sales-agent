@@ -1,6 +1,6 @@
 # Phase 03 — Durable customers and conversations
 
-Status: IN_PROGRESS — BLOCKED on hosted acceptance (local gates green). Relative complexity: L.
+Status: **CLOSED**. Relative complexity: L. See [closure](phase-03-closure.md) and the current regression baseline in [Phase 12 validation](phase-12-validation-report.md).
 
 ## 1. Objective
 

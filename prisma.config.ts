@@ -36,6 +36,21 @@ function loadLocalEnvForPrisma(cwd = process.cwd()): void {
   }
   for (const [key, value] of Object.entries(parse('.env.local'))) {
     if (skip.has(key)) continue;
+    // PATH B demo: keep Auth keys from .env.local but force DB URLs from .env / shell.
+    if (
+      process.env.DEMO_FORCE_LOCAL_DB === '1' &&
+      (key === 'DATABASE_URL' ||
+        key === 'MIGRATION_DATABASE_URL' ||
+        key === 'APP_RUNTIME_DB_HOST' ||
+        key === 'APP_RUNTIME_DB_PASSWORD' ||
+        key === 'APP_RUNTIME_DB_USER' ||
+        key === 'APP_RUNTIME_DB_NAME' ||
+        key === 'APP_RUNTIME_DB_PORT' ||
+        key === 'APP_RUNTIME_DB_PARAMS' ||
+        key === 'CONNECTION_MODE')
+    ) {
+      continue;
+    }
     process.env[key] = value;
   }
 }
