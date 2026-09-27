@@ -62,6 +62,7 @@ model Organization {
   messageTemplateVersions MessageTemplateVersion[]
   followUpPolicy        OrganizationFollowUpPolicy?
   followUps             FollowUp[]
+  conversationWorkingStates ConversationWorkingState[]
 
   @@map("organizations")
 }
@@ -264,6 +265,7 @@ model Conversation {
   sourceLeadActivities     LeadActivity[]   @relation("LeadActivitySourceConversation")
   sourceBookings           Booking[]        @relation("BookingSourceConversation")
   followUps                FollowUp[]
+  workingState             ConversationWorkingState?
 
   @@unique([organizationId, channelConnectionId, identityId])
   @@unique([organizationId, id])
@@ -482,6 +484,7 @@ model AgentRun {
   leadActivities         LeadActivity[]  @relation("LeadActivitySourceAgentRun")
   createdBookings        Booking[]       @relation("BookingCreatedByAgentRun")
   createdFollowUps       FollowUp[]      @relation("FollowUpCreatedByAgentRun")
+  workingStates          ConversationWorkingState[]
 
   @@unique([organizationId, runKey])
   @@unique([organizationId, id])
@@ -504,6 +507,7 @@ model ToolCall {
   createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
   organization   Organization @relation(fields: [organizationId], references: [id])
   agentRun       AgentRun     @relation(fields: [organizationId, agentRunId], references: [organizationId, id])
+  workingStates  ConversationWorkingState[]
 
   @@unique([agentRunId, ordinal])
   @@unique([organizationId, id])
@@ -685,6 +689,7 @@ model Lead {
   activities            LeadActivity[]
   bookings              Booking[]
   followUps             FollowUp[]
+  workingStates         ConversationWorkingState[]
 
   @@unique([organizationId, id])
   @@index([organizationId, status, updatedAt(sort: Desc)])
@@ -938,4 +943,26 @@ model FollowUp {
   @@index([organizationId, customerId, createdAt(sort: Desc)])
   @@map("follow_ups")
 }
+
+/// PRE-P14 — conversation-scoped working state for multi-turn business continuity.
+model ConversationWorkingState {
+  organizationId   String       @map("organization_id") @db.Uuid
+  conversationId   String       @map("conversation_id") @db.Uuid
+  version          Int          @default(1)
+  customerId       String?      @map("customer_id") @db.Uuid
+  leadId           String?      @map("lead_id") @db.Uuid
+  stateJson        Json         @default("{}") @map("state_json")
+  updatedAt        DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  lastAgentRunId   String?      @map("last_agent_run_id") @db.Uuid
+  lastToolCallId   String?      @map("last_tool_call_id") @db.Uuid
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  conversation     Conversation @relation(fields: [organizationId, conversationId], references: [organizationId, id], onDelete: Cascade)
+  lead             Lead?        @relation(fields: [organizationId, leadId], references: [organizationId, id], onDelete: SetNull)
+  lastAgentRun     AgentRun?    @relation(fields: [organizationId, lastAgentRunId], references: [organizationId, id], onDelete: SetNull)
+  lastToolCall     ToolCall?    @relation(fields: [organizationId, lastToolCallId], references: [organizationId, id], onDelete: SetNull)
+
+  @@id([organizationId, conversationId])
+  @@map("conversation_working_state")
+}
+
 

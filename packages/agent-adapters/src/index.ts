@@ -11,3 +11,6 @@ export * from './messaging/outbound-dispatch.js';
 export * from './followups/quiet-hours.js';
 export * from './followups/execute-followup.js';
 export * from './ai-emergency-kill.js';
+export * from './service-search.js';
+export * from './uuid-validator.js';
+export * from './conversation-working-state.js';

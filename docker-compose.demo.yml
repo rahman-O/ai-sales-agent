@@ -99,18 +99,66 @@ services:
       - demo
     restart: "no"
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ai-sales-demo-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+    networks:
+      - demo
+    restart: unless-stopped
+
+  ollama-bootstrap:
+    image: ollama/ollama:latest
+    container_name: ai-sales-demo-ollama-bootstrap
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+      AI_MODEL_NAME: ${AI_MODEL_NAME:-qwen2.5:1.5b}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Checking if model $${AI_MODEL_NAME} exists in Ollama..."
+        if ollama list | grep -q "$${AI_MODEL_NAME}"; then
+          echo "MODEL_ALREADY_PRESENT: $${AI_MODEL_NAME}"
+        else
+          echo "Pulling model $${AI_MODEL_NAME}..."
+          ollama pull "$${AI_MODEL_NAME}"
+          echo "MODEL_PULL_COMPLETE: $${AI_MODEL_NAME}"
+        fi
+        exit 0
+    depends_on:
+      ollama:
+        condition: service_healthy
+    networks:
+      - demo
+    restart: "no"
+
   api:
     build:
       context: .
       dockerfile: Dockerfile.api
     container_name: ai-sales-demo-api
     environment:
-      # Override image default production so Fake/ZERO_COST_DEMO gates work
+      # Override image default production so local demo runtime works
       NODE_ENV: development
       DEMO_DB_TARGET: LOCAL
       DEMO_FORCE_LOCAL_DB: "1"
-      AI_ALLOW_FAKE: "true"
-      ZERO_COST_DEMO: "1"
+      AI_MODEL_BASE_URL: http://ollama:11434/v1
+      AI_MODEL_API_KEY: local
+      AI_MODEL_NAME: ${AI_MODEL_NAME:-qwen2.5:1.5b}
+      AI_MODEL_LOCAL_TIMEOUTS: "1"
+      AI_MODEL_TIMEOUT_MS: ${AI_MODEL_TIMEOUT_MS:-360000}
+      AI_RUN_DEADLINE_MS: ${AI_RUN_DEADLINE_MS:-900000}
+      WORKER_LEASE_TTL_SECONDS: ${WORKER_LEASE_TTL_SECONDS:-300}
+      DEMO_DOCKER_LOCAL_LLM: "1"
       APP_URL: http://localhost:3000
       API_URL: http://localhost:3001
       DATABASE_URL: postgresql://app_runtime:${APP_RUNTIME_DB_PASSWORD}@postgres:5432/${POSTGRES_DB:-ai_sales_agent}
@@ -122,6 +170,7 @@ services:
       NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:-}
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:-}
       PORT: "3001"
+      API_BIND_HOST: "0.0.0.0"
     ports:
       - "127.0.0.1:3001:3001"
     depends_on:
@@ -129,6 +178,10 @@ services:
         condition: service_completed_successfully
       redis:
         condition: service_healthy
+      ollama:
+        condition: service_healthy
+      ollama-bootstrap:
+        condition: service_completed_successfully
     healthcheck:
       test:
         [
@@ -151,8 +204,14 @@ services:
       NODE_ENV: development
       DEMO_DB_TARGET: LOCAL
       DEMO_FORCE_LOCAL_DB: "1"
-      AI_ALLOW_FAKE: "true"
-      ZERO_COST_DEMO: "1"
+      AI_MODEL_BASE_URL: http://ollama:11434/v1
+      AI_MODEL_API_KEY: local
+      AI_MODEL_NAME: ${AI_MODEL_NAME:-qwen2.5:1.5b}
+      AI_MODEL_LOCAL_TIMEOUTS: "1"
+      AI_MODEL_TIMEOUT_MS: ${AI_MODEL_TIMEOUT_MS:-360000}
+      AI_RUN_DEADLINE_MS: ${AI_RUN_DEADLINE_MS:-900000}
+      WORKER_LEASE_TTL_SECONDS: ${WORKER_LEASE_TTL_SECONDS:-300}
+      DEMO_DOCKER_LOCAL_LLM: "1"
       APP_URL: http://localhost:3000
       API_URL: http://localhost:3001
       DATABASE_URL: postgresql://app_runtime:${APP_RUNTIME_DB_PASSWORD}@postgres:5432/${POSTGRES_DB:-ai_sales_agent}
@@ -168,6 +227,10 @@ services:
         condition: service_healthy
       api:
         condition: service_healthy
+      ollama:
+        condition: service_healthy
+      ollama-bootstrap:
+        condition: service_completed_successfully
     networks:
       - demo
     restart: unless-stopped
@@ -208,6 +271,7 @@ services:
 volumes:
   ai_sales_demo_postgres:
   ai_sales_demo_hf_cache:
+  ollama_models:
 
 networks:
   demo:

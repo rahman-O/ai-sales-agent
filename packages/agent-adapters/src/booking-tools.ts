@@ -12,6 +12,7 @@ import {
   rangesOverlap,
 } from './booking-time.js';
 import { resolveSlotTokenSecret, signSlotToken, verifySlotToken } from './slot-token.js';
+import { invalidUuidArg, isValidUuid } from './uuid-validator.js';
 
 const SLOT_STEP = 15;
 const MAX_SLOTS = 20;
@@ -38,6 +39,15 @@ export async function toolGetAvailableSlots(
     limit?: number;
   },
 ): Promise<ToolOk | ToolErr> {
+  if (!isValidUuid(args.serviceId)) {
+    return invalidUuidArg('getAvailableSlots', 'serviceId', args.serviceId);
+  }
+  if (args.locationId && !isValidUuid(args.locationId)) {
+    return invalidUuidArg('getAvailableSlots', 'locationId', args.locationId);
+  }
+  if (args.staffMemberId && !isValidUuid(args.staffMemberId)) {
+    return invalidUuidArg('getAvailableSlots', 'staffMemberId', args.staffMemberId);
+  }
   const limit = Math.min(Math.max(args.limit ?? MAX_SLOTS, 1), MAX_SLOTS);
   const svc = await c.query(
     `SELECT id, location_id, name, duration_minutes, buffer_before_minutes, buffer_after_minutes,
@@ -78,8 +88,26 @@ export async function toolGetAvailableSlots(
   );
   if (!staffRes.rows.length) return { ok: true, data: { slots: [], timezone } };
 
-  const endDate = args.endDate ?? args.startDate;
-  const dates = enumDates(args.startDate, endDate);
+  const startDate =
+    typeof args.startDate === 'string' && args.startDate.trim()
+      ? args.startDate.trim()
+      : formatLocalDateInZone(new Date(), timezone);
+
+  const endDate =
+    args.endDate ??
+    (() => {
+      try {
+        const [y, m, d] = startDate.split('-').map(Number);
+        if (y && m && d) {
+          const dt = new Date(Date.UTC(y, m - 1, d + 7));
+          return dt.toISOString().slice(0, 10);
+        }
+      } catch {
+        /* ignore */
+      }
+      return startDate;
+    })();
+  const dates = enumDates(startDate, endDate);
   const now = new Date();
   const minStart = new Date(now.getTime() + Number(service.minimum_lead_minutes) * 60_000);
   const maxEnd = new Date();
@@ -204,9 +232,12 @@ export async function toolCreateBooking(
   c: PoolClient,
   org: string,
   customerId: string,
-  args: { slotToken: string; confirmationMessageId: string; leadId?: string },
+  args: { slotToken: string; confirmationMessageId?: string; leadId?: string },
   ctx: { conversationId: string; agentRunId: string; targetIngressSequence: number },
 ): Promise<ToolOk | ToolErr> {
+  if (args.leadId && !isValidUuid(args.leadId)) {
+    return invalidUuidArg('createBooking', 'leadId', args.leadId);
+  }
   // Ignore any customerConfirmed boolean if present — never trust it
   let secret: string;
   try {
@@ -226,10 +257,19 @@ export async function toolCreateBooking(
   }
   const token = verified.payload;
 
-  const msg = await c.query(
+  // Server-proven confirmation message resolution:
+  // Must match organization, conversation, target ingress sequence, and be INBOUND.
+  const msg = await c.query<{
+    id: string;
+    direction: string;
+    conversation_id: string;
+    content_text: string | null;
+    ingress_sequence: number | null;
+  }>(
     `SELECT id, direction, conversation_id, content_text, ingress_sequence
-     FROM messages WHERE organization_id=$1 AND id=$2`,
-    [org, args.confirmationMessageId],
+     FROM messages
+     WHERE organization_id=$1 AND conversation_id=$2 AND ingress_sequence=$3 AND direction='INBOUND'`,
+    [org, ctx.conversationId, ctx.targetIngressSequence],
   );
   const m = msg.rows[0];
   if (!m || m.direction !== 'INBOUND' || m.conversation_id !== ctx.conversationId) {
@@ -241,6 +281,8 @@ export async function toolCreateBooking(
   if (!isExplicitBookingConfirmation(String(m.content_text ?? ''))) {
     return { ok: false, code: 'CONFIRMATION_REQUIRED' };
   }
+
+  const confirmationMessageId = m.id;
 
   const svc = await c.query(
     `SELECT * FROM services WHERE organization_id=$1 AND id=$2 AND active=true AND archived_at IS NULL`,
@@ -355,7 +397,7 @@ export async function toolCreateBooking(
         token.staffMemberId,
         args.leadId ?? null,
         ctx.conversationId,
-        args.confirmationMessageId,
+        confirmationMessageId,
         startsAt.toISOString(),
         endsAt.toISOString(),
         occupiedStartsAt.toISOString(),
@@ -435,6 +477,9 @@ export async function toolCancelBooking(
   args: { bookingId: string; expectedVersion: number; reasonCode?: string },
   ctx: { agentRunId: string },
 ): Promise<ToolOk | ToolErr> {
+  if (!isValidUuid(args.bookingId)) {
+    return invalidUuidArg('cancelBooking', 'bookingId', args.bookingId);
+  }
   if (!Number.isInteger(args.expectedVersion) || args.expectedVersion < 1) {
     return { ok: false, code: 'INVALID_ARGS' };
   }
@@ -465,6 +510,9 @@ export async function toolRescheduleBooking(
   args: { bookingId: string; expectedVersion: number; slotToken: string },
   ctx: { agentRunId: string },
 ): Promise<ToolOk | ToolErr> {
+  if (!isValidUuid(args.bookingId)) {
+    return invalidUuidArg('rescheduleBooking', 'bookingId', args.bookingId);
+  }
   if (!Number.isInteger(args.expectedVersion) || args.expectedVersion < 1) {
     return { ok: false, code: 'INVALID_ARGS' };
   }

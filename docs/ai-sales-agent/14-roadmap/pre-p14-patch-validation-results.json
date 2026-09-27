@@ -1,0 +1,157 @@
+{
+  "totalRuns": 10,
+  "validAgentDecisionCount": 10,
+  "validSchemaRate": "100.0%",
+  "toolSelectionCorrectCount": 7,
+  "finalResponseValidCount": 3,
+  "repairRequiredCount": 0,
+  "repairSuccessCount": 0,
+  "timeoutCount": 0,
+  "avgWallLatencyMs": 27817,
+  "results": [
+    {
+      "run": 1,
+      "input": "مرحبا",
+      "valid": true,
+      "decision": {
+        "type": "final_response",
+        "text": "مرحبا، كيف يمكنني مساعدتك اليوم؟",
+        "claims": []
+      },
+      "repairUsed": false,
+      "repairSuccess": false,
+      "wallMs": 87029
+    },
+    {
+      "run": 2,
+      "input": "أريد أحجز موعد",
+      "valid": true,
+      "decision": {
+        "type": "tool_request",
+        "toolName": "ensureLead",
+        "arguments": {}
+      },
+      "repairUsed": false,
+      "repairSuccess": false,
+      "wallMs": 8769
+    },
+    {
+      "run": 3,
+      "input": "شنو المواعيد المتوفرة؟",
+      "valid": true,
+      "decision": {
+        "type": "tool_request",
+        "toolName": "getAvailableSlots",
+        "arguments": {
+          "serviceId": "check-up",
+          "from": "2023-10-01",
+          "to": "2023-10-31"
+        }
+      },
+      "repairUsed": false,
+      "repairSuccess": false,
+      "wallMs": 21154
+    },
+    {
+      "run": 4,
+      "input": "أريد تنظيف أسنان",
+      "valid": true,
+      "decision": {
+        "type": "tool_request",
+        "toolName": "searchServices",
+        "arguments": {
+          "query": "تنظيف الأسنان"
+        }
+      },
+      "repairUsed": false,
+      "repairSuccess": false,
+      "wallMs": 26906
+    },
+    {
+      "run": 5,
+      "input": "تمام احجزلي أول موعد",
+      "valid": true,
+      "decision": {
+        "type": "tool_request",
+        "toolName": "ensureLead",
+        "arguments": {}
+      },
+      "repairUsed": false,
+      "repairSuccess": false,
+      "wallMs": 14455
+    },
+    {
+      "run": 6,
+      "input": "أكو تبييض؟",
+      "valid": true,
+      "decision": {
+        "type": "tool_request",
+        "toolName": "searchServices",
+        "arguments": {
+          "query": "تبييض أسنان"
+        }
+      },
+      "repairUsed": false,
+      "repairSuccess": false,
+      "wallMs": 11771
+    },
+    {
+      "run": 7,
+      "input": "اريد موعد باجر",
+      "valid": true,
+      "decision": {
+        "type": "tool_request",
+        "toolName": "searchServices",
+        "arguments": {
+          "query": "أجرونت"
+        }
+      },
+      "repairUsed": false,
+      "repairSuccess": false,
+      "wallMs": 15717
+    },
+    {
+      "run": 8,
+      "input": "شلون ألغي الحجز؟",
+      "valid": true,
+      "decision": {
+        "type": "final_response",
+        "text": "لإلغاء الحجز، يرجى تقديم تفاصيل الحجز مثل رقم الحجز أو التاريخ. سأتمكن من مساعدتك بعد تقديم هذه المعلومات.",
+        "claims": []
+      },
+      "repairUsed": false,
+      "repairSuccess": false,
+      "wallMs": 50025
+    },
+    {
+      "run": 9,
+      "input": "أريد أغير الموعد",
+      "valid": true,
+      "decision": {
+        "type": "tool_request",
+        "toolName": "getAvailableSlots",
+        "arguments": {
+          "from": "2023-10-01",
+          "serviceId": "check-up",
+          "to": "2023-10-31"
+        }
+      },
+      "repairUsed": false,
+      "repairSuccess": false,
+      "wallMs": 30404
+    },
+    {
+      "run": 10,
+      "input": "شكراً",
+      "valid": true,
+      "decision": {
+        "type": "final_response",
+        "text": "على الرحب والسعة!",
+        "claims": []
+      },
+      "repairUsed": false,
+      "repairSuccess": false,
+      "wallMs": 11938
+    }
+  ]
+}

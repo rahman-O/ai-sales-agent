@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
 import {
   FakeModelProvider,
+  resolveLocalDemoLimits,
   resolveProductionProvider,
   runAgentOrchestrator,
   tryCreateZeroCostDemoProvider,
@@ -9,6 +10,70 @@ import {
 } from '@ai-sales-agent/agent-core';
 import { createPgRunStore } from './pg-run-store.js';
 import { createToolExecutor } from './tool-executor.js';
+import { loadWorkingState } from './conversation-working-state.js';
+
+export function resolveWorkerLeaseTtlSeconds(env: NodeJS.ProcessEnv = process.env): number {
+  const raw = env.WORKER_LEASE_TTL_SECONDS?.trim();
+  if (!raw) return 60;
+  const n = parseInt(raw, 10);
+  if (Number.isNaN(n) || n < 5 || n > 3600) {
+    throw new Error(`invalid_WORKER_LEASE_TTL_SECONDS:${raw} (expected integer 5-3600)`);
+  }
+  return n;
+}
+
+export async function renewConversationLease(
+  pool: Pool,
+  input: {
+    organizationId: string;
+    conversationId: string;
+    workerId: string;
+    leaseFence: number;
+    ownershipEpoch: number;
+    ttlSeconds: number;
+  },
+): Promise<boolean> {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query(`SELECT set_config('app.current_organization_id', $1, true)`, [
+      input.organizationId,
+    ]);
+    await client.query(`SELECT set_config('app.current_user_id', $1, true)`, [input.workerId]);
+    const r = await client.query<{ id: string }>(
+      `UPDATE conversations
+       SET lease_expires_at = now() + ($4::text || ' seconds')::interval,
+           updated_at = now()
+       WHERE organization_id = $1::uuid
+         AND id = $2::uuid
+         AND lease_owner = $3
+         AND lease_fence = $5
+         AND ownership_epoch = $6
+         AND mode = 'AI_ACTIVE'
+         AND (lease_expires_at IS NULL OR lease_expires_at > now())
+       RETURNING id`,
+      [
+        input.organizationId,
+        input.conversationId,
+        input.workerId,
+        String(input.ttlSeconds),
+        input.leaseFence,
+        input.ownershipEpoch,
+      ],
+    );
+    await client.query('COMMIT');
+    return (r.rowCount ?? 0) > 0;
+  } catch {
+    try {
+      await client.query('ROLLBACK');
+    } catch {
+      /* ignore */
+    }
+    return false;
+  } finally {
+    client.release();
+  }
+}
 
 export async function ensureActiveAgentConfig(
   pool: Pool,
@@ -145,6 +210,7 @@ export async function runConversationAgent(opts: {
        ORDER BY version DESC LIMIT 1`,
       [opts.organizationId, opts.conversationId],
     );
+    const ws = await loadWorkingState(client, opts.organizationId, opts.conversationId);
     await client.query('COMMIT');
 
     const cfg = await ensureActiveAgentConfig(opts.pool, opts.organizationId);
@@ -168,6 +234,14 @@ export async function runConversationAgent(opts: {
       })),
       summaryText: summary.rows[0]?.summary_text ?? null,
       summaryWatermark: summary.rows[0]?.source_watermark ?? null,
+      workingState: ws
+        ? {
+            version: ws.version,
+            customerId: ws.customerId,
+            leadId: ws.leadId,
+            data: ws.stateData,
+          }
+        : null,
       agentConfigVersionId: cfg.id,
       promptVersion: cfg.promptVersion,
       modelProfile: cfg.modelProfile,
@@ -211,11 +285,62 @@ export async function runConversationAgent(opts: {
   if (!provider) {
     return { terminal: 'FAILED', reason: 'no_production_provider' };
   }
-  const result = await runAgentOrchestrator(snap, {
-    provider,
-    tools,
-    store,
-    allowFakeProvider: allowFake && provider.id === 'fake',
-  });
-  return { terminal: result.terminal, reason: result.reason };
+  const localLimits = resolveLocalDemoLimits(process.env);
+
+  const ttlSeconds = resolveWorkerLeaseTtlSeconds(process.env);
+  const heartbeatIntervalMs = Math.min(15_000, Math.max(1000, Math.floor((ttlSeconds * 1000) / 3)));
+  let authorityRevoked = false;
+  let heartbeatTimer: NodeJS.Timeout | null = null;
+
+  const startHeartbeat = () => {
+    heartbeatTimer = setInterval(async () => {
+      if (authorityRevoked) return;
+      const ok = await renewConversationLease(opts.pool, {
+        organizationId: opts.organizationId,
+        conversationId: opts.conversationId,
+        workerId: opts.workerId,
+        leaseFence: opts.leaseFence,
+        ownershipEpoch: opts.ownershipEpoch,
+        ttlSeconds,
+      });
+      if (!ok) {
+        authorityRevoked = true;
+        if (heartbeatTimer) clearInterval(heartbeatTimer);
+      }
+    }, heartbeatIntervalMs);
+    heartbeatTimer.unref();
+  };
+
+  const baseLoadAuthority = store.loadAuthority.bind(store);
+  const wrappedStore: typeof store = {
+    ...store,
+    async loadAuthority(orgId, convId) {
+      if (authorityRevoked) {
+        return {
+          mode: 'REVOKED',
+          ownershipEpoch: -1,
+          leaseOwner: null,
+          leaseFence: -1,
+          nextIngressSequence: 0,
+          processedSequence: 0,
+        };
+      }
+      return baseLoadAuthority(orgId, convId);
+    },
+  };
+
+  try {
+    startHeartbeat();
+    const result = await runAgentOrchestrator(snap, {
+      provider,
+      tools,
+      store: wrappedStore,
+      allowFakeProvider: allowFake && provider.id === 'fake',
+      ...(localLimits ? { limits: localLimits } : {}),
+    });
+    return { terminal: result.terminal, reason: result.reason };
+  } finally {
+    if (heartbeatTimer) clearInterval(heartbeatTimer);
+  }
 }
+

@@ -2,6 +2,7 @@
  * OpenAI-compatible structured-output adapter (interim while P00 vendor open).
  * Does not import business domain. Live HTTP optional; contract tests use inject.
  */
+import { assertDummyKeyLoopbackSafe } from './local-provider-guard.js';
 import type { ModelGenerateInput, ModelGenerateResult, ModelProvider } from './ports.js';
 
 export interface OpenAiCompatibleConfig {
@@ -10,6 +11,18 @@ export interface OpenAiCompatibleConfig {
   model: string;
   fetchImpl?: typeof fetch;
 }
+
+export {
+  assertDummyKeyLoopbackSafe,
+  evaluateHardwareFit,
+  isApprovedDockerOllamaBaseUrl,
+  isApprovedLoopbackBaseUrl,
+  isDummyModelApiKey,
+  LOCAL_DEMO_LIMIT_DEFAULTS,
+  PATH_B_HARDWARE_FIT,
+  resolveLocalDemoLimits,
+} from './local-provider-guard.js';
+export type { ModelFitInput, ModelFitResult } from './local-provider-guard.js';
 
 export class OpenAiCompatibleModelProvider implements ModelProvider {
   readonly id = 'openai_compatible';
@@ -77,10 +90,11 @@ export class OpenAiCompatibleModelProvider implements ModelProvider {
   }
 }
 
-/** Fail closed: production must not fall back to Fake. */
+/** Fail closed: production must not fall back to Fake. Dummy keys require loopback base URL. */
 export function resolveProductionProvider(env: Record<string, string | undefined>): ModelProvider | null {
   const key = env.AI_MODEL_API_KEY?.trim();
   if (key) {
+    assertDummyKeyLoopbackSafe(key, env.AI_MODEL_BASE_URL, env);
     return new OpenAiCompatibleModelProvider({
       apiKey: key,
       baseUrl: env.AI_MODEL_BASE_URL,

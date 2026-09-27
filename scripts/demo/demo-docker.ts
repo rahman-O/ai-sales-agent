@@ -16,6 +16,7 @@ const DEMO_PORTS = [
   { port: 3001, name: 'API' },
   { port: 5433, name: 'POSTGRES' },
   { port: 6380, name: 'REDIS' },
+  { port: 11434, name: 'OLLAMA' },
 ] as const;
 
 function run(cmd: string, args: string[], opts: { allowFail?: boolean } = {}) {
@@ -81,7 +82,9 @@ async function checkPortsForUp() {
           ? 'api'
           : name === 'POSTGRES'
             ? 'postgres'
-            : 'redis';
+            : name === 'REDIS'
+              ? 'redis'
+              : 'ollama';
     const id = spawnSync('docker', composeArgs(['ps', '-q', which]), {
       cwd: ROOT,
       encoding: 'utf8',
@@ -212,9 +215,53 @@ async function main() {
       );
       break;
     }
+    case 'ollama:up': {
+      ensureEnv();
+      run('docker', composeArgs(['up', '-d', 'ollama']));
+      run('docker', composeArgs(['up', 'ollama-bootstrap']));
+      console.log(JSON.stringify({ DEMO_OLLAMA_UP: 'PASS', BASE_URL: 'http://127.0.0.1:11434/v1' }));
+      break;
+    }
+    case 'ollama:down': {
+      ensureEnv();
+      run('docker', composeArgs(['stop', 'ollama']));
+      console.log(JSON.stringify({ DEMO_OLLAMA_DOWN: 'PASS' }));
+      break;
+    }
+    case 'ollama:logs': {
+      ensureEnv();
+      run('docker', composeArgs(['logs', '-f', 'ollama']));
+      break;
+    }
+    case 'ollama:status': {
+      ensureEnv();
+      const ps = spawnSync(
+        'docker',
+        composeArgs(['ps', 'ollama', '--format', '{{.State}} ({{.Health}})' ]),
+        { cwd: ROOT, encoding: 'utf8', shell: false },
+      );
+      let tags: unknown = null;
+      try {
+        const res = await fetch('http://127.0.0.1:11434/api/tags');
+        if (res.ok) tags = await res.json();
+      } catch {
+        /* ignore */
+      }
+      console.log(
+        JSON.stringify(
+          {
+            OLLAMA_CONTAINER: (ps.stdout || '').trim() || 'NOT_FOUND',
+            API_TAGS: tags,
+          },
+          null,
+          2,
+        ),
+      );
+      break;
+    }
     default:
       console.log(
-        'Usage: demo-docker.ts <build|up|down|stop|logs|ps|wipe|start>',
+        'Usage: demo-docker.ts <build|up|down|stop|logs|ps|wipe|start|ollama:up|ollama:down|ollama:logs|ollama:status>',
       );
       process.exit(1);
   }

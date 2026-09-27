@@ -69,6 +69,7 @@ export const DEMO_TENANT_TABLES_DELETE_ORDER = [
   'messages',
   'consumer_receipts',
   'webhook_receipts',
+  'conversation_working_state',
   'conversations',
   'customer_identities',
   'customers',

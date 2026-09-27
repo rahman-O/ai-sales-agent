@@ -15,6 +15,16 @@ function isRetryableProviderError(err: unknown): boolean {
   return Boolean(err && typeof err === 'object' && (err as { retryable?: boolean }).retryable);
 }
 
+export const SCHEMA_REPAIR_PROMPT = [
+  'Previous output failed schema validation.',
+  'Preserve all semantic fields from the original response while rewriting it into one complete valid AgentDecision JSON object.',
+  'Return ONLY a single raw JSON object matching one of these canonical shapes:',
+  '- Tool request: {"type": "tool_request", "toolName": "<toolName>", "arguments": {<args>}}',
+  '- Final response: {"type": "final_response", "text": "<arabic message>", "claims": []}',
+  '- Safe stop: {"type": "safe_stop", "reason": "<reason>"}',
+  'Do NOT drop toolName or arguments. Do NOT use {"name": "...", "arguments": {...}} format. Do NOT use markdown fences.',
+].join(' ');
+
 export async function runAgentOrchestrator(
   snap: ConversationSnapshot,
   deps: OrchestratorDeps,
@@ -176,7 +186,7 @@ export async function runAgentOrchestrator(
         schemaRepairs += 1;
         messages.push({
           role: 'user',
-          content: 'Previous output failed schema validation. Return a valid AgentDecision JSON only.',
+          content: SCHEMA_REPAIR_PROMPT,
         });
         continue;
       }

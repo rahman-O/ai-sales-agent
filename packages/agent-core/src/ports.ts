@@ -73,6 +73,34 @@ export interface ToolExecutorPort {
   execute(name: string, args: Record<string, unknown>, ctx: ToolExecutionContext): Promise<ToolResult>;
 }
 
+export interface CandidateSlotData {
+  index?: number;
+  entityId: string;
+  staffMemberId: string;
+  locationId: string;
+  startsAt: string;
+  endsAt: string;
+  localDate: string;
+  localStartTime: string;
+  slotToken: string;
+  expiresAt: string;
+}
+
+export interface ConversationWorkingStateData {
+  activeIntent?: {
+    type: string;
+    updatedAt: string;
+  } | null;
+  selectedEntity?: {
+    entityType: string;
+    entityId: string;
+    entityLabel?: string | null;
+  } | null;
+  candidateSlots?: CandidateSlotData[];
+  selectedCandidateIndex?: number | null;
+  lastConfirmedBookingId?: string | null;
+}
+
 export interface ConversationSnapshot {
   organizationId: string;
   conversationId: string;
@@ -94,6 +122,12 @@ export interface ConversationSnapshot {
   }>;
   summaryText: string | null;
   summaryWatermark: number | null;
+  workingState?: {
+    version: number;
+    customerId?: string | null;
+    leadId?: string | null;
+    data: ConversationWorkingStateData;
+  } | null;
   agentConfigVersionId: string;
   promptVersion: string;
   modelProfile: string;

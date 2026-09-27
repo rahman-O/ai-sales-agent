@@ -2,6 +2,7 @@ import { loadLocalEnv, loadServerEnv } from '@ai-sales-agent/config';
 import {
   dispatchOutboundMessage,
   executeFollowUp,
+  resolveWorkerLeaseTtlSeconds,
   runConversationAgent,
   shouldBlockNewAgentRuns,
 } from '@ai-sales-agent/agent-adapters';
@@ -127,6 +128,7 @@ async function main() {
       ]);
       await client.query(`SELECT set_config('app.current_user_id', $1, true)`, [workerId]);
 
+      const ttlSeconds = resolveWorkerLeaseTtlSeconds(process.env);
       const lease = await client.query<{
         lease_fence: number;
         ownership_epoch: number;
@@ -138,7 +140,7 @@ async function main() {
         `UPDATE conversations
          SET lease_owner = $3,
              lease_fence = lease_fence + 1,
-             lease_expires_at = now() + interval '60 seconds',
+             lease_expires_at = now() + ($4::text || ' seconds')::interval,
              updated_at = now(),
              version = version + 1
          WHERE organization_id = $1::uuid
@@ -146,7 +148,7 @@ async function main() {
            AND (lease_expires_at IS NULL OR lease_expires_at <= now() OR lease_owner = $3)
          RETURNING lease_fence, ownership_epoch, processed_sequence, next_sequence, mode,
                    ai_eligible_after_sequence`,
-        [organizationId, conversationId, workerId],
+        [organizationId, conversationId, workerId, String(ttlSeconds)],
       );
       if (!lease.rows[0]) {
         await client.query('ROLLBACK');
@@ -475,7 +477,11 @@ async function main() {
 
       return { ok: true, organizationId };
     },
-    { connection: connection as never },
+    {
+      connection: connection as never,
+      lockDuration: Math.max(300_000, resolveWorkerLeaseTtlSeconds(process.env) * 1000),
+      maxStalledCount: 5,
+    },
   );
 
   worker.on('failed', (job, err) => {

@@ -1,5 +1,6 @@
 import type { PoolClient } from 'pg';
 import { randomUUID } from 'node:crypto';
+import { invalidUuidArg, isValidUuid } from './uuid-validator.js';
 
 const OPEN = `('NEW','ENGAGED','QUALIFIED','NURTURE')`;
 
@@ -89,7 +90,13 @@ export async function toolGetLead(
   org: string,
   customerId: string,
   args: { leadId?: string; serviceId?: string },
-): Promise<{ ok: true; data: unknown } | { ok: false; code: string }> {
+): Promise<{ ok: true; data: unknown } | { ok: false; code: string; safeMessage?: string }> {
+  if (args.leadId && !isValidUuid(args.leadId)) {
+    return invalidUuidArg('getLead', 'leadId', args.leadId);
+  }
+  if (args.serviceId && !isValidUuid(args.serviceId)) {
+    return invalidUuidArg('getLead', 'serviceId', args.serviceId);
+  }
   if (args.leadId) {
     const r = await c.query<LeadRow>(
       `SELECT id, customer_id, status, primary_service_id, location_id, need_summary,
@@ -132,7 +139,13 @@ export async function toolEnsureLead(
   },
   ctx: { conversationId: string; agentRunId: string },
 ): Promise<{ ok: true; data: unknown } | { ok: false; code: string; safeMessage?: string }> {
-  const serviceId = typeof args.serviceId === 'string' ? args.serviceId : null;
+  const serviceId = typeof args.serviceId === 'string' && args.serviceId.trim() ? args.serviceId.trim() : null;
+  if (serviceId && !isValidUuid(serviceId)) {
+    return invalidUuidArg('ensureLead', 'serviceId', serviceId);
+  }
+  if (args.locationId && !isValidUuid(args.locationId)) {
+    return invalidUuidArg('ensureLead', 'locationId', args.locationId);
+  }
   if (serviceId) {
     const svc = await c.query(
       `SELECT id FROM services
@@ -336,7 +349,10 @@ export async function toolTransitionLead(
   customerId: string,
   args: { leadId: string; expectedVersion: number; toStatus: string },
   ctx: { conversationId: string; agentRunId: string },
-): Promise<{ ok: true; data: unknown } | { ok: false; code: string }> {
+): Promise<{ ok: true; data: unknown } | { ok: false; code: string; safeMessage?: string }> {
+  if (!isValidUuid(args.leadId)) {
+    return invalidUuidArg('transitionLead', 'leadId', args.leadId);
+  }
   if (!Number.isInteger(args.expectedVersion) || args.expectedVersion < 1) {
     return { ok: false, code: 'INVALID_ARGS' };
   }
@@ -398,7 +414,16 @@ export async function toolUpdateLeadQualification(
     serviceId?: string;
   },
   ctx: { conversationId: string; agentRunId: string },
-): Promise<{ ok: true; data: unknown } | { ok: false; code: string }> {
+): Promise<{ ok: true; data: unknown } | { ok: false; code: string; safeMessage?: string }> {
+  if (!isValidUuid(args.leadId)) {
+    return invalidUuidArg('updateLeadQualification', 'leadId', args.leadId);
+  }
+  if (args.serviceId && !isValidUuid(args.serviceId)) {
+    return invalidUuidArg('updateLeadQualification', 'serviceId', args.serviceId);
+  }
+  if (args.locationId && !isValidUuid(args.locationId)) {
+    return invalidUuidArg('updateLeadQualification', 'locationId', args.locationId);
+  }
   if (!Number.isInteger(args.expectedVersion) || args.expectedVersion < 1) {
     return { ok: false, code: 'INVALID_ARGS' };
   }

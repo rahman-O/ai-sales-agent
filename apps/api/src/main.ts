@@ -26,9 +26,11 @@ async function bootstrap() {
     credentials: true,
   });
   const port = Number(process.env.PORT || new URL(env.API_URL).port || 3001);
+  // Default loopback for host runs; Docker/demo sets API_BIND_HOST=0.0.0.0
+  const host = process.env.API_BIND_HOST?.trim() || '127.0.0.1';
   app.enableShutdownHooks();
-  await app.listen(port, '127.0.0.1');
-  console.log(JSON.stringify({ msg: 'api_listening', port, env: env.NODE_ENV }));
+  await app.listen(port, host);
+  console.log(JSON.stringify({ msg: 'api_listening', port, host, env: env.NODE_ENV }));
 }
 
 bootstrap().catch((err) => {

@@ -3,6 +3,7 @@ export * from './ports.js';
 export * from './fake-provider.js';
 export * from './demo-scripted-provider.js';
 export * from './openai-compatible.js';
+export * from './local-provider-guard.js';
 export * from './output-claim.js';
 export * from './context-builder.js';
 export * from './summary-cas.js';
