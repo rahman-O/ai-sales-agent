@@ -29,6 +29,12 @@ const DEMO_OVERLAY_KEYS = new Set([
   'POSTGRES_PASSWORD',
   'POSTGRES_USER',
   'POSTGRES_DB',
+  'AI_PROVIDER',
+  'DEEPSEEK_API_KEY',
+  'DEEPSEEK_BASE_URL',
+  'DEEPSEEK_MODEL',
+  'DEEPSEEK_TIMEOUT_MS',
+  'DEEPSEEK_RUN_DEADLINE_MS',
 ]);
 
 /** Load .env + .env.local with DEMO_FORCE; overlay .env.demo.session / .env.demo.local for host seed vs compose Postgres. */

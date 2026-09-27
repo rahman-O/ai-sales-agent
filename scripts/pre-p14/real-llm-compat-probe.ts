@@ -563,24 +563,32 @@ async function main(): Promise<void> {
     return;
   }
 
-  const install = ensureOllamaInstalled();
-  notes.push(...install.notes);
-  report.LOCAL_SERVER_INSTALLED = install.installed ? 'YES' : 'NO';
-  const ollamaBin = install.bin;
+  let ollamaBin: string | null = null;
+  if (await pingServer()) {
+    report.LOCAL_SERVER_INSTALLED = 'YES';
+    report.LOCAL_SERVER_RUNNING = 'YES';
+    notes.push('local_server_already_running');
+    ollamaBin = resolveOllamaBin();
+  } else {
+    const install = ensureOllamaInstalled();
+    notes.push(...install.notes);
+    report.LOCAL_SERVER_INSTALLED = install.installed ? 'YES' : 'NO';
+    ollamaBin = install.bin;
 
-  if (install.installed && ollamaBin) {
-    ensureOllamaServing(ollamaBin, notes);
-    const up = await waitForServer(45_000, notes);
-    report.LOCAL_SERVER_RUNNING = up ? 'YES' : 'NO';
+    if (install.installed && ollamaBin) {
+      ensureOllamaServing(ollamaBin, notes);
+      const up = await waitForServer(45_000, notes);
+      report.LOCAL_SERVER_RUNNING = up ? 'YES' : 'NO';
+    }
   }
 
   let model = MODEL;
-  if (report.LOCAL_SERVER_RUNNING === 'YES' && ollamaBin) {
+  if (report.LOCAL_SERVER_RUNNING === 'YES') {
     const existing = await listOllamaModels();
     notes.push(`ollama_models:${existing.join(',') || '(none)'}`);
     if (!model) {
       // Prefer already-installed small tags; otherwise pull smallest instruct-class probe candidate.
-      const preferred = ['qwen2.5:1.5b', 'qwen2.5:3b', 'llama3.2:3b', 'gemma2:2b', 'phi3:mini'];
+      const preferred = ['qwen2.5:7b', 'qwen2.5:1.5b', 'qwen2.5:3b', 'llama3.2:3b', 'gemma2:2b', 'phi3:mini'];
       model =
         preferred.find((p) => existing.some((e) => e === p || e.startsWith(`${p}`))) ?? '';
       if (!model && existing.length > 0) {
@@ -589,12 +597,12 @@ async function main(): Promise<void> {
           existing[0] ??
           '';
       }
-      if (!model) {
+      if (!model && ollamaBin) {
         model = 'qwen2.5:1.5b';
         const pulled = pullModelIfNeeded(ollamaBin, model, notes);
         if (!pulled) model = '';
       }
-    } else if (!existing.some((e) => e === model || e.startsWith(`${model}`))) {
+    } else if (ollamaBin && !existing.some((e) => e === model || e.startsWith(`${model}`))) {
       pullModelIfNeeded(ollamaBin, model, notes);
     }
   }

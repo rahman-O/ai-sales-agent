@@ -154,6 +154,14 @@ export async function toolEnsureLead(
     );
     if (!svc.rows[0]) return { ok: false, code: 'NOT_FOUND', safeMessage: 'invalid_service' };
   }
+  if (args.locationId) {
+    const loc = await c.query(
+      `SELECT id FROM locations
+       WHERE organization_id=$1 AND id=$2 AND active=true AND archived_at IS NULL`,
+      [org, args.locationId],
+    );
+    if (!loc.rows[0]) return { ok: false, code: 'NOT_FOUND', safeMessage: 'invalid_location' };
+  }
 
   const open = await c.query<LeadRow>(
     `SELECT id, customer_id, status, primary_service_id, location_id, need_summary,

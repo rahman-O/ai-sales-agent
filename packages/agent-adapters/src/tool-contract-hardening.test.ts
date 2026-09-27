@@ -296,3 +296,80 @@ test('toolCancelBooking and toolRescheduleBooking reject non-UUID bookingId with
   assert.equal(res2.ok, false);
   assert.equal(res2.code, 'TOOL_INVALID_ARGS');
 });
+
+test('toolGetAvailableSlots searches forward when startDate is omitted', async () => {
+  const mockClient = {
+    query: async (sql: string, params: any[]) => {
+      if (sql.includes('FROM services')) {
+        return {
+          rows: [
+            {
+              id: 'a0500001-0001-4001-8001-000000000001',
+              location_id: 'a0333333-3333-4333-8333-333333333333',
+              name: 'Checkup',
+              duration_minutes: 30,
+              buffer_before_minutes: 0,
+              buffer_after_minutes: 0,
+              booking_enabled: true,
+              minimum_lead_minutes: 0,
+              maximum_advance_days: 14,
+              active: true,
+              archived_at: null,
+            },
+          ],
+        };
+      }
+      if (sql.includes('FROM locations')) {
+        return {
+          rows: [{ id: 'a0333333-3333-4333-8333-333333333333', timezone: 'UTC', active: true }],
+        };
+      }
+      if (sql.includes('FROM service_staff')) {
+        return { rows: [{ staff_id: 'a0600001-0001-4001-8001-000000000001' }] };
+      }
+      if (sql.includes('FROM staff_members')) {
+        return { rows: [{ id: 'a0600001-0001-4001-8001-000000000001', display_name: 'Dr. One' }] };
+      }
+      if (sql.includes('FROM staff_availability_rules')) {
+        return {
+          rows: [
+            {
+              local_start_time: '09:00:00',
+              local_end_time: '17:00:00',
+              effective_from: null,
+              effective_to: null,
+            },
+          ],
+        };
+      }
+      if (sql.includes('FROM staff_availability_exceptions')) {
+        return { rows: [] };
+      }
+      if (sql.includes('FROM bookings')) {
+        return { rows: [] };
+      }
+      return { rows: [] };
+    },
+  } as any;
+
+  process.env.BOOKING_SLOT_TOKEN_SECRET = 'test-secret-at-least-32-chars-long-12345';
+
+  const res = await toolGetAvailableSlots(
+    mockClient,
+    'a0111111-1111-4111-8111-111111111111',
+    'a0700001-0001-4001-8001-000000000001',
+    {
+      serviceId: 'a0500001-0001-4001-8001-000000000001',
+      // startDate omitted
+    },
+  );
+
+  assert.equal(res.ok, true);
+  if (res.ok) {
+    const data = res.data as { slots: Array<{ slotToken: string }> };
+    assert.ok(Array.isArray(data.slots));
+    assert.ok(data.slots.length > 0);
+    assert.ok(data.slots[0]?.slotToken);
+  }
+});
+

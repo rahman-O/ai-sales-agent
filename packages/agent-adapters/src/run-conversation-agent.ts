@@ -2,8 +2,10 @@ import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
 import {
   FakeModelProvider,
+  resolveAiProvider,
   resolveLocalDemoLimits,
   resolveProductionProvider,
+  resolveProviderLimits,
   runAgentOrchestrator,
   tryCreateZeroCostDemoProvider,
   type ConversationSnapshot,
@@ -285,7 +287,7 @@ export async function runConversationAgent(opts: {
   if (!provider) {
     return { terminal: 'FAILED', reason: 'no_production_provider' };
   }
-  const localLimits = resolveLocalDemoLimits(process.env);
+  const providerLimits = resolveProviderLimits(process.env);
 
   const ttlSeconds = resolveWorkerLeaseTtlSeconds(process.env);
   const heartbeatIntervalMs = Math.min(15_000, Math.max(1000, Math.floor((ttlSeconds * 1000) / 3)));
@@ -336,7 +338,7 @@ export async function runConversationAgent(opts: {
       tools,
       store: wrappedStore,
       allowFakeProvider: allowFake && provider.id === 'fake',
-      ...(localLimits ? { limits: localLimits } : {}),
+      ...(providerLimits ? { limits: providerLimits } : {}),
     });
     return { terminal: result.terminal, reason: result.reason };
   } finally {

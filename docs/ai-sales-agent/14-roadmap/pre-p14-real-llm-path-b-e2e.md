@@ -1,12 +1,12 @@
 # PRE-P14 REAL LLM PATH B E2E STATUS
 
-Date: 2026-09-27T01:56:04.265Z
+Date: 2026-09-27T18:48:12.884Z
 
 ```text
 REAL LLM PATH B E2E STATUS: FAIL
 
 MODEL: qwen2.5:7b
-REAL MODEL USED: YES
+REAL MODEL USED: NO
 FAKE MODEL USED: NO
 
 NATURAL LANGUAGE TEST: PASS
@@ -18,12 +18,12 @@ SLOT TOKEN PROVENANCE: FAIL
 FALSE SUCCESS PROTECTION: PASS
 CONFLICT: PASS
 HUMAN TAKEOVER: PASS
-RESUME AI: FAIL
+RESUME AI: PASS
 AI EMERGENCY KILL: PASS
 AMBIGUOUS_SAFE: PASS
 
-MODEL LATENCY: p50=0ms max=0ms values=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-MODEL FAILURES: TOOL_SELECTION_FAILURE, DOMAIN_TOOL_FAILURE, TIMEOUT
+MODEL LATENCY: p50=0ms max=0ms values=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+MODEL FAILURES: TOOL_SELECTION_FAILURE
 MODEL_CAPABILITY: MARGINAL
 
 EXTERNAL META: NOT_RUN
@@ -35,10 +35,10 @@ P14_AUTHORIZED: NO
 
 ## Provider evidence
 
-- usage providers: openai_compatible
-- usage models: qwen2.5:7b
-- agent run ids (prefixes): 1ebe2165, 1f17fc54, 66cb7bb4, bb96ed14, 0448aec1, e3400e45, e6000603
-- tools observed: searchServices, getAvailableSlots, createBooking, ensureLead, getCustomer
+- usage providers: deepseek
+- usage models: deepseek-chat
+- agent run ids (prefixes): dadf8c86, 1d160b0d, 313ab53a, 5a039b94, 69a35c69, 72bbcb89, d11cdc70, e0bc0d34
+- tools observed: searchServices, getAvailableSlots
 
 ## Notes
 
@@ -46,16 +46,16 @@ P14_AUTHORIZED: NO
 - pre_enable_ai_status=201
 - agent_config_active=a0900001 missing_tools=none
 - org=a0111111-1111-4111-8111-111111111111 service=a0500001-0001-4001-8001-000000000001
-- run=1ebe2165 status=SUCCEEDED reason=final_response providers=openai_compatible tools=none
-- run=1f17fc54 status=SUCCEEDED reason=final_response providers=openai_compatible tools=searchServices
-- run=66cb7bb4 status=SUCCEEDED reason=final_response providers=openai_compatible tools=getAvailableSlots
-- run=bb96ed14 status=FAILED reason=Unable to safely continue. providers=openai_compatible tools=createBooking
+- run=dadf8c86 status=SUCCEEDED reason=final_response providers=deepseek tools=none
+- run=1d160b0d status=SUCCEEDED reason=final_response providers=deepseek tools=searchServices
+- run=313ab53a status=BUDGET_EXCEEDED reason=repeated_identical_tool providers=deepseek tools=getAvailableSlots,getAvailableSlots,getAvailableSlots
+- run=5a039b94 status=SUCCEEDED reason=final_response providers=deepseek tools=getAvailableSlots,getAvailableSlots
 - slot_token_c_fp=NONE
 - slot_token_d_fp=NONE
-- run=0448aec1 status=BUDGET_EXCEEDED reason=max_model_calls providers=openai_compatible tools=getAvailableSlots,searchServices,ensureLead,getCustomer
-- run=e3400e45 status=SUCCEEDED reason=final_response providers=openai_compatible tools=getAvailableSlots,createBooking
-- wait_timeout:agent_run_complete
-- run=e6000603 status=SUCCEEDED reason=final_response providers=openai_compatible tools=getAvailableSlots
+- run=69a35c69 status=FAILED reason=unparseable_provider_json providers=deepseek tools=getAvailableSlots
+- run=72bbcb89 status=FAILED reason=Customer confirmed booking the first slot, but no candidateSlots exist in working state and prior availability check returned no bookable slots. Unable to safely create a booking without a backend-issued slotToken. providers=deepseek tools=none
+- run=d11cdc70 status=SUCCEEDED reason=final_response providers=deepseek tools=getAvailableSlots
+- run=e0bc0d34 status=FAILED reason=unparseable_provider_json providers=deepseek tools=none
 
 ## STOP
 

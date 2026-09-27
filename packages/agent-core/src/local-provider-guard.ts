@@ -102,6 +102,11 @@ export const LOCAL_DEMO_LIMIT_DEFAULTS = {
   runDeadlineMs: 900_000,
 } as const;
 
+export const DEEPSEEK_LIMIT_DEFAULTS = {
+  modelTimeoutMs: 120_000,
+  runDeadlineMs: 300_000,
+} as const;
+
 /**
  * Timeout overrides apply only when base URL is approved loopback or approved docker ollama.
  * Production cloud path keeps DEFAULT_LIMITS unless caller passes other limits.
@@ -135,6 +140,21 @@ export function resolveLocalDemoLimits(
     ...(explicitTimeout != null ? { modelTimeoutMs: explicitTimeout } : {}),
     ...(explicitDeadline != null ? { runDeadlineMs: explicitDeadline } : {}),
   } as Partial<AgentLimits>;
+}
+
+export function resolveProviderLimits(
+  env: Record<string, string | undefined>,
+): Partial<AgentLimits> | undefined {
+  const provider = env.AI_PROVIDER?.trim().toLowerCase();
+  if (provider === 'deepseek') {
+    const explicitTimeout = parsePositiveInt(env.DEEPSEEK_TIMEOUT_MS);
+    const explicitDeadline = parsePositiveInt(env.DEEPSEEK_RUN_DEADLINE_MS) ?? parsePositiveInt(env.AI_RUN_DEADLINE_MS);
+    return {
+      modelTimeoutMs: explicitTimeout ?? DEEPSEEK_LIMIT_DEFAULTS.modelTimeoutMs,
+      runDeadlineMs: explicitDeadline ?? DEEPSEEK_LIMIT_DEFAULTS.runDeadlineMs,
+    } as Partial<AgentLimits>;
+  }
+  return resolveLocalDemoLimits(env);
 }
 
 /** Hardware-fit gate for 16GB Intel MBP 2018 class hosts (Path B). */

@@ -88,18 +88,20 @@ export async function toolGetAvailableSlots(
   );
   if (!staffRes.rows.length) return { ok: true, data: { slots: [], timezone } };
 
-  const startDate =
-    typeof args.startDate === 'string' && args.startDate.trim()
-      ? args.startDate.trim()
-      : formatLocalDateInZone(new Date(), timezone);
+  const explicitStart = typeof args.startDate === 'string' && args.startDate.trim().length > 0;
+  const startDate = explicitStart
+    ? args.startDate!.trim()
+    : formatLocalDateInZone(new Date(), timezone);
 
+  const maxAdvanceDays = Math.max(Number(service.maximum_advance_days) || 30, 1);
   const endDate =
     args.endDate ??
     (() => {
       try {
         const [y, m, d] = startDate.split('-').map(Number);
         if (y && m && d) {
-          const dt = new Date(Date.UTC(y, m - 1, d + 7));
+          const daysForward = explicitStart ? 7 : Math.min(maxAdvanceDays, 30);
+          const dt = new Date(Date.UTC(y, m - 1, d + daysForward));
           return dt.toISOString().slice(0, 10);
         }
       } catch {
@@ -111,7 +113,7 @@ export async function toolGetAvailableSlots(
   const now = new Date();
   const minStart = new Date(now.getTime() + Number(service.minimum_lead_minutes) * 60_000);
   const maxEnd = new Date();
-  maxEnd.setUTCDate(maxEnd.getUTCDate() + Number(service.maximum_advance_days));
+  maxEnd.setUTCDate(maxEnd.getUTCDate() + maxAdvanceDays);
   let secret: string;
   try {
     secret = resolveSlotTokenSecret();
@@ -119,10 +121,10 @@ export async function toolGetAvailableSlots(
     return { ok: false, code: 'TOOL_UNAVAILABLE', safeMessage: 'slot_token_secret_missing' };
   }
 
-  const slots: unknown[] = [];
-  for (const staff of staffRes.rows) {
+  const slots: Array<Record<string, unknown>> = [];
+  for (const localDate of dates) {
     if (slots.length >= limit) break;
-    for (const localDate of dates) {
+    for (const staff of staffRes.rows) {
       if (slots.length >= limit) break;
       const noon = localToUtcCandidates(localDate, '12:00:00', timezone)[0];
       if (!noon) continue;

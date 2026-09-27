@@ -231,10 +231,11 @@ function recordTrace(trace: Trace | null) {
 function assertRealProvider(trace: Trace | null): boolean {
   if (!trace) return false;
   const providers = [...new Set(trace.usage.map((u) => u.provider))];
+  const validRealProviders = new Set(['openai_compatible', 'local_ollama', 'deepseek']);
   const ok =
-    providers.includes('openai_compatible') &&
+    providers.length > 0 &&
     !providers.includes('fake') &&
-    providers.every((p) => p === 'openai_compatible');
+    providers.every((p) => validRealProviders.has(p));
   if (!ok) {
     evidence.failures.push('ENVIRONMENT_FAILURE');
     evidence.notes.push(`provider_fail:${providers.join(',') || 'empty'}`);
