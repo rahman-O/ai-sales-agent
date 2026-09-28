@@ -40,3 +40,9 @@ export interface MembershipDto {
 }
 
 export * from './agent.js';
+export * from './organization.js';
+export * from './navigation.js';
+export * from './catalog.js';
+export * from './offers.js';
+export * from './policies.js';
+

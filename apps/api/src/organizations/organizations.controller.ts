@@ -9,7 +9,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import type { AddMemberRequest, CreateOrganizationRequest, MemberRole } from '@ai-sales-agent/contracts';
+import type {
+  AddMemberRequest,
+  CreateOrganizationRequest,
+  MemberRole,
+  UpdateOrganizationCapabilitiesRequest,
+  UpdateOrganizationProfileRequest,
+} from '@ai-sales-agent/contracts';
 import { AuthGuard, type AuthenticatedRequest } from '../auth/auth.guard.js';
 import { OrganizationsService } from './organizations.service.js';
 
@@ -30,6 +36,53 @@ export class OrganizationsController {
   @Get(':id')
   get(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.orgs.getOrganization(req.auth!, id);
+  }
+
+  @Get(':id/profile')
+  getProfile(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.orgs.getProfile(req.auth!, id);
+  }
+
+  @Patch(':id/profile')
+  updateProfile(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: UpdateOrganizationProfileRequest,
+  ) {
+    return this.orgs.updateProfile(req.auth!, id, body);
+  }
+
+  @Get(':id/capabilities')
+  getCapabilities(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.orgs.getCapabilities(req.auth!, id);
+  }
+
+  @Patch(':id/capabilities')
+  updateCapabilities(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: UpdateOrganizationCapabilitiesRequest,
+  ) {
+    return this.orgs.updateCapabilities(req.auth!, id, body);
+  }
+
+  @Get(':id/onboarding')
+  getOnboarding(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.orgs.getOnboardingState(req.auth!, id);
+  }
+
+  @Patch(':id/onboarding-progress')
+  updateOnboardingProgress(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: any,
+  ) {
+    return this.orgs.updateOnboardingProgress(req.auth!, id, body);
+  }
+
+  @Post(':id/onboarding/complete')
+  completeOnboarding(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.orgs.completeOnboarding(req.auth!, id);
   }
 
   @Get(':id/members')
@@ -80,3 +133,4 @@ export class OrganizationsController {
     return this.orgs.setAiEmergencyDisable(req.auth!, id, false);
   }
 }
+

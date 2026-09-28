@@ -7,6 +7,7 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
+import { policyAllowsAction } from '@ai-sales-agent/contracts';
 import {
   TenantContextService,
   type ActorContext,
@@ -30,6 +31,7 @@ import {
   verifySlotToken,
   type SlotTokenPayloadV1,
 } from '../domain/slot-token.js';
+import { PoliciesService } from '../policies/policies.service.js';
 
 const SLOT_STEP_MINUTES = 15;
 const MAX_SLOTS = 20;
@@ -50,7 +52,31 @@ type ServiceRow = {
 
 @Injectable()
 export class BookingsService {
-  constructor(private readonly tenants: TenantContextService) {}
+  constructor(
+    private readonly tenants: TenantContextService,
+    private readonly policies: PoliciesService,
+  ) {}
+
+  private async enforceBookingActionPolicy(
+    tx: TenantTxClient,
+    organizationId: string,
+    policyType: 'CANCELLATION' | 'RESCHEDULING',
+    startsAt: Date,
+  ) {
+    const effective = await this.policies.resolveEffectiveInTx(tx, organizationId, policyType);
+    if (!effective.policy) return;
+    const evaluation = policyAllowsAction(policyType, effective.policy.rulesJson, startsAt);
+    if (!evaluation.allowed) {
+      throw new ConflictException({
+        code: `${policyType}_POLICY_CUTOFF`,
+        policyId: effective.policy.id,
+        policyVersion: effective.policy.version,
+        cutoffMinutes: evaluation.cutoffMinutes,
+        minutesBeforeStart: evaluation.minutesBeforeStart,
+        feeApplies: evaluation.feeApplies,
+      });
+    }
+  }
 
   private async membership(actor: ActorContext, organizationId: string) {
     const m = (await this.tenants.runAsActor(actor, (tx) =>
@@ -71,6 +97,13 @@ export class BookingsService {
   private requireWrite(role: string) {
     if (role !== 'OWNER' && role !== 'ADMIN') {
       throw new ForbiddenException('ADMIN/OWNER required');
+    }
+  }
+
+  private async requireBookingCapability(tx: TenantTxClient, organizationId: string) {
+    const caps = await tx.organizationCapabilities.findUnique({ where: { organizationId } });
+    if (caps && !caps.supportsBooking) {
+      throw new ForbiddenException('Booking capability is disabled for this organization');
     }
   }
 
@@ -278,6 +311,7 @@ export class BookingsService {
     },
     limit = MAX_SLOTS,
   ) {
+    await this.requireBookingCapability(tx, organizationId);
     const service = (await tx.service.findUnique({
       where: { organizationId_id: { organizationId, id: input.serviceId } },
     })) as ServiceRow | null;
@@ -490,8 +524,9 @@ export class BookingsService {
   async list(actor: ActorContext, organizationId: string, query?: { customerId?: string; status?: string }) {
     const m = await this.membership(actor, organizationId);
     this.requireRead(m.role);
-    return this.tenants.runInTenantContext(organizationId, actor, (tx) =>
-      tx.booking.findMany({
+    return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
+      await this.requireBookingCapability(tx, organizationId);
+      return tx.booking.findMany({
         where: {
           organizationId,
           ...(query?.customerId ? { customerId: query.customerId } : {}),
@@ -499,14 +534,15 @@ export class BookingsService {
         },
         orderBy: [{ startsAt: 'asc' }],
         take: 100,
-      }),
-    );
+      });
+    });
   }
 
   async get(actor: ActorContext, organizationId: string, bookingId: string) {
     const m = await this.membership(actor, organizationId);
     this.requireRead(m.role);
     return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
+      await this.requireBookingCapability(tx, organizationId);
       const row = await tx.booking.findUnique({
         where: { organizationId_id: { organizationId, id: bookingId } },
       });
@@ -899,6 +935,12 @@ export class BookingsService {
       throw new BadRequestException('Invalid reasonCode');
     }
     return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
+      const current = await tx.booking.findUnique({
+        where: { organizationId_id: { organizationId, id: bookingId } },
+      });
+      if (!current || current.status !== 'CONFIRMED') throw new NotFoundException();
+      if (current.version !== input.expectedVersion) throw new ConflictException('VERSION_CONFLICT');
+      await this.enforceBookingActionPolicy(tx, organizationId, 'CANCELLATION', current.startsAt);
       const result = await tx.booking.updateMany({
         where: {
           organizationId,
@@ -972,6 +1014,7 @@ export class BookingsService {
       if (current.version !== input.expectedVersion) {
         throw new ConflictException('VERSION_CONFLICT');
       }
+      await this.enforceBookingActionPolicy(tx, organizationId, 'RESCHEDULING', current.startsAt);
 
       const secret = this.secret();
       const verified = verifySlotToken(input.slotToken, secret, {
@@ -1120,6 +1163,13 @@ export class BookingsService {
       agentRunId?: string;
     },
   ) {
+    const current = await tx.booking.findUnique({
+      where: { organizationId_id: { organizationId: input.organizationId, id: input.bookingId } },
+    });
+    if (!current || current.customerId !== input.customerId || current.status !== 'CONFIRMED') {
+      throw new NotFoundException();
+    }
+    await this.enforceBookingActionPolicy(tx, input.organizationId, 'CANCELLATION', current.startsAt);
     const result = await tx.booking.updateMany({
       where: {
         organizationId: input.organizationId,

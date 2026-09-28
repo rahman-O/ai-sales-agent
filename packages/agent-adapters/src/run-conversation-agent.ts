@@ -213,9 +213,47 @@ export async function runConversationAgent(opts: {
       [opts.organizationId, opts.conversationId],
     );
     const ws = await loadWorkingState(client, opts.organizationId, opts.conversationId);
+    const profileRes = await client.query<{
+      display_name: string | null;
+      business_type: string | null;
+      description: string | null;
+      country: string | null;
+      timezone: string | null;
+      default_language: string | null;
+      default_currency: string | null;
+    }>(
+      `SELECT display_name, business_type, description, country, timezone, default_language, default_currency
+       FROM organization_profiles WHERE organization_id = $1`,
+      [opts.organizationId],
+    );
+    const capsRes = await client.query<{
+      supports_leads: boolean;
+      lead_required_before_booking: boolean;
+      auto_create_lead_on_intent: boolean;
+      supports_booking: boolean;
+      supports_offers: boolean;
+      supports_quotes: boolean;
+      supports_orders: boolean;
+      supports_inventory: boolean;
+      supports_staff: boolean;
+      supports_locations: boolean;
+      supports_products: boolean;
+      supports_services: boolean;
+      supports_listings: boolean;
+    }>(
+      `SELECT supports_leads, lead_required_before_booking, auto_create_lead_on_intent,
+              supports_booking, supports_offers, supports_quotes, supports_orders,
+              supports_inventory, supports_staff, supports_locations, supports_products,
+              supports_services, supports_listings
+       FROM organization_capabilities WHERE organization_id = $1`,
+      [opts.organizationId],
+    );
     await client.query('COMMIT');
 
     const cfg = await ensureActiveAgentConfig(opts.pool, opts.organizationId);
+    const p = profileRes.rows[0];
+    const cp = capsRes.rows[0];
+
     snap = {
       organizationId: opts.organizationId,
       conversationId: opts.conversationId,
@@ -242,6 +280,34 @@ export async function runConversationAgent(opts: {
             customerId: ws.customerId ?? c.customer_id,
             leadId: ws.leadId,
             data: ws.stateData,
+          }
+        : null,
+      organizationProfile: p
+        ? {
+            displayName: p.display_name,
+            businessType: p.business_type,
+            description: p.description,
+            country: p.country,
+            timezone: p.timezone ?? 'Asia/Baghdad',
+            defaultLanguage: p.default_language ?? 'ar',
+            defaultCurrency: p.default_currency ?? 'IQD',
+          }
+        : null,
+      organizationCapabilities: cp
+        ? {
+            supportsLeads: cp.supports_leads,
+            leadRequiredBeforeBooking: cp.lead_required_before_booking,
+            autoCreateLeadOnIntent: cp.auto_create_lead_on_intent,
+            supportsBooking: cp.supports_booking,
+            supportsOffers: cp.supports_offers,
+            supportsQuotes: cp.supports_quotes,
+            supportsOrders: cp.supports_orders,
+            supportsInventory: cp.supports_inventory,
+            supportsStaff: cp.supports_staff,
+            supportsLocations: cp.supports_locations,
+            supportsProducts: cp.supports_products,
+            supportsServices: cp.supports_services,
+            supportsListings: cp.supports_listings,
           }
         : null,
       agentConfigVersionId: cfg.id,

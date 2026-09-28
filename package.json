@@ -25,6 +25,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:reset:test": "tsx scripts/db-reset-test.ts",
     "demo:seed": "tsx scripts/demo/seed.ts",
+    "demo:migrate": "tsx scripts/demo/migrate.ts",
     "demo:status": "tsx scripts/demo/status.ts",
     "demo:verify": "tsx scripts/demo/verify.ts",
     "demo:reset": "tsx scripts/demo/reset.ts",

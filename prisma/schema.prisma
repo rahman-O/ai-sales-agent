@@ -63,8 +63,37 @@ model Organization {
   followUpPolicy        OrganizationFollowUpPolicy?
   followUps             FollowUp[]
   conversationWorkingStates ConversationWorkingState[]
+  profile               OrganizationProfile?
+  capabilities          OrganizationCapabilities?
+  onboarding            OrganizationOnboarding?
+  catalogItems          CatalogItem[]
+  offers                Offer[]
+  businessPolicies      BusinessPolicy[]
 
   @@map("organizations")
+}
+
+model BusinessPolicy {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  policyType     String       @map("policy_type")
+  status         String       @default("DRAFT")
+  title          String
+  summary        String
+  rulesJson      Json         @default("{}") @map("rules_json")
+  enforcementMode String      @default("INFORMATIONAL_ONLY") @map("enforcement_mode")
+  effectiveFrom  DateTime?    @map("effective_from") @db.Timestamptz(6)
+  effectiveUntil DateTime?    @map("effective_until") @db.Timestamptz(6)
+  version        Int
+  metadataJson   Json?        @map("metadata_json")
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([organizationId, id])
+  @@unique([organizationId, policyType, version])
+  @@index([organizationId, policyType, status, effectiveFrom, effectiveUntil, version])
+  @@map("business_policies")
 }
 
 model Customer {
@@ -159,9 +188,76 @@ model Location {
   @@map("locations")
 }
 
+model CatalogItem {
+  id             String             @id @default(uuid()) @db.Uuid
+  organizationId String             @map("organization_id") @db.Uuid
+  kind           String
+  name           String
+  description    String?
+  sku            String?
+  amountMinor    BigInt?            @map("amount_minor")
+  currency       String?            @db.Char(3)
+  status         String             @default("ACTIVE")
+  metadataJson   Json?              @map("metadata_json")
+  version        Int                @default(1)
+  archivedAt     DateTime?          @map("archived_at") @db.Timestamptz(6)
+  createdAt      DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization   Organization       @relation(fields: [organizationId], references: [id])
+  service        Service?
+  offerLinks     OfferCatalogItem[]
+
+  @@unique([organizationId, id])
+  @@index([organizationId, kind, status])
+  @@index([organizationId, status, name])
+  @@map("catalog_items")
+}
+
+model Offer {
+  id                  String              @id @default(uuid()) @db.Uuid
+  organizationId      String              @map("organization_id") @db.Uuid
+  name                String
+  description         String?
+  status              String              @default("ACTIVE")
+  offerType           String              @map("offer_type")
+  discountPercentage  Int?                @map("discount_percentage")
+  discountAmountMinor BigInt?             @map("discount_amount_minor")
+  currency            String?             @db.Char(3)
+  startsAt            DateTime?           @map("starts_at") @db.Timestamptz(6)
+  endsAt              DateTime?           @map("ends_at") @db.Timestamptz(6)
+  priority            Int                 @default(0)
+  stackable           Boolean             @default(false)
+  eligibility         String              @default("ANY_CUSTOMER")
+  metadataJson        Json?               @map("metadata_json")
+  version             Int                 @default(1)
+  archivedAt          DateTime?           @map("archived_at") @db.Timestamptz(6)
+  createdAt           DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization        Organization        @relation(fields: [organizationId], references: [id])
+  targetCatalogItems  OfferCatalogItem[]
+
+  @@unique([organizationId, id])
+  @@index([organizationId, status, startsAt, endsAt])
+  @@map("offers")
+}
+
+model OfferCatalogItem {
+  organizationId String      @map("organization_id") @db.Uuid
+  offerId        String      @map("offer_id") @db.Uuid
+  catalogItemId  String      @map("catalog_item_id") @db.Uuid
+  createdAt      DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  offer          Offer       @relation(fields: [organizationId, offerId], references: [organizationId, id], onDelete: Cascade)
+  catalogItem    CatalogItem @relation(fields: [organizationId, catalogItemId], references: [organizationId, id], onDelete: Cascade)
+
+  @@id([organizationId, offerId, catalogItemId])
+  @@index([organizationId, catalogItemId])
+  @@map("offer_catalog_items")
+}
+
 model Service {
   id                  String         @id @default(uuid()) @db.Uuid
   organizationId      String         @map("organization_id") @db.Uuid
+  catalogItemId       String?        @unique @map("catalog_item_id") @db.Uuid
   locationId          String         @map("location_id") @db.Uuid
   name                String
   durationMinutes     Int            @map("duration_minutes")
@@ -180,11 +276,13 @@ model Service {
   updatedAt           DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
   organization        Organization   @relation(fields: [organizationId], references: [id])
   location            Location       @relation(fields: [organizationId, locationId], references: [organizationId, id])
+  catalogItem         CatalogItem?   @relation(fields: [organizationId, catalogItemId], references: [organizationId, id], onDelete: SetNull)
   staff               ServiceStaff[]
   leads               Lead[]
   bookings            Booking[]
 
   @@unique([organizationId, id])
+  @@unique([organizationId, catalogItemId])
   @@index([organizationId, active, name])
   @@map("services")
 }
@@ -964,5 +1062,61 @@ model ConversationWorkingState {
   @@id([organizationId, conversationId])
   @@map("conversation_working_state")
 }
+
+/// MB-01 — organization profile metadata for business identity.
+model OrganizationProfile {
+  organizationId  String       @id @map("organization_id") @db.Uuid
+  displayName     String?      @map("display_name")
+  businessType    String?      @map("business_type")
+  description     String?
+  country         String?      @default("IQ")
+  timezone        String       @default("Asia/Baghdad")
+  defaultLanguage String       @default("ar") @map("default_language")
+  defaultCurrency String       @default("IQD") @map("default_currency")
+  createdAt       DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("organization_profiles")
+}
+
+/// MB-01 — organization capabilities model controlling allowed features & workflows.
+model OrganizationCapabilities {
+  organizationId            String       @id @map("organization_id") @db.Uuid
+  supportsLeads             Boolean      @default(true) @map("supports_leads")
+  leadRequiredBeforeBooking Boolean      @default(false) @map("lead_required_before_booking")
+  autoCreateLeadOnIntent    Boolean      @default(true) @map("auto_create_lead_on_intent")
+  supportsBooking           Boolean      @default(true) @map("supports_booking")
+  supportsOffers            Boolean      @default(false) @map("supports_offers")
+  supportsQuotes            Boolean      @default(false) @map("supports_quotes")
+  supportsOrders            Boolean      @default(false) @map("supports_orders")
+  supportsInventory         Boolean      @default(false) @map("supports_inventory")
+  supportsStaff             Boolean      @default(true) @map("supports_staff")
+  supportsLocations         Boolean      @default(true) @map("supports_locations")
+  supportsProducts          Boolean      @default(false) @map("supports_products")
+  supportsServices          Boolean      @default(true) @map("supports_services")
+  supportsListings          Boolean      @default(false) @map("supports_listings")
+  createdAt                 DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                 DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization              Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("organization_capabilities")
+}
+
+/// MB-02 — persistent organization onboarding state
+model OrganizationOnboarding {
+  organizationId String       @id @map("organization_id") @db.Uuid
+  status         String       @default("NOT_STARTED")
+  currentStep    String       @default("IDENTITY") @map("current_step")
+  completedSteps Json         @default("[]") @map("completed_steps")
+  startedAt      DateTime?    @map("started_at") @db.Timestamptz(6)
+  completedAt    DateTime?    @map("completed_at") @db.Timestamptz(6)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("organization_onboarding")
+}
+
 
 

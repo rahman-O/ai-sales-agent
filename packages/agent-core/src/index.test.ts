@@ -122,6 +122,139 @@ function memoryStore(): RunStorePort & { newer: boolean; runs: Map<string, strin
   };
 }
 
+function bookingSnapshot(): ConversationSnapshot {
+  return {
+    organizationId: 'o', conversationId: 'c', customerId: 'cu', mode: 'AI_ACTIVE',
+    ownershipEpoch: 0, leaseOwner: 'w1', leaseFence: 1,
+    nextIngressSequence: 2, processedSequence: 0, targetIngressSequence: 1,
+    messages: [{ id: 'm1', direction: 'INBOUND', ingressSequence: 1, timelineSequence: 1, contentText: 'احجز الموعد' }],
+    summaryText: null, summaryWatermark: null, agentConfigVersionId: 'cfg',
+    promptVersion: 'p1', modelProfile: 'test', toolAllowlist: ['createBooking', 'searchServices'],
+  };
+}
+
+function sequenceProvider(decisions: unknown[]): ModelProvider {
+  let index = 0;
+  return {
+    id: 'sequence',
+    async generate() {
+      return {
+        decision: decisions[index++] ?? decisions.at(-1),
+        finishReason: 'stop',
+        usage: { estimated: false },
+        providerRequestId: `req-${index}`,
+        model: 'test-model',
+      };
+    },
+  };
+}
+
+function mutationTools(result: ToolResult, counter: { count: number }): ToolExecutorPort {
+  return {
+    listTools: () => [{
+      name: 'createBooking', version: '1', description: 'book', classification: 'mutate',
+      inputSchema: { type: 'object' },
+    }],
+    execute: async () => {
+      counter.count += 1;
+      return result;
+    },
+  };
+}
+
+test('post-booking schema repair can recover with a valid model final response', async () => {
+  const count = { count: 0 };
+  const result = await runAgentOrchestrator(bookingSnapshot(), {
+    provider: sequenceProvider([
+      { type: 'tool_request', toolName: 'createBooking', arguments: { slotToken: 'token' } },
+      { type: 'final_response', text: 'invalid', claims: [], unexpected: true },
+      { type: 'final_response', text: 'شكراً لك.', claims: [] },
+    ]),
+    tools: mutationTools({ ok: true, code: 'OK', data: { bookingId: 'booking-1' } }, count),
+    store: memoryStore(), allowFakeProvider: true,
+  });
+  assert.equal(result.terminal, 'SUCCEEDED');
+  assert.equal(count.count, 1);
+  assert.equal(result.finalization?.source, 'MODEL');
+  assert.equal(result.finalization?.structuredRetryRecovered, true);
+  assert.equal(result.finalization?.fallbackUsed, false);
+});
+
+test('post-booking repeated invalid output uses authoritative deterministic finalization once', async () => {
+  const count = { count: 0 };
+  const result = await runAgentOrchestrator(bookingSnapshot(), {
+    provider: sequenceProvider([
+      { type: 'tool_request', toolName: 'createBooking', arguments: { slotToken: 'token' } },
+      { type: 'final_response', text: 'invalid', claims: [], unexpected: true },
+      { type: 'final_response', text: 'still invalid', claims: [], unexpected: true },
+    ]),
+    tools: mutationTools({ ok: true, code: 'OK', data: { bookingId: 'booking-2' } }, count),
+    store: memoryStore(), allowFakeProvider: true,
+  });
+  assert.equal(result.terminal, 'SUCCEEDED');
+  assert.equal(count.count, 1);
+  assert.equal(result.finalization?.source, 'AUTHORITATIVE_TOOL_RESULT');
+  assert.equal(result.finalization?.fallbackUsed, true);
+  assert.match(result.decisionTrace.at(-1)?.type === 'final_response' ? result.decisionTrace.at(-1)!.text : '', /تأكيد حجزك/);
+});
+
+test('post-booking redundant tool request does not re-execute and finalizes deterministically with count 1', async () => {
+  const count = { count: 0 };
+  const result = await runAgentOrchestrator(bookingSnapshot(), {
+    provider: sequenceProvider([
+      { type: 'tool_request', toolName: 'createBooking', arguments: { slotToken: 'token' } },
+      { type: 'tool_request', toolName: 'createBooking', arguments: { slotToken: 'token' } },
+      { type: 'tool_request', toolName: 'createBooking', arguments: { slotToken: 'token' } },
+    ]),
+    tools: mutationTools({ ok: true, code: 'OK', data: { bookingId: 'booking-repeat' } }, count),
+    store: memoryStore(), allowFakeProvider: true,
+  });
+  assert.equal(result.terminal, 'SUCCEEDED');
+  assert.equal(count.count, 1);
+  assert.equal(result.finalization?.source, 'AUTHORITATIVE_TOOL_RESULT');
+  assert.equal(result.finalization?.fallbackUsed, true);
+});
+
+test('failed booking followed by invalid model output remains fail closed', async () => {
+  const count = { count: 0 };
+  const result = await runAgentOrchestrator(bookingSnapshot(), {
+    provider: sequenceProvider([
+      { type: 'tool_request', toolName: 'createBooking', arguments: { slotToken: 'token' } },
+      { type: 'final_response', text: 'invalid', claims: [], unexpected: true },
+      { type: 'final_response', text: 'still invalid', claims: [], unexpected: true },
+    ]),
+    tools: mutationTools({ ok: false, code: 'SLOT_UNAVAILABLE' }, count),
+    store: memoryStore(), allowFakeProvider: true,
+  });
+  assert.equal(result.terminal, 'FAILED');
+  assert.equal(result.reason, 'model_output_invalid');
+  assert.equal(result.finalization, undefined);
+  assert.equal(count.count, 1);
+});
+
+test('read-only success followed by invalid model output preserves fail-closed behavior', async () => {
+  const store = memoryStore();
+  let count = 0;
+  const tools: ToolExecutorPort = {
+    listTools: () => [{ name: 'searchServices', version: '1', description: 'search', classification: 'read', inputSchema: {} }],
+    execute: async () => { count += 1; return { ok: true, code: 'OK', data: { services: [] } }; },
+  };
+  const snap = bookingSnapshot();
+  snap.toolAllowlist = ['searchServices'];
+  const result = await runAgentOrchestrator(snap, {
+    provider: sequenceProvider([
+      { type: 'tool_request', toolName: 'searchServices', arguments: { query: 'x' } },
+      { type: 'final_response', text: 'invalid', claims: [], unexpected: true },
+      { type: 'final_response', text: 'still invalid', claims: [], unexpected: true },
+    ]),
+    tools, store, allowFakeProvider: true,
+  });
+  assert.equal(result.terminal, 'FAILED');
+  assert.equal(result.reason, 'model_output_invalid');
+  assert.equal(result.finalization, undefined);
+  assert.equal(count, 1);
+});
+
 test('orchestrator final response with Fake provider', async () => {
   const store = memoryStore();
   const tools: ToolExecutorPort = {

@@ -7,7 +7,7 @@ export default function HomePage() {
       <p>Phase 01 foundation — staff shell.</p>
       <p>
         <Link href="/login">Login</Link> · <Link href="/dashboard">Dashboard</Link> ·{' '}
-        <Link href="/app">App</Link>
+        <Link href="/onboarding">Onboarding</Link> · <Link href="/app">App</Link>
       </p>
     </main>
   );

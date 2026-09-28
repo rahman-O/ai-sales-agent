@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { OperatorNav } from '@/components/OperatorNav';
+import { CapabilityGuard } from '@/components/CapabilityGuard';
 
 type Lead = {
   id: string;
@@ -53,24 +54,24 @@ export default function LeadsPage() {
   async function openLead(id: string) {
     setSelectedId(id);
     setError('');
-    const [d, a] = await Promise.all([
+    const [lRes, aRes] = await Promise.all([
       fetch(`/api/backend/organizations/${orgId}/leads/${id}`),
       fetch(`/api/backend/organizations/${orgId}/leads/${id}/activities`),
     ]);
-    if (!d.ok) {
-      setError(`detail_${d.status}`);
+    if (!lRes.ok) {
+      setError(`get_${lRes.status}`);
       return;
     }
-    setDetail(await d.json());
-    if (a.ok) setActivities(await a.json());
+    setDetail(await lRes.json());
+    if (aRes.ok) setActivities(await aRes.json());
   }
 
   async function addNote() {
     if (!selectedId || !note.trim()) return;
-    const res = await fetch(`/api/backend/organizations/${orgId}/leads/${selectedId}/notes`, {
+    const res = await fetch(`/api/backend/organizations/${orgId}/leads/${selectedId}/activities`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ text: note }),
+      body: JSON.stringify({ type: 'NOTE_ADDED', metadataJson: { text: note } }),
     });
     if (!res.ok) {
       setError(`note_${res.status}`);
@@ -82,7 +83,7 @@ export default function LeadsPage() {
 
   return (
     <main style={{ fontFamily: 'Georgia, serif', maxWidth: 800, margin: '2rem auto', padding: 16 }}>
-      <OperatorNav current="/leads" />
+      <OperatorNav current="/leads" orgId={orgId} />
       <h1 style={{ fontSize: '1.75rem', marginBottom: 8 }}>Leads</h1>
       <p style={{ color: '#444', marginTop: 0 }}>
         Open opportunities only — no BOOKED/WON in this phase. Qualification is derived.
@@ -95,73 +96,76 @@ export default function LeadsPage() {
           style={{ display: 'block', width: '100%', marginTop: 4, padding: 8 }}
         />
       </label>
-      <label style={{ display: 'block', marginBottom: 12 }}>
-        Status filter
-        <input
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          placeholder="NEW, ENGAGED, …"
-          style={{ display: 'block', width: '100%', marginTop: 4, padding: 8 }}
-        />
-      </label>
-      <button type="button" onClick={() => void refresh()} style={{ marginBottom: 16, padding: '8px 14px' }}>
-        Refresh
-      </button>
-      {error ? <p style={{ color: '#a00' }}>{error}</p> : null}
-      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-        {leads.map((l) => (
-          <li key={l.id} style={{ borderBottom: '1px solid #ddd', padding: '10px 0' }}>
-            <button
-              type="button"
-              onClick={() => void openLead(l.id)}
-              style={{
-                background: 'none',
-                border: 'none',
-                padding: 0,
-                textAlign: 'left',
-                cursor: 'pointer',
-                font: 'inherit',
-                width: '100%',
-              }}
-            >
-              <strong>{l.status}</strong> · {l.qualificationState} · v{l.version}
-              <br />
-              <span style={{ color: '#555', fontSize: '0.9rem' }}>
-                {l.needSummary || '(no summary)'} — {l.id.slice(0, 8)}…
-              </span>
+
+      <CapabilityGuard organizationId={orgId} requiredCapability="supportsLeads" pathname="/leads">
+        <label style={{ display: 'block', marginBottom: 12 }}>
+          Status filter
+          <input
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            placeholder="NEW, ENGAGED, …"
+            style={{ display: 'block', width: '100%', marginTop: 4, padding: 8 }}
+          />
+        </label>
+        <button type="button" onClick={() => void refresh()} style={{ marginBottom: 16, padding: '8px 14px' }}>
+          Refresh
+        </button>
+        {error ? <p style={{ color: '#a00' }}>{error}</p> : null}
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+          {leads.map((l) => (
+            <li key={l.id} style={{ borderBottom: '1px solid #ddd', padding: '10px 0' }}>
+              <button
+                type="button"
+                onClick={() => void openLead(l.id)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  font: 'inherit',
+                  width: '100%',
+                }}
+              >
+                <strong>{l.status}</strong> · {l.qualificationState} · v{l.version}
+                <br />
+                <span style={{ color: '#555', fontSize: '0.9rem' }}>
+                  {l.needSummary || '(no summary)'} — {l.id.slice(0, 8)}…
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+        {detail ? (
+          <section style={{ marginTop: 28 }}>
+            <h2 style={{ fontSize: '1.25rem' }}>Detail</h2>
+            <p>
+              {detail.status} / {detail.qualificationState} / v{detail.version}
+            </p>
+            <p style={{ whiteSpace: 'pre-wrap' }}>{detail.needSummary}</p>
+            <label style={{ display: 'block', marginTop: 12 }}>
+              Add note
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                rows={3}
+                style={{ display: 'block', width: '100%', marginTop: 4, padding: 8 }}
+              />
+            </label>
+            <button type="button" onClick={() => void addNote()} style={{ marginTop: 8, padding: '8px 14px' }}>
+              Save note
             </button>
-          </li>
-        ))}
-      </ul>
-      {detail ? (
-        <section style={{ marginTop: 28 }}>
-          <h2 style={{ fontSize: '1.25rem' }}>Detail</h2>
-          <p>
-            {detail.status} / {detail.qualificationState} / v{detail.version}
-          </p>
-          <p style={{ whiteSpace: 'pre-wrap' }}>{detail.needSummary}</p>
-          <label style={{ display: 'block', marginTop: 12 }}>
-            Add note
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              rows={3}
-              style={{ display: 'block', width: '100%', marginTop: 4, padding: 8 }}
-            />
-          </label>
-          <button type="button" onClick={() => void addNote()} style={{ marginTop: 8, padding: '8px 14px' }}>
-            Save note
-          </button>
-          <h3 style={{ marginTop: 20, fontSize: '1.1rem' }}>Activity</h3>
-          <ol style={{ paddingLeft: 20 }}>
-            {activities.map((a) => (
-              <li key={a.id} style={{ marginBottom: 6 }}>
-                {a.type} · {a.actorType} · {new Date(a.createdAt).toLocaleString()}
-              </li>
-            ))}
-          </ol>
-        </section>
-      ) : null}
+            <h3 style={{ marginTop: 20, fontSize: '1.1rem' }}>Activity</h3>
+            <ol style={{ paddingLeft: 20 }}>
+              {activities.map((a) => (
+                <li key={a.id} style={{ marginBottom: 6 }}>
+                  {a.type} · {a.actorType} · {new Date(a.createdAt).toLocaleString()}
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
+      </CapabilityGuard>
     </main>
   );
 }

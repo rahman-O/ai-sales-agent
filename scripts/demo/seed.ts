@@ -16,6 +16,9 @@ import {
   DEMO_ORG_ID,
   DEMO_ORG_NAME,
   DEMO_ORG_SLUG,
+  DEMO_CATALOG_ITEM_IDS,
+  DEMO_OFFER_IDS,
+  DEMO_POLICY_IDS,
   DEMO_SERVICE_IDS,
   DEMO_STAFF_IDS,
   DEMO_TIMEZONE,
@@ -131,6 +134,75 @@ async function main() {
         status: 'ACTIVE',
       },
     });
+
+    // ——— Organization Profile & Capabilities & Onboarding ———
+    await prisma.organizationProfile.upsert({
+      where: { organizationId: DEMO_ORG_ID },
+      update: {
+        businessType: 'CLINIC',
+        country: 'IQ',
+        timezone: DEMO_TIMEZONE,
+        defaultLanguage: 'ar',
+        defaultCurrency: 'IQD',
+      },
+      create: {
+        organizationId: DEMO_ORG_ID,
+        businessType: 'CLINIC',
+        country: 'IQ',
+        timezone: DEMO_TIMEZONE,
+        defaultLanguage: 'ar',
+        defaultCurrency: 'IQD',
+      },
+    });
+
+    await prisma.organizationCapabilities.upsert({
+      where: { organizationId: DEMO_ORG_ID },
+      update: {
+        supportsLeads: true,
+        leadRequiredBeforeBooking: false,
+        autoCreateLeadOnIntent: true,
+        supportsBooking: true,
+        supportsOffers: true,
+        supportsQuotes: false,
+        supportsOrders: false,
+        supportsInventory: false,
+        supportsStaff: true,
+        supportsLocations: true,
+        supportsProducts: false,
+        supportsServices: true,
+        supportsListings: false,
+      },
+      create: {
+        organizationId: DEMO_ORG_ID,
+        supportsLeads: true,
+        leadRequiredBeforeBooking: false,
+        autoCreateLeadOnIntent: true,
+        supportsBooking: true,
+        supportsOffers: true,
+        supportsQuotes: false,
+        supportsOrders: false,
+        supportsInventory: false,
+        supportsStaff: true,
+        supportsLocations: true,
+        supportsProducts: false,
+        supportsServices: true,
+        supportsListings: false,
+      },
+    });
+
+    await prisma.organizationOnboarding.upsert({
+      where: { organizationId: DEMO_ORG_ID },
+      update: {
+        status: 'COMPLETED',
+        completedAt: new Date(),
+      },
+      create: {
+        organizationId: DEMO_ORG_ID,
+        status: 'COMPLETED',
+        completedAt: new Date(),
+      },
+    });
+
     record({ section: 'ORGANIZATION', result: 'PASS' });
     console.log(JSON.stringify({ DEMO_OPERATOR: 'READY' }));
 
@@ -156,27 +228,52 @@ async function main() {
     const services = [
       {
         id: DEMO_SERVICE_IDS.consultation,
+        catalogItemId: DEMO_CATALOG_ITEM_IDS.consultation,
         name: 'Dental Consultation (Demo Synthetic)',
         durationMinutes: 30,
         amountMinor: 50000n,
       },
       {
         id: DEMO_SERVICE_IDS.cleaning,
+        catalogItemId: DEMO_CATALOG_ITEM_IDS.cleaning,
         name: 'Teeth Cleaning (Demo Synthetic)',
         durationMinutes: 45,
         amountMinor: 75000n,
       },
       {
         id: DEMO_SERVICE_IDS.checkup,
+        catalogItemId: DEMO_CATALOG_ITEM_IDS.checkup,
         name: 'Dental Check-up (Demo Synthetic)',
         durationMinutes: 20,
         amountMinor: 35000n,
       },
     ];
     for (const s of services) {
+      await prisma.catalogItem.upsert({
+        where: { organizationId_id: { organizationId: DEMO_ORG_ID, id: s.catalogItemId } },
+        update: {
+          name: s.name,
+          kind: 'SERVICE',
+          amountMinor: s.amountMinor,
+          currency: 'IQD',
+          status: 'ACTIVE',
+          archivedAt: null,
+        },
+        create: {
+          id: s.catalogItemId,
+          organizationId: DEMO_ORG_ID,
+          kind: 'SERVICE',
+          name: s.name,
+          amountMinor: s.amountMinor,
+          currency: 'IQD',
+          status: 'ACTIVE',
+        },
+      });
+
       await prisma.service.upsert({
         where: { organizationId_id: { organizationId: DEMO_ORG_ID, id: s.id } },
         update: {
+          catalogItemId: s.catalogItemId,
           name: s.name,
           durationMinutes: s.durationMinutes,
           amountMinor: s.amountMinor,
@@ -189,6 +286,7 @@ async function main() {
         create: {
           id: s.id,
           organizationId: DEMO_ORG_ID,
+          catalogItemId: s.catalogItemId,
           locationId: DEMO_LOCATION_ID,
           name: s.name,
           durationMinutes: s.durationMinutes,
@@ -199,6 +297,130 @@ async function main() {
         },
       });
     }
+
+    // ——— Offers (MB-05) ———
+    await prisma.offerCatalogItem.deleteMany({ where: { organizationId: DEMO_ORG_ID } });
+    await prisma.offer.deleteMany({ where: { organizationId: DEMO_ORG_ID } });
+
+    const seedNow = new Date();
+    await prisma.offer.create({
+      data: {
+        id: DEMO_OFFER_IDS.activeSummerSale,
+        organizationId: DEMO_ORG_ID,
+        name: 'Summer Dental Care Discount',
+        description: '20% off dental consultations and cleanings',
+        status: 'ACTIVE',
+        offerType: 'PERCENTAGE_DISCOUNT',
+        discountPercentage: 20,
+        startsAt: new Date(seedNow.getTime() - 7 * 86400000),
+        endsAt: new Date(seedNow.getTime() + 30 * 86400000),
+        priority: 10,
+        stackable: false,
+        eligibility: 'ANY_CUSTOMER',
+      },
+    });
+
+    await prisma.offerCatalogItem.createMany({
+      data: [
+        {
+          organizationId: DEMO_ORG_ID,
+          offerId: DEMO_OFFER_IDS.activeSummerSale,
+          catalogItemId: DEMO_CATALOG_ITEM_IDS.consultation,
+        },
+        {
+          organizationId: DEMO_ORG_ID,
+          offerId: DEMO_OFFER_IDS.activeSummerSale,
+          catalogItemId: DEMO_CATALOG_ITEM_IDS.cleaning,
+        },
+      ],
+    });
+
+    await prisma.offer.create({
+      data: {
+        id: DEMO_OFFER_IDS.futureWinterPromo,
+        organizationId: DEMO_ORG_ID,
+        name: 'Winter Special Promotion',
+        description: 'Upcoming winter fixed discount',
+        status: 'ACTIVE',
+        offerType: 'FIXED_DISCOUNT',
+        discountAmountMinor: 10000n,
+        currency: 'IQD',
+        startsAt: new Date(seedNow.getTime() + 60 * 86400000),
+        endsAt: new Date(seedNow.getTime() + 90 * 86400000),
+        priority: 5,
+        stackable: false,
+        eligibility: 'ANY_CUSTOMER',
+      },
+    });
+
+    await prisma.offerCatalogItem.createMany({
+      data: [
+        {
+          organizationId: DEMO_ORG_ID,
+          offerId: DEMO_OFFER_IDS.futureWinterPromo,
+          catalogItemId: DEMO_CATALOG_ITEM_IDS.consultation,
+        },
+      ],
+    });
+
+    await prisma.offer.create({
+      data: {
+        id: DEMO_OFFER_IDS.expiredWelcomeDiscount,
+        organizationId: DEMO_ORG_ID,
+        name: 'Old Welcome Offer',
+        description: 'Expired introductory discount',
+        status: 'ARCHIVED',
+        offerType: 'PERCENTAGE_DISCOUNT',
+        discountPercentage: 15,
+        startsAt: new Date(seedNow.getTime() - 60 * 86400000),
+        endsAt: new Date(seedNow.getTime() - 30 * 86400000),
+        priority: 0,
+        stackable: false,
+        eligibility: 'ANY_CUSTOMER',
+      },
+    });
+    record({ section: 'OFFERS', result: 'PASS' });
+
+    // ——— Business policies (MB-06) ———
+    await prisma.businessPolicy.deleteMany({ where: { organizationId: DEMO_ORG_ID } });
+    await prisma.businessPolicy.createMany({
+      data: [
+        {
+          id: DEMO_POLICY_IDS.cancellation,
+          organizationId: DEMO_ORG_ID,
+          policyType: 'CANCELLATION',
+          status: 'ACTIVE',
+          title: 'Appointment cancellation',
+          summary: 'Appointments may be cancelled at least 30 minutes before their start time.',
+          rulesJson: { cutoffMinutes: 30, allowAfterCutoff: false },
+          enforcementMode: 'ENFORCEABLE',
+          version: 1,
+        },
+        {
+          id: DEMO_POLICY_IDS.rescheduling,
+          organizationId: DEMO_ORG_ID,
+          policyType: 'RESCHEDULING',
+          status: 'ACTIVE',
+          title: 'Appointment rescheduling',
+          summary: 'Appointments may be rescheduled at least 30 minutes before their start time.',
+          rulesJson: { cutoffMinutes: 30 },
+          enforcementMode: 'ENFORCEABLE',
+          version: 1,
+        },
+        {
+          id: DEMO_POLICY_IDS.payment,
+          organizationId: DEMO_ORG_ID,
+          policyType: 'PAYMENT',
+          status: 'ACTIVE',
+          title: 'Accepted payment methods',
+          summary: 'The demo accepts cash and card. This policy does not execute payments.',
+          rulesJson: { acceptedMethods: ['CASH', 'CARD'] },
+          enforcementMode: 'INFORMATIONAL_ONLY',
+          version: 1,
+        },
+      ],
+    });
+    record({ section: 'POLICIES', result: 'PASS' });
 
     for (const [key, id] of Object.entries(DEMO_STAFF_IDS)) {
       await prisma.staffMember.upsert({

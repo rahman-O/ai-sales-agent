@@ -217,8 +217,8 @@ async function main() {
     }
     case 'ollama:up': {
       ensureEnv();
-      run('docker', composeArgs(['up', '-d', 'ollama']));
-      run('docker', composeArgs(['up', 'ollama-bootstrap']));
+      run('docker', composeArgs(['--profile', 'local-ai', 'up', '-d', 'ollama']));
+      run('docker', composeArgs(['--profile', 'local-ai', 'up', 'ollama-bootstrap']));
       console.log(JSON.stringify({ DEMO_OLLAMA_UP: 'PASS', BASE_URL: 'http://127.0.0.1:11434/v1' }));
       break;
     }

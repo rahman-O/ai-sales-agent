@@ -1,5 +1,6 @@
 import type { PoolClient } from 'pg';
 import { randomUUID } from 'node:crypto';
+import { policyAllowsAction } from '@ai-sales-agent/contracts';
 import {
   applyExceptionsToDay,
   formatLocalDateInZone,
@@ -19,6 +20,31 @@ const MAX_SLOTS = 20;
 
 type ToolOk = { ok: true; data: unknown };
 type ToolErr = { ok: false; code: string; safeMessage?: string };
+
+async function enforcePolicy(
+  c: PoolClient,
+  org: string,
+  type: 'CANCELLATION' | 'RESCHEDULING',
+  startsAt: Date,
+): Promise<ToolErr | null> {
+  const result = await c.query(
+    `SELECT id, version, rules_json FROM business_policies
+      WHERE organization_id=$1 AND policy_type=$2 AND status='ACTIVE'
+        AND (effective_from IS NULL OR effective_from <= now())
+        AND (effective_until IS NULL OR effective_until >= now())
+      ORDER BY version DESC, effective_from DESC NULLS LAST, created_at DESC LIMIT 1`,
+    [org, type],
+  );
+  const policy = result.rows[0];
+  if (!policy) return null;
+  const evaluation = policyAllowsAction(type, policy.rules_json, startsAt);
+  if (evaluation.allowed) return null;
+  return {
+    ok: false,
+    code: `${type}_POLICY_CUTOFF`,
+    safeMessage: `This request is outside the active ${type.toLowerCase()} policy cutoff.`,
+  };
+}
 
 function timeStr(v: unknown): string {
   if (typeof v === 'string') return v.length === 5 ? `${v}:00` : v.slice(0, 8);
@@ -393,16 +419,52 @@ export async function toolCreateBooking(
     const b = nearest(localToUtcCandidates(localDate, w.endLocal, timezone), occupiedEndsAt);
     return a && b && intervalContained(occupiedStartsAt, occupiedEndsAt, a, b);
   });
-  if (!fits) return { ok: false, code: 'SLOT_UNAVAILABLE' };
+  // MB-01: Check organization capabilities
+  const capsRow = await c.query<{
+    supports_booking: boolean;
+    supports_leads: boolean;
+    lead_required_before_booking: boolean;
+  }>(
+    `SELECT supports_booking, supports_leads, lead_required_before_booking
+     FROM organization_capabilities WHERE organization_id = $1`,
+    [org],
+  );
+  const supportsBooking = capsRow.rows[0]?.supports_booking ?? true;
+  const supportsLeads = capsRow.rows[0]?.supports_leads ?? true;
+  const leadRequiredBeforeBooking = capsRow.rows[0]?.lead_required_before_booking ?? false;
 
+  if (!supportsBooking) {
+    return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'booking_disabled' };
+  }
+
+  let effectiveLeadId: string | null = null;
   if (args.leadId) {
-    const lead = await c.query(
-      `SELECT id, customer_id FROM leads WHERE organization_id=$1 AND id=$2`,
+    if (!isValidUuid(args.leadId)) {
+      return invalidUuidArg('createBooking', 'leadId', args.leadId);
+    }
+    const lead = await c.query<{ id: string; customer_id: string; status: string }>(
+      `SELECT id, customer_id, status FROM leads WHERE organization_id=$1 AND id=$2`,
       [org, args.leadId],
     );
     if (!lead.rows[0] || lead.rows[0].customer_id !== customerId) {
       return { ok: false, code: 'INVALID_ARGS' };
     }
+    if (['DISQUALIFIED', 'ARCHIVED'].includes(lead.rows[0].status)) {
+      return { ok: false, code: 'INVALID_ARGS' };
+    }
+    effectiveLeadId = lead.rows[0].id;
+  } else if (supportsLeads && leadRequiredBeforeBooking) {
+    // Lead required but not passed in args: check if customer has an authoritative active lead
+    const openLead = await c.query<{ id: string }>(
+      `SELECT id FROM leads
+       WHERE organization_id=$1 AND customer_id=$2 AND status IN ('NEW','ENGAGED','QUALIFIED','NURTURE','CONTACTED')
+       ORDER BY updated_at DESC LIMIT 1`,
+      [org, customerId],
+    );
+    if (!openLead.rows[0]) {
+      return { ok: false, code: 'LEAD_REQUIRED', safeMessage: 'lead_required_before_booking' };
+    }
+    effectiveLeadId = openLead.rows[0].id;
   }
 
   const id = randomUUID();
@@ -430,7 +492,7 @@ export async function toolCreateBooking(
         token.serviceId,
         token.locationId,
         token.staffMemberId,
-        args.leadId ?? null,
+        effectiveLeadId ?? null,
         ctx.conversationId,
         confirmationMessageId,
         startsAt.toISOString(),
@@ -464,14 +526,14 @@ export async function toolCreateBooking(
      VALUES($1,$2,$3,'BOOKING_CREATED','AGENT',$4,$5::jsonb)`,
     [randomUUID(), org, id, ctx.agentRunId, JSON.stringify({ startsAt: token.startsAt })],
   );
-  if (args.leadId) {
+  if (effectiveLeadId) {
     await c.query(
       `INSERT INTO lead_activities(id,organization_id,lead_id,type,actor_type,actor_id,source_conversation_id,source_agent_run_id,metadata_json)
        VALUES($1,$2,$3,'BOOKING_CONFIRMED','AGENT',$4,$5,$6,$7::jsonb)`,
       [
         randomUUID(),
         org,
-        args.leadId,
+        effectiveLeadId,
         ctx.agentRunId,
         ctx.conversationId,
         ctx.agentRunId,
@@ -522,6 +584,14 @@ export async function toolCancelBooking(
   if (!['CUSTOMER_REQUEST', 'CLINIC_REQUEST', 'DUPLICATE_BOOKING', 'OTHER'].includes(reason)) {
     return { ok: false, code: 'INVALID_ARGS' };
   }
+  const currentResult = await c.query(
+    `SELECT starts_at FROM bookings
+      WHERE organization_id=$1 AND id=$2 AND customer_id=$3 AND version=$4 AND status='CONFIRMED'`,
+    [org, args.bookingId, customerId, args.expectedVersion],
+  );
+  if (!currentResult.rows[0]) return { ok: false, code: 'VERSION_CONFLICT' };
+  const policyError = await enforcePolicy(c, org, 'CANCELLATION', new Date(currentResult.rows[0].starts_at));
+  if (policyError) return policyError;
   const upd = await c.query(
     `UPDATE bookings SET status='CANCELLED', cancellation_reason_code=$5,
        version=version+1, updated_at=now()
@@ -564,6 +634,8 @@ export async function toolRescheduleBooking(
   const current = cur.rows[0];
   if (!current || current.status !== 'CONFIRMED') return { ok: false, code: 'NOT_FOUND' };
   if (Number(current.version) !== args.expectedVersion) return { ok: false, code: 'VERSION_CONFLICT' };
+  const policyError = await enforcePolicy(c, org, 'RESCHEDULING', new Date(current.starts_at));
+  if (policyError) return policyError;
 
   const verified = verifySlotToken(args.slotToken, secret, { organizationId: org, customerId });
   if (!verified.ok) return { ok: false, code: 'SLOT_UNAVAILABLE' };

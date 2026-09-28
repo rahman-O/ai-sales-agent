@@ -195,6 +195,7 @@ test('upsertWorkingStateCAS fails cleanly if lease fence is stale', async () => 
 
 test('applySelectiveToolWriteBack handles searchServices with single unambiguous match', async () => {
   let savedState: any = null;
+  let savedCustomerId: string | null = null;
   const mockClient = {
     query: async (sql: string, params: any[]) => {
       if (sql.includes('SELECT version, customer_id')) {
@@ -204,6 +205,7 @@ test('applySelectiveToolWriteBack handles searchServices with single unambiguous
         return { rows: [{ mode: 'AI_ACTIVE', ownership_epoch: 1, lease_fence: 1 }] };
       }
       if (sql.includes('INSERT INTO conversation_working_state')) {
+        savedCustomerId = params[2];
         savedState = JSON.parse(params[4]);
         return { rowCount: 1, rows: [{ version: 1 }] };
       }
@@ -214,6 +216,7 @@ test('applySelectiveToolWriteBack handles searchServices with single unambiguous
   await applySelectiveToolWriteBack(mockClient, {
     organizationId: 'org-1',
     conversationId: 'conv-1',
+    customerId: 'cust-authoritative',
     agentRunId: 'run-1',
     toolCallId: 'call-1',
     toolName: 'searchServices',
@@ -230,8 +233,81 @@ test('applySelectiveToolWriteBack handles searchServices with single unambiguous
   });
 
   assert.ok(savedState);
+  assert.equal(savedCustomerId, 'cust-authoritative');
   assert.equal(savedState.selectedEntity?.entityId, 'srv-dental');
   assert.equal(savedState.selectedEntity?.entityLabel, 'Dental Check-up');
+});
+
+test('applySelectiveToolWriteBack preserves an existing authoritative customer', async () => {
+  let savedCustomerId: string | null = null;
+  const mockClient = {
+    query: async (sql: string, params: any[]) => {
+      if (sql.includes('FROM conversation_working_state')) {
+        return { rows: [{ version: 4, customer_id: 'cust-same', lead_id: null, state_json: {}, updated_at: new Date() }] };
+      }
+      if (sql.includes('SELECT mode, ownership_epoch')) {
+        return { rows: [{ mode: 'AI_ACTIVE', ownership_epoch: 1, lease_fence: 1 }] };
+      }
+      if (sql.includes('UPDATE conversation_working_state')) {
+        savedCustomerId = params[2];
+        return { rows: [{ version: 5 }] };
+      }
+      return { rows: [] };
+    },
+  } as any;
+
+  await applySelectiveToolWriteBack(mockClient, {
+    organizationId: 'org-1', conversationId: 'conv-1', customerId: 'cust-same', agentRunId: 'run-1',
+    toolName: 'searchServices', toolArgs: { query: 'dental' },
+    toolResult: { ok: true, data: { services: [{ id: 'srv-1', name: 'Dental' }] } },
+    leaseFence: 1, ownershipEpoch: 1,
+  });
+  assert.equal(savedCustomerId, 'cust-same');
+});
+
+test('applySelectiveToolWriteBack ignores a conflicting customer id from tool results', async () => {
+  let savedCustomerId: string | null = null;
+  const mockClient = {
+    query: async (sql: string, params: any[]) => {
+      if (sql.includes('FROM conversation_working_state')) return { rows: [] };
+      if (sql.includes('SELECT mode, ownership_epoch')) return { rows: [{ mode: 'AI_ACTIVE', ownership_epoch: 1, lease_fence: 1 }] };
+      if (sql.includes('INSERT INTO conversation_working_state')) {
+        savedCustomerId = params[2];
+        return { rows: [{ version: 1 }] };
+      }
+      return { rows: [] };
+    },
+  } as any;
+
+  await applySelectiveToolWriteBack(mockClient, {
+    organizationId: 'org-1', conversationId: 'conv-1', customerId: 'cust-authoritative', agentRunId: 'run-1',
+    toolName: 'createCustomer', toolArgs: {},
+    toolResult: { ok: true, data: { customerId: 'cust-untrusted' } },
+    leaseFence: 1, ownershipEpoch: 1,
+  });
+  assert.equal(savedCustomerId, 'cust-authoritative');
+});
+
+test('applySelectiveToolWriteBack keeps createCustomer result support without trusted context', async () => {
+  let savedCustomerId: string | null = null;
+  const mockClient = {
+    query: async (sql: string, params: any[]) => {
+      if (sql.includes('FROM conversation_working_state')) return { rows: [] };
+      if (sql.includes('SELECT mode, ownership_epoch')) return { rows: [{ mode: 'AI_ACTIVE', ownership_epoch: 1, lease_fence: 1 }] };
+      if (sql.includes('INSERT INTO conversation_working_state')) {
+        savedCustomerId = params[2];
+        return { rows: [{ version: 1 }] };
+      }
+      return { rows: [] };
+    },
+  } as any;
+
+  await applySelectiveToolWriteBack(mockClient, {
+    organizationId: 'org-1', conversationId: 'conv-1', agentRunId: 'run-1',
+    toolName: 'createCustomer', toolArgs: {}, toolResult: { ok: true, data: { customerId: 'cust-created' } },
+    leaseFence: 1, ownershipEpoch: 1,
+  });
+  assert.equal(savedCustomerId, 'cust-created');
 });
 
 test('applySelectiveToolWriteBack handles getAvailableSlots capping candidates at 3', async () => {

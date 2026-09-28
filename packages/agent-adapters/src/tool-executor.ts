@@ -31,6 +31,7 @@ import {
 import { matchServices } from './service-search.js';
 import { invalidUuidArg, isValidUuid } from './uuid-validator.js';
 import { applySelectiveToolWriteBack } from './conversation-working-state.js';
+import { BUSINESS_POLICY_TYPES } from '@ai-sales-agent/contracts';
 
 const TOOL_VERSION = '1';
 const MAX_DISTANCE = ACCEPTED_EMBEDDING_PROFILE.maxDistance;
@@ -302,6 +303,32 @@ const DEFS: ToolDefinition[] = [
     classification: 'read',
     inputSchema: { type: 'object', additionalProperties: false, properties: {} },
   },
+  {
+    name: 'getActiveOffers',
+    version: TOOL_VERSION,
+    description: 'Get currently active promotional offers and discounts for the organization or a specific catalog item',
+    classification: 'read',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        catalogItemId: { type: 'string' },
+        query: { type: 'string' },
+      },
+    },
+  },
+  {
+    name: 'getEffectivePolicy',
+    version: TOOL_VERSION,
+    description: 'Get the authoritative currently effective business policy of one type',
+    classification: 'read',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: { policyType: { type: 'string', enum: [...BUSINESS_POLICY_TYPES] } },
+      required: ['policyType'],
+    },
+  },
 ];
 
 async function withTenant<T>(
@@ -427,6 +454,35 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
           }
           if (row.customer_id !== ctx.customerId) {
             return { ok: false, code: 'TOOL_NOT_AUTHORIZED' };
+          }
+
+          // MB-01: Load organization capabilities for mutate gating
+          const capsRow = await c.query<{
+            supports_leads: boolean;
+            supports_booking: boolean;
+          }>(
+            `SELECT supports_leads, supports_booking
+             FROM organization_capabilities WHERE organization_id=$1`,
+            [ctx.organizationId],
+          );
+          const supportsLeads = capsRow.rows[0]?.supports_leads ?? true;
+          const supportsBooking = capsRow.rows[0]?.supports_booking ?? true;
+
+          if (
+            !supportsBooking &&
+            (name === 'createBooking' || name === 'cancelBooking' || name === 'rescheduleBooking')
+          ) {
+            return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'booking_disabled' };
+          }
+
+          if (
+            !supportsLeads &&
+            (name === 'ensureLead' ||
+              name === 'updateLeadQualification' ||
+              name === 'transitionLead' ||
+              name === 'scheduleLeadFollowUp')
+          ) {
+            return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'leads_disabled' };
           }
 
           const runMutate = async (): Promise<ToolResult> => {
@@ -725,6 +781,7 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
               await applySelectiveToolWriteBack(c, {
                 organizationId: ctx.organizationId,
                 conversationId: ctx.conversationId,
+                customerId: ctx.customerId,
                 agentRunId: ctx.agentRunId,
                 toolCallId: (args as any)?.toolCallId ?? null,
                 toolName: name,
@@ -743,6 +800,26 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
 
       // Read tools
       return withTenant(pool, ctx.organizationId, async (c) => {
+        // MB-01: Load organization capabilities for read gating
+        const capsRow = await c.query<{
+          supports_leads: boolean;
+          supports_booking: boolean;
+        }>(
+          `SELECT supports_leads, supports_booking
+           FROM organization_capabilities WHERE organization_id=$1`,
+          [ctx.organizationId],
+        );
+        const supportsLeads = capsRow.rows[0]?.supports_leads ?? true;
+        const supportsBooking = capsRow.rows[0]?.supports_booking ?? true;
+
+        if (!supportsBooking && (name === 'getAvailableSlots' || name === 'getBookings')) {
+          return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'booking_disabled' };
+        }
+
+        if (!supportsLeads && name === 'getLead') {
+          return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'leads_disabled' };
+        }
+
         const runRead = async (): Promise<ToolResult> => {
           if (name === 'getCustomer') {
             const r = await c.query(
@@ -919,6 +996,106 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
               },
             };
           }
+          if (name === 'getActiveOffers') {
+            const catalogItemId = typeof args.catalogItemId === 'string' ? args.catalogItemId.trim() : undefined;
+            if (catalogItemId && !isValidUuid(catalogItemId)) {
+              return invalidUuidArg('getActiveOffers', 'catalogItemId', catalogItemId);
+            }
+
+            const capRes = await c.query(
+              `SELECT supports_offers FROM organization_capabilities WHERE organization_id = $1`,
+              [ctx.organizationId],
+            );
+            if (capRes.rows[0] && capRes.rows[0].supports_offers === false) {
+              return {
+                ok: true,
+                code: 'OK',
+                data: {
+                  offers: [],
+                  message: 'Offers are not enabled for this organization',
+                },
+              };
+            }
+
+            const now = new Date();
+            let querySql = `
+              SELECT DISTINCT o.id, o.name, o.description, o.offer_type,
+                     o.discount_percentage, o.discount_amount_minor, o.currency,
+                     o.starts_at, o.ends_at, o.priority, o.stackable, o.eligibility
+              FROM offers o
+              LEFT JOIN offer_catalog_items oci ON o.id = oci.offer_id AND o.organization_id = oci.organization_id
+              WHERE o.organization_id = $1
+                AND o.status = 'ACTIVE'
+                AND o.archived_at IS NULL
+                AND (o.starts_at IS NULL OR o.starts_at <= $2)
+                AND (o.ends_at IS NULL OR o.ends_at >= $2)
+            `;
+            const queryParams: any[] = [ctx.organizationId, now];
+
+            if (catalogItemId) {
+              querySql += ` AND (oci.catalog_item_id = $3 OR oci.catalog_item_id IS NULL)`;
+              queryParams.push(catalogItemId);
+            }
+
+            querySql += ` ORDER BY o.priority DESC, o.name ASC`;
+
+            const r = await c.query(querySql, queryParams);
+
+            return {
+              ok: true,
+              code: 'OK',
+              data: {
+                offers: r.rows.map((row) => ({
+                  id: row.id,
+                  name: row.name,
+                  description: row.description,
+                  offerType: row.offer_type,
+                  discountPercentage: row.discount_percentage,
+                  discountAmountMinor: row.discount_amount_minor ? String(row.discount_amount_minor) : null,
+                  currency: row.currency,
+                  startsAt: row.starts_at ? new Date(row.starts_at).toISOString() : null,
+                  endsAt: row.ends_at ? new Date(row.ends_at).toISOString() : null,
+                  eligibility: row.eligibility,
+                })),
+              },
+            };
+          }
+          if (name === 'getEffectivePolicy') {
+            const policyType = typeof args.policyType === 'string' ? args.policyType : '';
+            if (!(BUSINESS_POLICY_TYPES as readonly string[]).includes(policyType)) {
+              return { ok: false, code: 'INVALID_ARGS' };
+            }
+            const result = await c.query(
+              `SELECT id, policy_type, title, summary, rules_json, enforcement_mode,
+                      effective_from, effective_until, version
+                 FROM business_policies
+                WHERE organization_id=$1 AND policy_type=$2 AND status='ACTIVE'
+                  AND (effective_from IS NULL OR effective_from <= now())
+                  AND (effective_until IS NULL OR effective_until >= now())
+                ORDER BY version DESC, effective_from DESC NULLS LAST, created_at DESC
+                LIMIT 1`,
+              [ctx.organizationId, policyType],
+            );
+            const row = result.rows[0];
+            return {
+              ok: true,
+              code: 'OK',
+              data: row ? {
+                policy: {
+                  id: row.id,
+                  policyType: row.policy_type,
+                  title: row.title,
+                  summary: row.summary,
+                  rules: row.rules_json,
+                  enforcementMode: row.enforcement_mode,
+                  effectiveFrom: row.effective_from ? new Date(row.effective_from).toISOString() : null,
+                  effectiveUntil: row.effective_until ? new Date(row.effective_until).toISOString() : null,
+                  version: row.version,
+                },
+                authoritative: true,
+              } : { policy: null, authoritative: true },
+            };
+          }
           return { ok: false, code: 'TOOL_NOT_FOUND' };
         };
 
@@ -928,6 +1105,7 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
             await applySelectiveToolWriteBack(c, {
               organizationId: ctx.organizationId,
               conversationId: ctx.conversationId,
+              customerId: ctx.customerId,
               agentRunId: ctx.agentRunId,
               toolCallId: (args as any)?.toolCallId ?? null,
               toolName: name,

@@ -101,6 +101,32 @@ export interface ConversationWorkingStateData {
   lastConfirmedBookingId?: string | null;
 }
 
+export interface OrganizationProfileSnapshot {
+  displayName?: string | null;
+  businessType?: string | null;
+  description?: string | null;
+  country?: string | null;
+  timezone?: string;
+  defaultLanguage?: string;
+  defaultCurrency?: string;
+}
+
+export interface OrganizationCapabilitiesSnapshot {
+  supportsLeads?: boolean;
+  leadRequiredBeforeBooking?: boolean;
+  autoCreateLeadOnIntent?: boolean;
+  supportsBooking?: boolean;
+  supportsOffers?: boolean;
+  supportsQuotes?: boolean;
+  supportsOrders?: boolean;
+  supportsInventory?: boolean;
+  supportsStaff?: boolean;
+  supportsLocations?: boolean;
+  supportsProducts?: boolean;
+  supportsServices?: boolean;
+  supportsListings?: boolean;
+}
+
 export interface ConversationSnapshot {
   organizationId: string;
   conversationId: string;
@@ -128,6 +154,8 @@ export interface ConversationSnapshot {
     leadId?: string | null;
     data: ConversationWorkingStateData;
   } | null;
+  organizationProfile?: OrganizationProfileSnapshot | null;
+  organizationCapabilities?: OrganizationCapabilitiesSnapshot | null;
   agentConfigVersionId: string;
   promptVersion: string;
   modelProfile: string;
@@ -197,6 +225,14 @@ export interface RunStorePort {
     outboundText: string;
     modelCalls: number;
     toolCalls: number;
+    finalization?: {
+      source: 'MODEL' | 'AUTHORITATIVE_TOOL_RESULT';
+      postToolModelOutputInvalid: boolean;
+      structuredRetryUsed: boolean;
+      structuredRetryRecovered: boolean;
+      fallbackUsed: boolean;
+      mutationToolName?: string;
+    };
   }): Promise<{ outboundMessageId: string }>;
 
   finalizeHandoff(input: {
@@ -254,4 +290,12 @@ export interface OrchestratorResult {
   runKey: string;
   outboundMessageId: string | null;
   decisionTrace: AgentDecision[];
+  finalization?: {
+    source: 'MODEL' | 'AUTHORITATIVE_TOOL_RESULT';
+    postToolModelOutputInvalid: boolean;
+    structuredRetryUsed: boolean;
+    structuredRetryRecovered: boolean;
+    fallbackUsed: boolean;
+    mutationToolName?: string;
+  };
 }

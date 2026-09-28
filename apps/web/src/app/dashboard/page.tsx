@@ -78,6 +78,16 @@ export default function DashboardPage() {
   const esRef = useRef<EventSource | null>(null);
   const refreshRef = useRef<ReturnType<typeof createRefreshController> | null>(null);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const qOrg = params.get('orgId') || localStorage.getItem('ai_sales_org_id') || '';
+      if (qOrg && !orgId) {
+        setOrgId(qOrg);
+      }
+    }
+  }, [orgId]);
+
   const loadImmediate = useCallback(async () => {
     if (!orgId.trim()) return;
     setLoading(true);
@@ -152,7 +162,7 @@ export default function DashboardPage() {
 
   return (
     <main style={{ fontFamily: 'Georgia, serif', maxWidth: 1100 }}>
-      <OperatorNav current="/dashboard" />
+      <OperatorNav current="/dashboard" orgId={orgId} />
       <h1>Dashboard</h1>
       <p style={{ color: '#555', marginTop: 0 }}>Operator workspace — current state only.</p>
 

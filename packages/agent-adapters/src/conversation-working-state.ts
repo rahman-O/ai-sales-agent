@@ -238,7 +238,9 @@ export async function applySelectiveToolWriteBack(
 
   const current = await loadWorkingState(c, organizationId, conversationId);
   const stateData: ConversationWorkingStateData = current?.stateData ? { ...current.stateData } : {};
-  let customerId: string | null = current?.customerId ?? input.customerId ?? null;
+  // The conversation binding is authoritative. Tool arguments/results are model-influenced
+  // and must never replace a trusted customer id supplied by ToolExecutionContext.
+  let customerId: string | null = input.customerId ?? current?.customerId ?? null;
   let leadId: string | null = current?.leadId ?? null;
   let shouldUpdate = false;
 
@@ -268,12 +270,14 @@ export async function applySelectiveToolWriteBack(
       leadId = resultData.id;
       shouldUpdate = true;
     }
-    if (typeof resultData.customerId === 'string') {
+    if (!input.customerId && typeof resultData.customerId === 'string') {
       customerId = resultData.customerId;
       shouldUpdate = true;
     }
   } else if (toolName === 'createCustomer' && toolResult.ok) {
-    if (typeof resultData.customerId === 'string') {
+    if (input.customerId) {
+      shouldUpdate = true;
+    } else if (typeof resultData.customerId === 'string') {
       customerId = resultData.customerId;
       shouldUpdate = true;
     }

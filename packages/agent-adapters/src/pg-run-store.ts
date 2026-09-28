@@ -296,7 +296,11 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
         await c.query(
           `INSERT INTO audit_logs(organization_id, actor_user_id, action, target_type, target_id, metadata_json)
            VALUES ($1,NULL,'agent.run_succeeded','AgentRun',$2,$3::jsonb)`,
-          [input.organizationId, input.agentRunId, JSON.stringify({ runKey: input.runKey, messageId })],
+          [
+            input.organizationId,
+            input.agentRunId,
+            JSON.stringify({ runKey: input.runKey, messageId, finalization: input.finalization ?? null }),
+          ],
         );
         return { outboundMessageId: messageId };
       });

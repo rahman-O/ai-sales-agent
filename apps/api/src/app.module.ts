@@ -5,6 +5,8 @@ import { AuthModule } from './auth/auth.module.js';
 import { OrganizationsModule } from './organizations/organizations.module.js';
 import { CustomersModule } from './customers/customers.module.js';
 import { CatalogModule } from './catalog/catalog.module.js';
+import { OffersModule } from './offers/offers.module.js';
+import { PoliciesModule } from './policies/policies.module.js';
 import { ConversationsModule } from './conversations/conversations.module.js';
 import { AgentModule } from './agent/agent.module.js';
 import { KnowledgeModule } from './knowledge/knowledge.module.js';
@@ -27,6 +29,8 @@ import { SecurityHeadersAndRateLimitMiddleware } from './common/security.middlew
     OrganizationsModule,
     CustomersModule,
     CatalogModule,
+    OffersModule,
+    PoliciesModule,
     ConversationsModule,
     MessagingModule,
     AgentModule,

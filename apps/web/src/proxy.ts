@@ -39,6 +39,8 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/follow-ups') ||
     request.nextUrl.pathname.startsWith('/knowledge') ||
     request.nextUrl.pathname.startsWith('/schedule') ||
+    request.nextUrl.pathname.startsWith('/onboarding') ||
+    request.nextUrl.pathname.startsWith('/policies') ||
     request.nextUrl.pathname.startsWith('/settings');
 
   if (isProtected && !data.user) {
@@ -70,6 +72,10 @@ export const config = {
     '/knowledge/:path*',
     '/schedule',
     '/schedule/:path*',
+    '/onboarding',
+    '/onboarding/:path*',
+    '/policies',
+    '/policies/:path*',
     '/settings/:path*',
   ],
 };

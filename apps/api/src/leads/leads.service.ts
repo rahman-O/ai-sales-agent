@@ -74,6 +74,13 @@ export class LeadsService {
     }
   }
 
+  private async requireLeadsCapability(tx: TenantTxClient, organizationId: string) {
+    const caps = await tx.organizationCapabilities.findUnique({ where: { organizationId } });
+    if (caps && !caps.supportsLeads) {
+      throw new ForbiddenException('Leads capability is disabled for this organization');
+    }
+  }
+
   private async activeLocationCount(tx: TenantTxClient, organizationId: string): Promise<number> {
     return tx.location.count({
       where: { organizationId, active: true, archivedAt: null },
@@ -128,6 +135,7 @@ export class LeadsService {
     this.requireRead(m.role);
     const take = Math.min(Math.max(query.take ?? 50, 1), 100);
     return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
+      await this.requireLeadsCapability(tx, organizationId);
       const rows = (await tx.lead.findMany({
         where: {
           organizationId,
@@ -150,6 +158,7 @@ export class LeadsService {
     const m = await this.membership(actor, organizationId);
     this.requireRead(m.role);
     return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
+      await this.requireLeadsCapability(tx, organizationId);
       const lead = (await tx.lead.findUnique({
         where: { organizationId_id: { organizationId, id: leadId } },
       })) as LeadRecord | null;

@@ -100,6 +100,7 @@ services:
     restart: "no"
 
   ollama:
+    profiles: ["local-ai"]
     image: ollama/ollama:latest
     container_name: ai-sales-demo-ollama
     ports:
@@ -117,6 +118,7 @@ services:
     restart: unless-stopped
 
   ollama-bootstrap:
+    profiles: ["local-ai"]
     image: ollama/ollama:latest
     container_name: ai-sales-demo-ollama-bootstrap
     environment:
@@ -151,17 +153,17 @@ services:
       NODE_ENV: development
       DEMO_DB_TARGET: LOCAL
       DEMO_FORCE_LOCAL_DB: "1"
-      AI_PROVIDER: ${AI_PROVIDER:-local}
+      AI_PROVIDER: ${AI_PROVIDER}
       AI_MODEL_BASE_URL: http://ollama:11434/v1
       AI_MODEL_API_KEY: local
       AI_MODEL_NAME: ${AI_MODEL_NAME:-qwen2.5:1.5b}
       AI_MODEL_LOCAL_TIMEOUTS: "1"
       AI_MODEL_TIMEOUT_MS: ${AI_MODEL_TIMEOUT_MS:-360000}
       AI_RUN_DEADLINE_MS: ${AI_RUN_DEADLINE_MS:-900000}
-      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
-      DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL:-https://api.deepseek.com}
-      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL:-deepseek-chat}
-      DEEPSEEK_TIMEOUT_MS: ${DEEPSEEK_TIMEOUT_MS:-120000}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL}
+      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL}
+      DEEPSEEK_TIMEOUT_MS: ${DEEPSEEK_TIMEOUT_MS}
       DEEPSEEK_RUN_DEADLINE_MS: ${DEEPSEEK_RUN_DEADLINE_MS:-300000}
       WORKER_LEASE_TTL_SECONDS: ${WORKER_LEASE_TTL_SECONDS:-300}
       DEMO_DOCKER_LOCAL_LLM: "1"
@@ -184,10 +186,6 @@ services:
         condition: service_completed_successfully
       redis:
         condition: service_healthy
-      ollama:
-        condition: service_healthy
-      ollama-bootstrap:
-        condition: service_completed_successfully
     healthcheck:
       test:
         [
@@ -210,17 +208,17 @@ services:
       NODE_ENV: development
       DEMO_DB_TARGET: LOCAL
       DEMO_FORCE_LOCAL_DB: "1"
-      AI_PROVIDER: ${AI_PROVIDER:-local}
+      AI_PROVIDER: ${AI_PROVIDER}
       AI_MODEL_BASE_URL: http://ollama:11434/v1
       AI_MODEL_API_KEY: local
       AI_MODEL_NAME: ${AI_MODEL_NAME:-qwen2.5:1.5b}
       AI_MODEL_LOCAL_TIMEOUTS: "1"
       AI_MODEL_TIMEOUT_MS: ${AI_MODEL_TIMEOUT_MS:-360000}
       AI_RUN_DEADLINE_MS: ${AI_RUN_DEADLINE_MS:-900000}
-      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
-      DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL:-https://api.deepseek.com}
-      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL:-deepseek-chat}
-      DEEPSEEK_TIMEOUT_MS: ${DEEPSEEK_TIMEOUT_MS:-120000}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL}
+      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL}
+      DEEPSEEK_TIMEOUT_MS: ${DEEPSEEK_TIMEOUT_MS}
       DEEPSEEK_RUN_DEADLINE_MS: ${DEEPSEEK_RUN_DEADLINE_MS:-300000}
       WORKER_LEASE_TTL_SECONDS: ${WORKER_LEASE_TTL_SECONDS:-300}
       DEMO_DOCKER_LOCAL_LLM: "1"
@@ -239,10 +237,6 @@ services:
         condition: service_healthy
       api:
         condition: service_healthy
-      ollama:
-        condition: service_healthy
-      ollama-bootstrap:
-        condition: service_completed_successfully
     networks:
       - demo
     restart: unless-stopped

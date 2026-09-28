@@ -3,9 +3,10 @@ import { DatabaseModule } from '../database/database.module.js';
 import { AuthModule } from '../auth/auth.module.js';
 import { BookingsController } from './bookings.controller.js';
 import { BookingsService } from './bookings.service.js';
+import { PoliciesModule } from '../policies/policies.module.js';
 
 @Module({
-  imports: [DatabaseModule, AuthModule],
+  imports: [DatabaseModule, AuthModule, PoliciesModule],
   controllers: [BookingsController],
   providers: [BookingsService],
   exports: [BookingsService],

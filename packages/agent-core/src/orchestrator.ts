@@ -114,16 +114,71 @@ export async function runAgentOrchestrator(
   let modelCalls = 0;
   let toolCalls = 0;
   let schemaRepairs = 0;
+  let successfulBookingResult: Record<string, unknown> | null = null;
+  let postToolModelOutputInvalid = false;
+  let postMutationStructuredRetryUsed = false;
   const seenToolFingerprints = new Map<string, number>();
   const messages: Array<{ role: 'system' | 'user' | 'assistant' | 'tool'; content: string }> = [
     ...buildContextMessages(snap),
   ];
+
+  const finalizeSuccessfulBookingFallback = async (): Promise<OrchestratorResult> => {
+    const bookingId =
+      typeof successfulBookingResult?.bookingId === 'string'
+        ? successfulBookingResult.bookingId
+        : null;
+    if (!bookingId) {
+      return end('FAILED', 'post_mutation_result_missing', false);
+    }
+    const decision: AgentDecision = {
+      type: 'final_response',
+      text: 'تم تأكيد حجزك بنجاح.',
+      claims: [{ kind: 'booking', evidenceRef: bookingId }],
+    };
+    const safe = assertFinalResponseSafe(decision.text, decision.claims);
+    if (!safe.ok) return end('FAILED', safe.reason, false);
+    decisionTrace.push(decision);
+    const finalization = {
+      source: 'AUTHORITATIVE_TOOL_RESULT' as const,
+      postToolModelOutputInvalid: true,
+      structuredRetryUsed: postMutationStructuredRetryUsed,
+      structuredRetryRecovered: false,
+      fallbackUsed: true,
+      mutationToolName: 'createBooking',
+    };
+    const fin = await deps.store.finalizeSuccess({
+      organizationId: snap.organizationId,
+      conversationId: snap.conversationId,
+      agentRunId: run.agentRunId,
+      runKey,
+      targetIngressSequence: snap.targetIngressSequence,
+      leaseOwner: snap.leaseOwner ?? '',
+      leaseFence: snap.leaseFence,
+      ownershipEpoch: snap.ownershipEpoch,
+      outboundText: decision.text,
+      modelCalls,
+      toolCalls,
+      finalization,
+    });
+    return {
+      terminal: 'SUCCEEDED',
+      reason: 'final_response',
+      agentRunId: run.agentRunId,
+      runKey,
+      outboundMessageId: fin.outboundMessageId,
+      decisionTrace,
+      finalization,
+    };
+  };
 
   while (true) {
     if (now() - started > limits.runDeadlineMs) {
       return end('TIMED_OUT', 'run_deadline', false);
     }
     if (modelCalls >= limits.maxModelCalls) {
+      if (successfulBookingResult && postToolModelOutputInvalid) {
+        return finalizeSuccessfulBookingFallback();
+      }
       return end('BUDGET_EXCEEDED', 'max_model_calls', false);
     }
 
@@ -182,6 +237,16 @@ export async function runAgentOrchestrator(
     try {
       decision = parseAgentDecision(raw);
     } catch {
+      if (successfulBookingResult) {
+        postToolModelOutputInvalid = true;
+        if (!postMutationStructuredRetryUsed) {
+          postMutationStructuredRetryUsed = true;
+          schemaRepairs += 1;
+          messages.push({ role: 'user', content: SCHEMA_REPAIR_PROMPT });
+          continue;
+        }
+        return finalizeSuccessfulBookingFallback();
+      }
       if (schemaRepairs < limits.maxSchemaRepairs) {
         schemaRepairs += 1;
         messages.push({
@@ -195,6 +260,11 @@ export async function runAgentOrchestrator(
     decisionTrace.push(decision);
 
     if (decision.type === 'safe_stop') {
+      if (successfulBookingResult && decision.reason === 'unparseable_provider_json') {
+        postToolModelOutputInvalid = true;
+        postMutationStructuredRetryUsed = true;
+        return finalizeSuccessfulBookingFallback();
+      }
       return end('FAILED', decision.reason, false);
     }
 
@@ -218,7 +288,23 @@ export async function runAgentOrchestrator(
         outboundText: decision.text,
         modelCalls,
         toolCalls,
+        finalization: {
+          source: 'MODEL',
+          postToolModelOutputInvalid,
+          structuredRetryUsed: postMutationStructuredRetryUsed,
+          structuredRetryRecovered: postMutationStructuredRetryUsed,
+          fallbackUsed: false,
+          ...(successfulBookingResult ? { mutationToolName: 'createBooking' } : {}),
+        },
       });
+      const finalization = {
+        source: 'MODEL' as const,
+        postToolModelOutputInvalid,
+        structuredRetryUsed: postMutationStructuredRetryUsed,
+        structuredRetryRecovered: postMutationStructuredRetryUsed,
+        fallbackUsed: false,
+        ...(successfulBookingResult ? { mutationToolName: 'createBooking' } : {}),
+      };
       return {
         terminal: 'SUCCEEDED',
         reason: 'final_response',
@@ -226,10 +312,22 @@ export async function runAgentOrchestrator(
         runKey,
         outboundMessageId: fin.outboundMessageId,
         decisionTrace,
+        finalization,
       };
     }
 
     // tool_request
+    if (successfulBookingResult) {
+      postToolModelOutputInvalid = true;
+      if (!postMutationStructuredRetryUsed) {
+        postMutationStructuredRetryUsed = true;
+        schemaRepairs += 1;
+        messages.push({ role: 'user', content: SCHEMA_REPAIR_PROMPT });
+        continue;
+      }
+      return finalizeSuccessfulBookingFallback();
+    }
+
     if (toolCalls >= limits.maxToolCalls) {
       return end('BUDGET_EXCEEDED', 'max_tool_calls', false);
     }
@@ -285,6 +383,16 @@ export async function runAgentOrchestrator(
       resultCode: result.code,
       durationMs: now() - t0,
     });
+
+    if (
+      decision.toolName === 'createBooking' &&
+      result.ok &&
+      result.data &&
+      typeof result.data === 'object' &&
+      typeof (result.data as Record<string, unknown>).bookingId === 'string'
+    ) {
+      successfulBookingResult = result.data as Record<string, unknown>;
+    }
 
     if (decision.toolName === 'handoffToHuman' && result.ok) {
       return {

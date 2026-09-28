@@ -87,12 +87,22 @@ export const P10_TOOL_NAMES = [
 
 export type P10ToolName = (typeof P10_TOOL_NAMES)[number];
 
+export const MB05_TOOL_NAMES = ['getActiveOffers'] as const;
+
+export type MB05ToolName = (typeof MB05_TOOL_NAMES)[number];
+
+export const MB06_TOOL_NAMES = ['getEffectivePolicy'] as const;
+
+export type MB06ToolName = (typeof MB06_TOOL_NAMES)[number];
+
 export const ALL_REGISTERED_TOOL_NAMES = [
   ...P04_TOOL_NAMES,
   ...P05_TOOL_NAMES,
   ...P06_TOOL_NAMES,
   ...P07_TOOL_NAMES,
   ...P10_TOOL_NAMES,
+  ...MB05_TOOL_NAMES,
+  ...MB06_TOOL_NAMES,
 ] as const;
 
 export type RegisteredToolName = (typeof ALL_REGISTERED_TOOL_NAMES)[number];
