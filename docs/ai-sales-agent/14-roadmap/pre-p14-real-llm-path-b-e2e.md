@@ -1,6 +1,6 @@
 # PRE-P14 REAL LLM PATH B E2E STATUS
 
-Date: 2026-09-27T18:48:12.884Z
+Date: 2026-09-27T23:40:33.195Z
 
 ```text
 REAL LLM PATH B E2E STATUS: FAIL
@@ -11,8 +11,8 @@ FAKE MODEL USED: NO
 
 NATURAL LANGUAGE TEST: PASS
 SIMPLE RESPONSE: PASS
-LEAD CREATION: FAIL
-AVAILABILITY: PASS
+LEAD CREATION: PASS
+AVAILABILITY: FAIL
 BOOKING: FAIL
 SLOT TOKEN PROVENANCE: FAIL
 FALSE SUCCESS PROTECTION: PASS
@@ -35,10 +35,10 @@ P14_AUTHORIZED: NO
 
 ## Provider evidence
 
-- usage providers: deepseek
-- usage models: deepseek-chat
-- agent run ids (prefixes): dadf8c86, 1d160b0d, 313ab53a, 5a039b94, 69a35c69, 72bbcb89, d11cdc70, e0bc0d34
-- tools observed: searchServices, getAvailableSlots
+- usage providers: local_ollama
+- usage models: qwen2.5:7b
+- agent run ids (prefixes): bc9a4d55, 580f2a63, 3e7fce36, 29dd9282, e7980bb4, 16ad7576, fda13c87, 96d78222
+- tools observed: searchServices, getServiceDetails, getCustomer, ensureLead, createCustomer, getAvailableSlots
 
 ## Notes
 
@@ -46,16 +46,16 @@ P14_AUTHORIZED: NO
 - pre_enable_ai_status=201
 - agent_config_active=a0900001 missing_tools=none
 - org=a0111111-1111-4111-8111-111111111111 service=a0500001-0001-4001-8001-000000000001
-- run=dadf8c86 status=SUCCEEDED reason=final_response providers=deepseek tools=none
-- run=1d160b0d status=SUCCEEDED reason=final_response providers=deepseek tools=searchServices
-- run=313ab53a status=BUDGET_EXCEEDED reason=repeated_identical_tool providers=deepseek tools=getAvailableSlots,getAvailableSlots,getAvailableSlots
-- run=5a039b94 status=SUCCEEDED reason=final_response providers=deepseek tools=getAvailableSlots,getAvailableSlots
+- run=bc9a4d55 status=SUCCEEDED reason=final_response providers=local_ollama tools=none
+- run=580f2a63 status=BUDGET_EXCEEDED reason=max_model_calls providers=local_ollama tools=searchServices,getServiceDetails,getCustomer,ensureLead,createCustomer
+- run=3e7fce36 status=SUCCEEDED reason=final_response providers=local_ollama tools=searchServices
+- run=29dd9282 status=SUCCEEDED reason=final_response providers=local_ollama tools=none
 - slot_token_c_fp=NONE
 - slot_token_d_fp=NONE
-- run=69a35c69 status=FAILED reason=unparseable_provider_json providers=deepseek tools=getAvailableSlots
-- run=72bbcb89 status=FAILED reason=Customer confirmed booking the first slot, but no candidateSlots exist in working state and prior availability check returned no bookable slots. Unable to safely create a booking without a backend-issued slotToken. providers=deepseek tools=none
-- run=d11cdc70 status=SUCCEEDED reason=final_response providers=deepseek tools=getAvailableSlots
-- run=e0bc0d34 status=FAILED reason=unparseable_provider_json providers=deepseek tools=none
+- run=e7980bb4 status=SUCCEEDED reason=final_response providers=local_ollama tools=searchServices,getAvailableSlots
+- run=16ad7576 status=SUCCEEDED reason=final_response providers=local_ollama tools=none
+- run=fda13c87 status=SUCCEEDED reason=final_response providers=local_ollama tools=searchServices
+- run=96d78222 status=SUCCEEDED reason=final_response providers=local_ollama tools=none
 
 ## STOP
 

@@ -34,6 +34,7 @@
     "pre-p14:real-llm-e2e": "tsx scripts/pre-p14/real-llm-path-b-e2e.ts",
     "pre-p14:deepseek-probe": "tsx scripts/pre-p14/deepseek-probe.ts",
     "pre-p14:model-search": "tsx scripts/pre-p14/local-model-capability-search.ts",
+    "pre-p14:valid-slot-e2e": "tsx scripts/pre-p14/valid-slot-booking-e2e.ts",
     "demo:docker:build": "tsx scripts/demo/demo-docker.ts build",
     "demo:up": "tsx scripts/demo/demo-docker.ts up",
     "demo:down": "tsx scripts/demo/demo-docker.ts down",

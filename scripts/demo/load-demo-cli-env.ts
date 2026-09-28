@@ -35,6 +35,7 @@ const DEMO_OVERLAY_KEYS = new Set([
   'DEEPSEEK_MODEL',
   'DEEPSEEK_TIMEOUT_MS',
   'DEEPSEEK_RUN_DEADLINE_MS',
+  'DEMO_OPERATOR_AUTH_SUBJECT',
 ]);
 
 /** Load .env + .env.local with DEMO_FORCE; overlay .env.demo.session / .env.demo.local for host seed vs compose Postgres. */

@@ -86,8 +86,6 @@ export async function toolGetAvailableSlots(
      ORDER BY id ASC`,
     [org, staffIds, locationId],
   );
-  if (!staffRes.rows.length) return { ok: true, data: { slots: [], timezone } };
-
   const explicitStart = typeof args.startDate === 'string' && args.startDate.trim().length > 0;
   const startDate = explicitStart
     ? args.startDate!.trim()
@@ -109,6 +107,24 @@ export async function toolGetAvailableSlots(
       }
       return startDate;
     })();
+
+  if (!staffRes.rows.length) {
+    return {
+      ok: true,
+      data: {
+        slots: [],
+        timezone,
+        searchWindow: {
+          from: startDate,
+          to: endDate,
+        },
+        nextAction: 'ASK_ALTERNATIVE_DATE_OR_TIME',
+        retryIdenticalArguments: false,
+        message:
+          'No staff available for the requested service and location in the search window. Do not repeat with identical arguments; ask the customer for alternative options.',
+      },
+    };
+  }
   const dates = enumDates(startDate, endDate);
   const now = new Date();
   const minStart = new Date(now.getTime() + Number(service.minimum_lead_minutes) * 60_000);
@@ -226,6 +242,23 @@ export async function toolGetAvailableSlots(
         }
       }
     }
+  }
+  if (!slots.length) {
+    return {
+      ok: true,
+      data: {
+        slots: [],
+        timezone,
+        searchWindow: {
+          from: startDate,
+          to: endDate,
+        },
+        nextAction: 'ASK_ALTERNATIVE_DATE_OR_TIME',
+        retryIdenticalArguments: false,
+        message:
+          'No available slots found in the requested date range. Do not repeat with identical arguments; ask the customer for alternative preferred dates or times, or provide a no-availability response.',
+      },
+    };
   }
   return { ok: true, data: { slots, timezone } };
 }

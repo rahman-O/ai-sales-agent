@@ -239,7 +239,7 @@ export async function runConversationAgent(opts: {
       workingState: ws
         ? {
             version: ws.version,
-            customerId: ws.customerId,
+            customerId: ws.customerId ?? c.customer_id,
             leadId: ws.leadId,
             data: ws.stateData,
           }

@@ -373,3 +373,81 @@ test('toolGetAvailableSlots searches forward when startDate is omitted', async (
   }
 });
 
+// ============================================================
+// SECTION 11: ZERO SLOT RECOVERY METADATA TESTS (A - F)
+// ============================================================
+
+test('ZERO_SLOT_RECOVERY: zero slots returns searchWindow, nextAction, and retryIdenticalArguments=false', async () => {
+  const mockClient = {
+    query: async (sql: string) => {
+      if (sql.includes('FROM services')) {
+        return {
+          rows: [
+            {
+              id: 'a0500001-0001-4001-8001-000000000001',
+              active: true,
+              archived_at: null,
+              booking_enabled: true,
+              location_id: 'a0333333-3333-4333-8333-333333333333',
+              duration_minutes: 30,
+              buffer_before_minutes: 0,
+              buffer_after_minutes: 0,
+              minimum_lead_minutes: 60,
+              maximum_advance_days: 30,
+            },
+          ],
+        };
+      }
+      if (sql.includes('FROM locations')) {
+        return {
+          rows: [{ id: 'a0333333-3333-4333-8333-333333333333', timezone: 'Asia/Baghdad', active: true }],
+        };
+      }
+      if (sql.includes('FROM service_staff')) {
+        return { rows: [] }; // No staff linked -> 0 slots
+      }
+      if (sql.includes('FROM staff_members')) {
+        return { rows: [] };
+      }
+      return { rows: [] };
+    },
+  } as any;
+
+  process.env.BOOKING_SLOT_TOKEN_SECRET = 'test-secret-at-least-32-chars-long-12345';
+
+  const res = await toolGetAvailableSlots(
+    mockClient,
+    'a0111111-1111-4111-8111-111111111111',
+    'a0700001-0001-4001-8001-000000000001',
+    {
+      serviceId: 'a0500001-0001-4001-8001-000000000001',
+      startDate: '2026-10-01',
+      endDate: '2026-10-07',
+    },
+  );
+
+  assert.equal(res.ok, true);
+  if (res.ok) {
+    const data = res.data as {
+      slots: unknown[];
+      searchWindow?: { from: string; to: string };
+      nextAction?: string;
+      retryIdenticalArguments?: boolean;
+      message?: string;
+    };
+    // A: zero slots result contains bounded search-window context
+    assert.deepEqual(data.slots, []);
+    assert.ok(data.searchWindow);
+    assert.equal(data.searchWindow.from, '2026-10-01');
+    assert.equal(data.searchWindow.to, '2026-10-07');
+
+    // B: zero slots result includes no-identical-retry guidance
+    assert.equal(data.retryIdenticalArguments, false);
+
+    // C: model-facing result gives an alternative next action
+    assert.equal(data.nextAction, 'ASK_ALTERNATIVE_DATE_OR_TIME');
+    assert.ok(data.message && data.message.includes('Do not repeat with identical arguments'));
+  }
+});
+
+

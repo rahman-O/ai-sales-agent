@@ -19,14 +19,21 @@ export interface WorkingStateRecord {
 export function extractSlotTokenExpiry(token: string): string | null {
   try {
     const parts = token.split('.');
-    if (parts.length >= 2 && parts[1]) {
-      const payloadStr = Buffer.from(parts[1], 'base64url').toString('utf8');
-      const payload = JSON.parse(payloadStr);
-      if (payload.exp && typeof payload.exp === 'string') {
-        return payload.exp;
-      }
-      if (payload.expiresAt && typeof payload.expiresAt === 'string') {
-        return payload.expiresAt;
+    for (const part of parts) {
+      if (!part) continue;
+      try {
+        const payloadStr = Buffer.from(part, 'base64url').toString('utf8');
+        const payload = JSON.parse(payloadStr);
+        if (payload && typeof payload === 'object') {
+          if (payload.exp && typeof payload.exp === 'string') {
+            return payload.exp;
+          }
+          if (payload.expiresAt && typeof payload.expiresAt === 'string') {
+            return payload.expiresAt;
+          }
+        }
+      } catch {
+        // try next part
       }
     }
   } catch {
