@@ -248,11 +248,33 @@ export async function runConversationAgent(opts: {
        FROM organization_capabilities WHERE organization_id = $1`,
       [opts.organizationId],
     );
+    const convProfileRes = await client.query<{
+      assistant_name: string | null;
+      primary_language: string;
+      dialect: string;
+      tone: string;
+      formality: string;
+      response_length: string;
+      sales_style: string;
+      emoji_usage: string;
+      customer_name_usage: string;
+      questions_per_turn: number;
+      greeting_style: string;
+      handoff_style: string;
+      custom_instructions: string | null;
+    }>(
+      `SELECT assistant_name, primary_language, dialect, tone, formality, response_length,
+              sales_style, emoji_usage, customer_name_usage, questions_per_turn,
+              greeting_style, handoff_style, custom_instructions
+       FROM organization_conversation_profiles WHERE organization_id = $1`,
+      [opts.organizationId],
+    );
     await client.query('COMMIT');
 
     const cfg = await ensureActiveAgentConfig(opts.pool, opts.organizationId);
     const p = profileRes.rows[0];
     const cp = capsRes.rows[0];
+    const convP = convProfileRes.rows[0];
 
     snap = {
       organizationId: opts.organizationId,
@@ -310,6 +332,37 @@ export async function runConversationAgent(opts: {
             supportsListings: cp.supports_listings,
           }
         : null,
+      conversationProfile: convP
+        ? {
+            assistantName: convP.assistant_name,
+            primaryLanguage: convP.primary_language ?? 'ar',
+            dialect: convP.dialect ?? 'IRAQI',
+            tone: convP.tone ?? 'PROFESSIONAL',
+            formality: convP.formality ?? 'BALANCED',
+            responseLength: convP.response_length ?? 'BALANCED',
+            salesStyle: convP.sales_style ?? 'BALANCED',
+            emojiUsage: convP.emoji_usage ?? 'MINIMAL',
+            customerNameUsage: convP.customer_name_usage ?? 'WHEN_KNOWN',
+            questionsPerTurn: convP.questions_per_turn ?? 1,
+            greetingStyle: convP.greeting_style ?? 'BRIEF',
+            handoffStyle: convP.handoff_style ?? 'PROFESSIONAL',
+            customInstructions: convP.custom_instructions,
+          }
+        : {
+            assistantName: null,
+            primaryLanguage: 'ar',
+            dialect: 'IRAQI',
+            tone: 'PROFESSIONAL',
+            formality: 'BALANCED',
+            responseLength: 'BALANCED',
+            salesStyle: 'BALANCED',
+            emojiUsage: 'MINIMAL',
+            customerNameUsage: 'WHEN_KNOWN',
+            questionsPerTurn: 1,
+            greetingStyle: 'BRIEF',
+            handoffStyle: 'PROFESSIONAL',
+            customInstructions: null,
+          },
       agentConfigVersionId: cfg.id,
       promptVersion: cfg.promptVersion,
       modelProfile: cfg.modelProfile,

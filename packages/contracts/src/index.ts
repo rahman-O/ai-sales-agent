@@ -45,4 +45,11 @@ export * from './navigation.js';
 export * from './catalog.js';
 export * from './offers.js';
 export * from './policies.js';
+export * from './conversation-profile.js';
+export * from './knowledge.js';
+export * from './preview.js';
+export * from './workflow.js';
+export * from './packs.js';
+export * from './transactions.js';
+export * from './analytics.js';
 

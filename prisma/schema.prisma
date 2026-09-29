@@ -66,9 +66,14 @@ model Organization {
   profile               OrganizationProfile?
   capabilities          OrganizationCapabilities?
   onboarding            OrganizationOnboarding?
+  conversationProfile   OrganizationConversationProfile?
   catalogItems          CatalogItem[]
   offers                Offer[]
   businessPolicies      BusinessPolicy[]
+  quotes                Quote[]
+  quoteLineItems        QuoteLineItem[]
+  orders                Order[]
+  orderLineItems        OrderLineItem[]
 
   @@map("organizations")
 }
@@ -112,6 +117,8 @@ model Customer {
   leads           Lead[]
   bookings        Booking[]
   followUps       FollowUp[]
+  quotes          Quote[]
+  orders          Order[]
 
   @@unique([organizationId, id])
   @@index([organizationId, updatedAt, id])
@@ -206,6 +213,8 @@ model CatalogItem {
   organization   Organization       @relation(fields: [organizationId], references: [id])
   service        Service?
   offerLinks     OfferCatalogItem[]
+  quoteLineItems QuoteLineItem[]
+  orderLineItems OrderLineItem[]
 
   @@unique([organizationId, id])
   @@index([organizationId, kind, status])
@@ -671,6 +680,9 @@ model KnowledgeDocument {
   id                      String                     @id @default(uuid()) @db.Uuid
   organizationId          String                     @map("organization_id") @db.Uuid
   title                   String
+  sourceType              String                     @default("FILE") @map("source_type")
+  visibility              String                     @default("CUSTOMER_VISIBLE")
+  metadataJson            Json?                      @map("metadata_json")
   activePublishedVersionId String?                   @map("active_published_version_id") @db.Uuid
   archivedAt              DateTime?                  @map("archived_at") @db.Timestamptz(6)
   deletedAt               DateTime?                  @map("deleted_at") @db.Timestamptz(6)
@@ -683,6 +695,7 @@ model KnowledgeDocument {
 
   @@unique([organizationId, id])
   @@index([organizationId, updatedAt(sort: Desc)])
+  @@index([organizationId, sourceType, visibility])
   @@map("knowledge_documents")
 }
 
@@ -788,6 +801,8 @@ model Lead {
   bookings              Booking[]
   followUps             FollowUp[]
   workingStates         ConversationWorkingState[]
+  quotes                Quote[]
+  orders                Order[]
 
   @@unique([organizationId, id])
   @@index([organizationId, status, updatedAt(sort: Desc)])
@@ -1116,6 +1131,138 @@ model OrganizationOnboarding {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@map("organization_onboarding")
+}
+
+/// MB-07 — organization conversation profile for tone, style, and assistant personality.
+model OrganizationConversationProfile {
+  organizationId    String       @id @map("organization_id") @db.Uuid
+  assistantName     String?      @map("assistant_name")
+  primaryLanguage   String       @default("ar") @map("primary_language")
+  dialect           String       @default("IRAQI")
+  tone              String       @default("PROFESSIONAL")
+  formality         String       @default("BALANCED")
+  responseLength    String       @default("BALANCED") @map("response_length")
+  salesStyle        String       @default("BALANCED") @map("sales_style")
+  emojiUsage        String       @default("MINIMAL") @map("emoji_usage")
+  customerNameUsage String       @default("WHEN_KNOWN") @map("customer_name_usage")
+  questionsPerTurn  Int          @default(1) @map("questions_per_turn")
+  greetingStyle     String       @default("BRIEF") @map("greeting_style")
+  handoffStyle      String       @default("PROFESSIONAL") @map("handoff_style")
+  customInstructions String?     @map("custom_instructions")
+  createdAt         DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("organization_conversation_profiles")
+}
+
+/// MB-12 — Quotations for prospective services/products before binding transactions.
+model Quote {
+  id                  String          @id @default(uuid()) @db.Uuid
+  organizationId      String          @map("organization_id") @db.Uuid
+  customerId          String?         @map("customer_id") @db.Uuid
+  leadId              String?         @map("lead_id") @db.Uuid
+  status              String          @default("DRAFT")
+  currency            String          @default("IQD") @db.Char(3)
+  subtotalAmountMinor BigInt          @default(0) @map("subtotal_amount_minor")
+  discountAmountMinor BigInt          @default(0) @map("discount_amount_minor")
+  totalAmountMinor    BigInt          @default(0) @map("total_amount_minor")
+  expiresAt           DateTime?       @map("expires_at") @db.Timestamptz(6)
+  notes               String?
+  version             Int             @default(1)
+  metadataJson        Json?           @map("metadata_json")
+  presentedAt         DateTime?       @map("presented_at") @db.Timestamptz(6)
+  acceptedAt          DateTime?       @map("accepted_at") @db.Timestamptz(6)
+  rejectedAt          DateTime?       @map("rejected_at") @db.Timestamptz(6)
+  cancelledAt         DateTime?       @map("cancelled_at") @db.Timestamptz(6)
+  createdAt           DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization        Organization    @relation(fields: [organizationId], references: [id])
+  customer            Customer?       @relation(fields: [organizationId, customerId], references: [organizationId, id])
+  lead                Lead?           @relation(fields: [organizationId, leadId], references: [organizationId, id])
+  lineItems           QuoteLineItem[]
+  orders              Order[]
+
+  @@unique([organizationId, id])
+  @@index([organizationId, status, createdAt])
+  @@index([organizationId, customerId])
+  @@map("quotes")
+}
+
+model QuoteLineItem {
+  id                  String       @id @default(uuid()) @db.Uuid
+  organizationId      String       @map("organization_id") @db.Uuid
+  quoteId             String       @map("quote_id") @db.Uuid
+  catalogItemId       String?      @map("catalog_item_id") @db.Uuid
+  descriptionSnapshot String       @map("description_snapshot")
+  quantity            Int          @default(1)
+  unitAmountMinor     BigInt       @map("unit_amount_minor")
+  discountAmountMinor BigInt       @default(0) @map("discount_amount_minor")
+  lineTotalAmountMinor BigInt      @map("line_total_amount_minor")
+  metadataJson        Json?        @map("metadata_json")
+  createdAt           DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization        Organization @relation(fields: [organizationId], references: [id])
+  quote               Quote        @relation(fields: [organizationId, quoteId], references: [organizationId, id], onDelete: Cascade)
+  catalogItem         CatalogItem? @relation(fields: [organizationId, catalogItemId], references: [organizationId, id])
+
+  @@unique([organizationId, id])
+  @@index([organizationId, quoteId])
+  @@map("quote_line_items")
+}
+
+/// MB-12 — Orders for non-booking transactional purchases.
+model Order {
+  id                  String          @id @default(uuid()) @db.Uuid
+  organizationId      String          @map("organization_id") @db.Uuid
+  customerId          String?         @map("customer_id") @db.Uuid
+  leadId              String?         @map("lead_id") @db.Uuid
+  quoteId             String?         @map("quote_id") @db.Uuid
+  status              String          @default("DRAFT")
+  currency            String          @default("IQD") @db.Char(3)
+  subtotalAmountMinor BigInt          @default(0) @map("subtotal_amount_minor")
+  discountAmountMinor BigInt          @default(0) @map("discount_amount_minor")
+  totalAmountMinor    BigInt          @default(0) @map("total_amount_minor")
+  notes               String?
+  version             Int             @default(1)
+  metadataJson        Json?           @map("metadata_json")
+  confirmedAt         DateTime?       @map("confirmed_at") @db.Timestamptz(6)
+  completedAt         DateTime?       @map("completed_at") @db.Timestamptz(6)
+  cancelledAt         DateTime?       @map("cancelled_at") @db.Timestamptz(6)
+  createdAt           DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization        Organization    @relation(fields: [organizationId], references: [id])
+  customer            Customer?       @relation(fields: [organizationId, customerId], references: [organizationId, id])
+  lead                Lead?           @relation(fields: [organizationId, leadId], references: [organizationId, id])
+  quote               Quote?          @relation(fields: [organizationId, quoteId], references: [organizationId, id])
+  lineItems           OrderLineItem[]
+
+  @@unique([organizationId, id])
+  @@index([organizationId, status, createdAt])
+  @@index([organizationId, customerId])
+  @@map("orders")
+}
+
+model OrderLineItem {
+  id                  String       @id @default(uuid()) @db.Uuid
+  organizationId      String       @map("organization_id") @db.Uuid
+  orderId             String       @map("order_id") @db.Uuid
+  catalogItemId       String?      @map("catalog_item_id") @db.Uuid
+  descriptionSnapshot String       @map("description_snapshot")
+  quantity            Int          @default(1)
+  unitAmountMinor     BigInt       @map("unit_amount_minor")
+  discountAmountMinor BigInt       @default(0) @map("discount_amount_minor")
+  lineTotalAmountMinor BigInt      @map("line_total_amount_minor")
+  metadataJson        Json?        @map("metadata_json")
+  createdAt           DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization        Organization @relation(fields: [organizationId], references: [id])
+  order               Order        @relation(fields: [organizationId, orderId], references: [organizationId, id], onDelete: Cascade)
+  catalogItem         CatalogItem? @relation(fields: [organizationId, catalogItemId], references: [organizationId, id])
+
+  @@unique([organizationId, id])
+  @@index([organizationId, orderId])
+  @@map("order_line_items")
 }
 
 

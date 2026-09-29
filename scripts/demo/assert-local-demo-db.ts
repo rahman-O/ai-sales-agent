@@ -32,8 +32,8 @@ export function assertLocalDemoDb(
   env: NodeJS.ProcessEnv = process.env,
   opts: { requireAllowReset?: boolean } = {},
 ): LocalDemoGateResult {
-  if (env.NODE_ENV === 'production') {
-    return { ok: false, reason: 'NODE_ENV_production' };
+  if (env.NODE_ENV === 'production' || env.APP_ENV === 'production' || env.DB_ENV === 'production') {
+    return { ok: false, reason: 'production_environment_detected' };
   }
   const marker = env.DEMO_DB_TARGET === 'LOCAL' || env.DEMO_FORCE_LOCAL_DB === '1';
   if (!marker) {

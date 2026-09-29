@@ -4,6 +4,8 @@ import { json, urlencoded } from 'express';
 import { AppModule } from './app.module.js';
 import { loadLocalEnv, loadServerEnv } from '@ai-sales-agent/config';
 
+import { GlobalHttpExceptionFilter } from './common/http-exception.filter.js';
+
 async function bootstrap() {
   loadLocalEnv();
   const env = loadServerEnv(process.env);
@@ -11,6 +13,7 @@ async function bootstrap() {
     logger: ['error', 'warn', 'log'],
     bodyParser: false,
   });
+  app.useGlobalFilters(new GlobalHttpExceptionFilter());
   app.use(
     json({
       limit: '1mb',

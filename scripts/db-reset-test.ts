@@ -3,11 +3,10 @@
  * Refuses production.
  */
 import { Pool } from 'pg';
+import { assertNonProduction } from '@ai-sales-agent/config';
 
 async function main() {
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error('Refusing db:reset:test in production');
-  }
+  assertNonProduction('db:reset:test');
   const url = process.env.MIGRATION_DATABASE_URL;
   if (!url) throw new Error('MIGRATION_DATABASE_URL required');
   if (!url.includes('ai_sales_agent')) {

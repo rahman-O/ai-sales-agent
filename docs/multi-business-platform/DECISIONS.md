@@ -188,6 +188,80 @@
 
 ---
 
+## D011 — Business Packs Are Bootstrap-Only Inputs
+
+**Status:** ACCEPTED
+
+**Context:** Onboarding multiple business types benefits from industry presets (clinic, salon, real estate, restaurant, professional services). However, embedding industry branches into runtime logic creates fragility and tenant lock-in.
+
+**Decision:** Business Packs are code-owned, versioned templates used strictly during initial onboarding or merge-missing setup. After application, all platform runtime components (orchestrator, tools, workflow resolver, policies, knowledge) operate exclusively on persisted generic configuration (`OrganizationCapabilities`, `BusinessPolicy`, `CatalogItem`, `KnowledgeDocument`, `OrganizationConversationProfile`). Pack application records minimal provenance for auditing but never acts as a runtime decision source.
+
+**Consequences:**
+- Zero runtime branching on `packId`, `businessType`, or industry strings
+- Pack policy starters default to `DRAFT` (not active)
+- Pack knowledge starters default to `DRAFT` (not published)
+- Pack catalog starters default to `INACTIVE` with null price (no fake prices)
+- Re-applying a pack uses deterministic starter keys for idempotency
+- Operators can freely customize all settings post-application
+
+---
+
+## D012 — Backend-Authoritative Pricing and Transaction State
+ 
+**Status:** ACCEPTED
+ 
+**Context:** Non-booking commercial transactions (Quotes and Orders) require deterministic price calculation, offer discount stacking, currency consistency, and safety guarantees against hallucinated pricing or unauthorized state modifications by LLMs.
+ 
+**Decision:** Pricing calculations are strictly backend-authoritative in integer minor units (BigInt) within a pure deterministically testable function (`calculateTransactionPricing`). The LLM is never trusted with computing totals, discounts, or order status mutations. Manual pricing is gated on catalog items (`pricingModel === 'MANUAL_QUOTE'`). Order confirmation requires explicit server-side state confirmation (`pendingTransactionConfirmation` in working state) and any line item modification invalidates confirmation. Quote and Order lifecycles enforce rigid state machines (`Quote: DRAFT -> SENT -> ACCEPTED / REJECTED / CANCELLED / EXPIRED`, `Order: DRAFT -> PENDING_CONFIRMATION -> CONFIRMED -> CANCELLED / FULFILLED / EXPIRED`). Preview mode simulates transactions in memory without database mutations.
+
+**Consequences:**
+- LLM cannot hallucinate totals or discounts
+- Currency mismatches throw validation errors
+- Offer discounts from MB-05 are stacked deterministically
+- Line items snapshot historical name and unit price at transaction creation
+- Multi-tenant RLS isolation with DB-level CHECK constraints
+
+---
+
+## D013 — Deterministic Derived Analytics from Structured Operational Truth
+ 
+**Status:** ACCEPTED
+ 
+**Context:** Analytics and dashboard metrics must reflect real business activity accurately across different business types without hallucinated totals, ungrounded conversational NLP inferences, cross-currency mixing, or expensive queries on hot transactional paths.
+ 
+**Decision:** Analytics is strictly derived from authoritative structured backend state (`conversations`, `messages`, `leads`, `bookings`, `quotes`, `orders`, `catalog_items`, `agent_runs`). DeepSeek / LLM models are never used to compute, aggregate, or infer core metrics. Multi-currency values are partitioned and never summed across currencies. Zero denominators safely produce `rate: null` (`N/A`). Date ranges are converted to half-open UTC intervals `[from, to)` based on the organization's local timezone. Preview sessions and simulated tool mutations are strictly excluded. Dynamic dashboards render modules strictly according to `OrganizationCapabilities` with zero `businessType` runtime branching.
+
+**Consequences:**
+- LLMs cannot hallucinate metrics or revenue
+- Financial totals are labelled accurately (Accepted Quote Value, Confirmed Order Value)
+- Safe zero-denominator handling prevents runtime math errors
+- Tenant RLS isolation guaranteed on all analytics queries
+- Clean separation between hot operational transactions and derived aggregate read queries
+
+---
+
+## D014 — Production Hardening & Operational Safety
+
+**Status:** ACCEPTED
+
+**Context:** Live production deployments require strict environment boundaries, automated RLS verification, role separation, bounded retry and backoff mechanisms, standardized error masking, and disaster recovery procedures to ensure operational resilience and zero data contamination.
+
+**Decision:**
+1. **Environment Tiers & Safety Gates**: Explicit `APP_ENV` (`development | test | staging | production`) and `DB_ENV` (`local | remote_test | staging | production`). Destructive CLI commands (`demo:reset`, `demo:reseed`, `db:reset:test`, `db:seed`) fail closed via `assertNonProduction()` when production environment variables are detected.
+2. **Database Role Separation**: Runtime processes operate exclusively under the `app_runtime` non-superuser role (`NOBYPASSRLS`). DDL migrations run via owner credentials during deployment and are stripped from runtime servers.
+3. **RLS & FORCE RLS**: All 47 tenant tables enforce `ENABLE ROW LEVEL SECURITY` and `FORCE ROW LEVEL SECURITY`. Automated cross-tenant negative test suites prevent cross-organization reads and writes.
+4. **Resilient Queues & Observability**: BullMQ workers configure bounded retry attempts (3), exponential backoff (1000ms delay), dead-letter logging, and graceful shutdown handling (`SIGTERM`/`SIGINT`).
+5. **Standardized Error Masking**: `GlobalHttpExceptionFilter` formats API errors to `{ statusCode, code, message, requestId, timestamp }` and masks raw SQL and internal traces in production.
+6. **Production Readiness CLI**: `npm run prod:check` runs non-destructive checks against target databases and Redis before deployment.
+
+**Consequences:**
+- Accidental destructive resets against production databases are impossible.
+- Tenant data leakage across organizations is strictly blocked at the PostgreSQL engine level.
+- Unhandled exceptions never leak database topology, SQL queries, or secrets to external callers.
+- Clear operational runbooks enable predictable incident triage and disaster recovery.
+
+---
+
 ## Decision Summary
 
 | ID | Decision | Status |
@@ -202,3 +276,8 @@
 | D008 | Backward-compatible booking | PROPOSED (constraint ACCEPTED) |
 | D009 | Catalog extension over replacement | PROPOSED |
 | D010 | JSONB for org configuration | PROPOSED |
+| D011 | Business Packs are bootstrap-only inputs | ACCEPTED |
+| D012 | Backend-authoritative pricing and transaction state | ACCEPTED |
+| D013 | Deterministic derived analytics from structured operational truth | ACCEPTED |
+| D014 | Production hardening and operational safety | ACCEPTED |
+

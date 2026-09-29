@@ -32,6 +32,18 @@ import { matchServices } from './service-search.js';
 import { invalidUuidArg, isValidUuid } from './uuid-validator.js';
 import { applySelectiveToolWriteBack } from './conversation-working-state.js';
 import { BUSINESS_POLICY_TYPES } from '@ai-sales-agent/contracts';
+import {
+  toolAcceptQuote,
+  toolCancelOrder,
+  toolCancelQuote,
+  toolConfirmOrder,
+  toolCreateOrder,
+  toolCreateQuote,
+  toolGetOrder,
+  toolGetQuote,
+  toolPresentQuote,
+  toolRejectQuote,
+} from './transaction-tools.js';
 
 const TOOL_VERSION = '1';
 const MAX_DISTANCE = ACCEPTED_EMBEDDING_PROFILE.maxDistance;
@@ -329,6 +341,162 @@ const DEFS: ToolDefinition[] = [
       required: ['policyType'],
     },
   },
+  {
+    name: 'getQuote',
+    version: TOOL_VERSION,
+    description: 'Get formal price quote details by id or latest for customer',
+    classification: 'read',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: { quoteId: { type: 'string' } },
+    },
+  },
+  {
+    name: 'createQuote',
+    version: TOOL_VERSION,
+    description: 'Create a draft price quote based on catalog items with backend-calculated prices and offers',
+    classification: 'mutate',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        items: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              catalogItemId: { type: 'string' },
+              description: { type: 'string' },
+              quantity: { type: 'number' },
+            },
+            required: ['quantity'],
+          },
+        },
+        leadId: { type: 'string' },
+        notes: { type: 'string' },
+      },
+      required: ['items'],
+    },
+  },
+  {
+    name: 'presentQuote',
+    version: TOOL_VERSION,
+    description: 'Present draft quote to customer for review',
+    classification: 'mutate',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: { quoteId: { type: 'string' } },
+      required: ['quoteId'],
+    },
+  },
+  {
+    name: 'acceptQuote',
+    version: TOOL_VERSION,
+    description: 'Accept a presented quote on behalf of explicit customer confirmation',
+    classification: 'mutate',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: { quoteId: { type: 'string' } },
+      required: ['quoteId'],
+    },
+  },
+  {
+    name: 'rejectQuote',
+    version: TOOL_VERSION,
+    description: 'Reject a presented quote on customer refusal',
+    classification: 'mutate',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: { quoteId: { type: 'string' } },
+      required: ['quoteId'],
+    },
+  },
+  {
+    name: 'cancelQuote',
+    version: TOOL_VERSION,
+    description: 'Cancel a draft or presented quote',
+    classification: 'mutate',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: { quoteId: { type: 'string' } },
+      required: ['quoteId'],
+    },
+  },
+  {
+    name: 'getOrder',
+    version: TOOL_VERSION,
+    description: 'Get order details by id or latest for customer',
+    classification: 'read',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: { orderId: { type: 'string' } },
+    },
+  },
+  {
+    name: 'createOrder',
+    version: TOOL_VERSION,
+    description: 'Create an order with backend-calculated pricing and minimum order policy checks',
+    classification: 'mutate',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        items: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              catalogItemId: { type: 'string' },
+              description: { type: 'string' },
+              quantity: { type: 'number' },
+            },
+            required: ['catalogItemId', 'quantity'],
+          },
+        },
+        quoteId: { type: 'string' },
+        leadId: { type: 'string' },
+        notes: { type: 'string' },
+      },
+      required: ['items'],
+    },
+  },
+  {
+    name: 'confirmOrder',
+    version: TOOL_VERSION,
+    description: 'Confirm a pending order upon server-verified customer agreement',
+    classification: 'mutate',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        orderId: { type: 'string' },
+        expectedTotalAmountMinor: { type: 'string' },
+        expectedVersion: { type: 'number' },
+      },
+      required: ['orderId'],
+    },
+  },
+  {
+    name: 'cancelOrder',
+    version: TOOL_VERSION,
+    description: 'Cancel an order before completion',
+    classification: 'mutate',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        orderId: { type: 'string' },
+        expectedVersion: { type: 'number' },
+      },
+      required: ['orderId'],
+    },
+  },
 ];
 
 async function withTenant<T>(
@@ -460,13 +628,17 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
           const capsRow = await c.query<{
             supports_leads: boolean;
             supports_booking: boolean;
+            supports_quotes: boolean;
+            supports_orders: boolean;
           }>(
-            `SELECT supports_leads, supports_booking
+            `SELECT supports_leads, supports_booking, supports_quotes, supports_orders
              FROM organization_capabilities WHERE organization_id=$1`,
             [ctx.organizationId],
           );
           const supportsLeads = capsRow.rows[0]?.supports_leads ?? true;
           const supportsBooking = capsRow.rows[0]?.supports_booking ?? true;
+          const supportsQuotes = capsRow.rows[0]?.supports_quotes ?? false;
+          const supportsOrders = capsRow.rows[0]?.supports_orders ?? false;
 
           if (
             !supportsBooking &&
@@ -483,6 +655,24 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
               name === 'scheduleLeadFollowUp')
           ) {
             return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'leads_disabled' };
+          }
+
+          if (
+            !supportsQuotes &&
+            (name === 'createQuote' ||
+              name === 'presentQuote' ||
+              name === 'acceptQuote' ||
+              name === 'rejectQuote' ||
+              name === 'cancelQuote')
+          ) {
+            return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'quotes_disabled' };
+          }
+
+          if (
+            !supportsOrders &&
+            (name === 'createOrder' || name === 'confirmOrder' || name === 'cancelOrder')
+          ) {
+            return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'orders_disabled' };
           }
 
           const runMutate = async (): Promise<ToolResult> => {
@@ -772,6 +962,115 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
             return { ok: true, code: 'OK', data: upd.rows[0], operationId: claim.operationId };
           }
 
+          if (name === 'createQuote') {
+            const result = await toolCreateQuote(c, ctx.organizationId, ctx.customerId, {
+              items: Array.isArray(args.items) ? (args.items as any) : [],
+              leadId: typeof args.leadId === 'string' ? args.leadId : undefined,
+              notes: typeof args.notes === 'string' ? args.notes : undefined,
+            });
+            if (!result.ok) return { ok: false, code: result.code, data: result.data };
+            await c.query(
+              `UPDATE command_operations SET status='SUCCEEDED', result_json=$3::jsonb, completed_at=now()
+               WHERE organization_id=$1 AND id=$2`,
+              [ctx.organizationId, claim.operationId, JSON.stringify(result.data)],
+            );
+            return { ok: true, code: 'OK', data: result.data, operationId: claim.operationId };
+          }
+
+          if (name === 'presentQuote') {
+            const quoteId = String(args.quoteId ?? '');
+            const result = await toolPresentQuote(c, ctx.organizationId, quoteId);
+            if (!result.ok) return { ok: false, code: result.code };
+            await c.query(
+              `UPDATE command_operations SET status='SUCCEEDED', result_json=$3::jsonb, completed_at=now()
+               WHERE organization_id=$1 AND id=$2`,
+              [ctx.organizationId, claim.operationId, JSON.stringify(result.data)],
+            );
+            return { ok: true, code: 'OK', data: result.data, operationId: claim.operationId };
+          }
+
+          if (name === 'acceptQuote') {
+            const quoteId = String(args.quoteId ?? '');
+            const result = await toolAcceptQuote(c, ctx.organizationId, quoteId);
+            if (!result.ok) return { ok: false, code: result.code };
+            await c.query(
+              `UPDATE command_operations SET status='SUCCEEDED', result_json=$3::jsonb, completed_at=now()
+               WHERE organization_id=$1 AND id=$2`,
+              [ctx.organizationId, claim.operationId, JSON.stringify(result.data)],
+            );
+            return { ok: true, code: 'OK', data: result.data, operationId: claim.operationId };
+          }
+
+          if (name === 'rejectQuote') {
+            const quoteId = String(args.quoteId ?? '');
+            const result = await toolRejectQuote(c, ctx.organizationId, quoteId);
+            if (!result.ok) return { ok: false, code: result.code };
+            await c.query(
+              `UPDATE command_operations SET status='SUCCEEDED', result_json=$3::jsonb, completed_at=now()
+               WHERE organization_id=$1 AND id=$2`,
+              [ctx.organizationId, claim.operationId, JSON.stringify(result.data)],
+            );
+            return { ok: true, code: 'OK', data: result.data, operationId: claim.operationId };
+          }
+
+          if (name === 'cancelQuote') {
+            const quoteId = String(args.quoteId ?? '');
+            const result = await toolCancelQuote(c, ctx.organizationId, quoteId);
+            if (!result.ok) return { ok: false, code: result.code };
+            await c.query(
+              `UPDATE command_operations SET status='SUCCEEDED', result_json=$3::jsonb, completed_at=now()
+               WHERE organization_id=$1 AND id=$2`,
+              [ctx.organizationId, claim.operationId, JSON.stringify(result.data)],
+            );
+            return { ok: true, code: 'OK', data: result.data, operationId: claim.operationId };
+          }
+
+          if (name === 'createOrder') {
+            const result = await toolCreateOrder(c, ctx.organizationId, ctx.customerId, {
+              items: Array.isArray(args.items) ? (args.items as any) : [],
+              quoteId: typeof args.quoteId === 'string' ? args.quoteId : undefined,
+              leadId: typeof args.leadId === 'string' ? args.leadId : undefined,
+              notes: typeof args.notes === 'string' ? args.notes : undefined,
+            });
+            if (!result.ok) return { ok: false, code: result.code, data: result.data };
+            await c.query(
+              `UPDATE command_operations SET status='SUCCEEDED', result_json=$3::jsonb, completed_at=now()
+               WHERE organization_id=$1 AND id=$2`,
+              [ctx.organizationId, claim.operationId, JSON.stringify(result.data)],
+            );
+            return { ok: true, code: 'OK', data: result.data, operationId: claim.operationId };
+          }
+
+          if (name === 'confirmOrder') {
+            const orderId = String(args.orderId ?? '');
+            const expectedTotalAmountMinor = typeof args.expectedTotalAmountMinor === 'string' ? args.expectedTotalAmountMinor : undefined;
+            const expectedVersion = typeof args.expectedVersion === 'number' ? args.expectedVersion : undefined;
+            const result = await toolConfirmOrder(c, ctx.organizationId, orderId, {
+              expectedTotalAmountMinor,
+              expectedVersion,
+            });
+            if (!result.ok) return { ok: false, code: result.code };
+            await c.query(
+              `UPDATE command_operations SET status='SUCCEEDED', result_json=$3::jsonb, completed_at=now()
+               WHERE organization_id=$1 AND id=$2`,
+              [ctx.organizationId, claim.operationId, JSON.stringify(result.data)],
+            );
+            return { ok: true, code: 'OK', data: result.data, operationId: claim.operationId };
+          }
+
+          if (name === 'cancelOrder') {
+            const orderId = String(args.orderId ?? '');
+            const expectedVersion = typeof args.expectedVersion === 'number' ? args.expectedVersion : undefined;
+            const result = await toolCancelOrder(c, ctx.organizationId, orderId, expectedVersion);
+            if (!result.ok) return { ok: false, code: result.code };
+            await c.query(
+              `UPDATE command_operations SET status='SUCCEEDED', result_json=$3::jsonb, completed_at=now()
+               WHERE organization_id=$1 AND id=$2`,
+              [ctx.organizationId, claim.operationId, JSON.stringify(result.data)],
+            );
+            return { ok: true, code: 'OK', data: result.data, operationId: claim.operationId };
+          }
+
           return { ok: false, code: 'TOOL_NOT_FOUND' };
         };
 
@@ -804,13 +1103,17 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
         const capsRow = await c.query<{
           supports_leads: boolean;
           supports_booking: boolean;
+          supports_quotes: boolean;
+          supports_orders: boolean;
         }>(
-          `SELECT supports_leads, supports_booking
+          `SELECT supports_leads, supports_booking, supports_quotes, supports_orders
            FROM organization_capabilities WHERE organization_id=$1`,
           [ctx.organizationId],
         );
         const supportsLeads = capsRow.rows[0]?.supports_leads ?? true;
         const supportsBooking = capsRow.rows[0]?.supports_booking ?? true;
+        const supportsQuotes = capsRow.rows[0]?.supports_quotes ?? false;
+        const supportsOrders = capsRow.rows[0]?.supports_orders ?? false;
 
         if (!supportsBooking && (name === 'getAvailableSlots' || name === 'getBookings')) {
           return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'booking_disabled' };
@@ -818,6 +1121,14 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
 
         if (!supportsLeads && name === 'getLead') {
           return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'leads_disabled' };
+        }
+
+        if (!supportsQuotes && name === 'getQuote') {
+          return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'quotes_disabled' };
+        }
+
+        if (!supportsOrders && name === 'getOrder') {
+          return { ok: false, code: 'TOOL_NOT_AUTHORIZED', safeMessage: 'orders_disabled' };
         }
 
         const runRead = async (): Promise<ToolResult> => {
@@ -1096,6 +1407,22 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
               } : { policy: null, authoritative: true },
             };
           }
+          if (name === 'getQuote') {
+            const result = await toolGetQuote(c, ctx.organizationId, ctx.customerId, {
+              quoteId: typeof args.quoteId === 'string' ? args.quoteId : undefined,
+            });
+            if (!result.ok) return { ok: false, code: result.code };
+            return { ok: true, code: 'OK', data: result.data };
+          }
+
+          if (name === 'getOrder') {
+            const result = await toolGetOrder(c, ctx.organizationId, ctx.customerId, {
+              orderId: typeof args.orderId === 'string' ? args.orderId : undefined,
+            });
+            if (!result.ok) return { ok: false, code: result.code };
+            return { ok: true, code: 'OK', data: result.data };
+          }
+
           return { ok: false, code: 'TOOL_NOT_FOUND' };
         };
 

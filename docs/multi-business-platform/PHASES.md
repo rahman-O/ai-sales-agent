@@ -359,13 +359,12 @@ CatalogItem (new)
 |-------|--------|-------------------------------|
 | MB-05 Offers | CLOSED | Offer-to-CatalogItem relationship model (OfferCatalogItem join table implemented) |
 | MB-06 Policies | CLOSED | Generic typed policy model, deterministic resolution, RLS, UI, AI retrieval, and booking cutoff enforcement |
-| MB-07 Style | NEXT | Organization conversation style and assistant personality |
-| MB-07 Style | NOT_STARTED | ConversationProfile storage (JSONB vs. table) |
-| MB-08 Knowledge | NOT_STARTED | Category taxonomy for multi-business knowledge |
-| MB-09 Preview | NOT_STARTED | Sandbox isolation strategy (flag vs. separate store) |
-| MB-10 Workflows | NOT_STARTED | Dynamic prompt composition budget |
-| MB-11 Packs | NOT_STARTED | Template versioning strategy |
-| MB-12 Orders | NOT_STARTED | Order state machine design |
-| MB-13 Analytics | NOT_STARTED | Cross-capability metric aggregation |
-| MB-14 Hardening | NOT_STARTED | Full regression test surface |
-| MB-15 Acceptance | NOT_STARTED | Provider acceptance criteria |
+| MB-07 Style | CLOSED | Organization conversation profile, tone, dialect, sales style, deterministic preview, and context-builder integration |
+| MB-08 Knowledge | CLOSED | Generic KnowledgeSource model, review/publish boundary, pgvector search, and structured truth precedence |
+| MB-09 Preview | CLOSED | First-class PREVIEW execution mode, safe tool simulation, zero DB rows, UI trace inspector |
+| MB-10 Workflows | CLOSED | Three-tier Intent + Workflow + Working State orchestration layer, capability-driven gating, topic-switching (suspend/resume) |
+| MB-11 Packs | CLOSED | Code-owned versioned packs (clinic.v1, salon.v1, real_estate.v1, restaurant.v1, professional_services.v1), preview diff, idempotent merge, bootstrap-only rule |
+| MB-12 Orders | CLOSED | Backend-authoritative Quote/Order state machines, BigInt minor unit pricing, capability gating, preview simulation |
+| MB-13 Analytics | CLOSED | Structured metric catalog, workflow funnels, capability-driven dashboards, multi-currency isolation, zero LLM dependency |
+| MB-14 Hardening | CLOSED | Full regression test surface, rate limiting, error standardizing, RLS verification, runbooks |
+| MB-15 Acceptance | NEXT | Provider acceptance criteria |

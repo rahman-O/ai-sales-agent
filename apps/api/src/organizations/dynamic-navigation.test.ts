@@ -99,7 +99,7 @@ test('MB-03: Scenario B — Lead-only organization displays leads and hides book
   assert.equal(routeAccessLeads.allowed, true);
 });
 
-test('MB-03/MB-05: Future modules (MB-07, MB-08, MB-10, MB-12) are marked COMING_SOON and omitted from active operator nav, while implemented modules (offers) are active when capability enabled', () => {
+test('MB-03/MB-05/MB-12: Implemented modules (offers, quotes, orders) are active when capability enabled, while future modules (inventory, listings) are COMING_SOON', () => {
   const futureEcommerceCaps = {
     ...DEFAULT_ORGANIZATION_CAPABILITIES,
     supportsProducts: true,
@@ -114,20 +114,21 @@ test('MB-03/MB-05: Future modules (MB-07, MB-08, MB-10, MB-12) are marked COMING
   const activeNav = filterNavItems(DASHBOARD_NAV_ITEMS, futureEcommerceCaps, 'ADMIN');
   const activeNavIds = activeNav.map((i) => i.id);
 
-  assert.equal(activeNavIds.includes('orders'), false);
-  assert.equal(activeNavIds.includes('inventory'), false);
-  assert.equal(activeNavIds.includes('quotes'), false);
-  assert.equal(activeNavIds.includes('listings'), false);
-  // In MB-05, offers is implemented and enabled when supportsOffers is true
+  // In MB-12, orders and quotes are implemented and active when capability is enabled
+  assert.equal(activeNavIds.includes('orders'), true);
+  assert.equal(activeNavIds.includes('quotes'), true);
   assert.equal(activeNavIds.includes('offers'), true);
+  // Future modules remain COMING_SOON
+  assert.equal(activeNavIds.includes('inventory'), false);
+  assert.equal(activeNavIds.includes('listings'), false);
 
   // If explicitly requested for roadmap preview, coming soon items can be displayed
   const previewNav = filterNavItems(DASHBOARD_NAV_ITEMS, futureEcommerceCaps, 'ADMIN', {
     includeComingSoon: true,
   });
   const previewIds = previewNav.map((i) => i.id);
-  assert.ok(previewIds.includes('orders'));
-  assert.ok(previewIds.includes('quotes'));
+  assert.ok(previewIds.includes('inventory'));
+  assert.ok(previewIds.includes('listings'));
 });
 
 test('MB-03: Role & capability intersection restricts admin routes from regular members', () => {

@@ -13,6 +13,7 @@ import type {
   AddMemberRequest,
   CreateOrganizationRequest,
   MemberRole,
+  UpdateConversationProfileRequest,
   UpdateOrganizationCapabilitiesRequest,
   UpdateOrganizationProfileRequest,
 } from '@ai-sales-agent/contracts';
@@ -64,6 +65,20 @@ export class OrganizationsController {
     @Body() body: UpdateOrganizationCapabilitiesRequest,
   ) {
     return this.orgs.updateCapabilities(req.auth!, id, body);
+  }
+
+  @Get(':id/conversation-profile')
+  getConversationProfile(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.orgs.getConversationProfile(req.auth!, id);
+  }
+
+  @Patch(':id/conversation-profile')
+  updateConversationProfile(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: UpdateConversationProfileRequest,
+  ) {
+    return this.orgs.updateConversationProfile(req.auth!, id, body);
   }
 
   @Get(':id/onboarding')

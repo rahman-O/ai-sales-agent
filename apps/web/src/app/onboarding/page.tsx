@@ -11,6 +11,7 @@ import {
   type OrganizationCapabilitiesDto,
   type OrganizationOnboardingDto,
   type OrganizationProfileDto,
+  type PackPreviewDto,
 } from '@ai-sales-agent/contracts';
 
 type StepNumber = 1 | 2 | 3 | 4 | 5;
@@ -53,6 +54,76 @@ export default function OnboardingPage() {
 
   // Step 5 / Live Readiness
   const [readiness, setReadiness] = useState<OnboardingReadinessDto | null>(null);
+
+  // Business Pack state
+  const [packPreview, setPackPreview] = useState<PackPreviewDto | null>(null);
+  const [packLoading, setPackLoading] = useState(false);
+  const [packApplied, setPackApplied] = useState(false);
+
+  const getPackIdForBusinessType = (type: string): string | null => {
+    switch (type) {
+      case 'CLINIC_HEALTHCARE':
+        return 'CLINIC';
+      case 'SALON_BEAUTY':
+        return 'SALON';
+      case 'REAL_ESTATE':
+        return 'REAL_ESTATE';
+      case 'RESTAURANT_FOOD':
+        return 'RESTAURANT';
+      case 'PROFESSIONAL_SERVICES':
+        return 'PROFESSIONAL_SERVICES';
+      default:
+        return null;
+    }
+  };
+
+  const handlePreviewPack = async (packId: string) => {
+    if (!orgId) return;
+    setPackLoading(true);
+    setError('');
+    try {
+      const res = await fetch(`/api/backend/organizations/${orgId}/packs/${packId}/preview`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode: 'PREVIEW_ONLY' }),
+      });
+      if (!res.ok) {
+        throw new Error(`Failed to preview pack (${res.status})`);
+      }
+      const data = (await res.json()) as PackPreviewDto;
+      setPackPreview(data);
+    } catch (e: any) {
+      setError(e.message || 'Failed to preview pack');
+    } finally {
+      setPackLoading(false);
+    }
+  };
+
+  const handleApplyPack = async (packId: string) => {
+    if (!orgId) return;
+    setPackLoading(true);
+    setError('');
+    try {
+      const res = await fetch(`/api/backend/organizations/${orgId}/packs/${packId}/apply`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode: 'INITIAL_SETUP' }),
+      });
+      if (!res.ok) {
+        throw new Error(`Failed to apply pack (${res.status})`);
+      }
+      const data = await res.json();
+      setPackApplied(true);
+      setSuccessMsg(
+        langRtl ? `تم تطبيق حزمة ${data.packId} بنجاح!` : `Pack ${data.packId} applied successfully!`,
+      );
+      await loadState(orgId);
+    } catch (e: any) {
+      setError(e.message || 'Failed to apply pack');
+    } finally {
+      setPackLoading(false);
+    }
+  };
 
   // Load initial organization onboarding state
   const loadState = useCallback(async (targetOrgId: string) => {
@@ -554,6 +625,107 @@ export default function OnboardingPage() {
                   />
                 </div>
               </div>
+
+              {/* MB-11: Business Pack Starter / Template Suggestion */}
+              {getPackIdForBusinessType(businessType) && (
+                <div style={{ marginTop: 20, padding: 16, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
+                    <div>
+                      <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#0284c7', background: '#e0f2fe', padding: '2px 8px', borderRadius: 4 }}>
+                        {langRtl ? 'حزمة مقترحة' : 'Recommended Pack'}
+                      </span>
+                      <h4 style={{ margin: '6px 0 2px 0', fontSize: 16, color: '#0f172a' }}>
+                        {getPackIdForBusinessType(businessType)} Pack Template
+                      </h4>
+                      <p style={{ margin: 0, fontSize: 13, color: '#64748b' }}>
+                        {langRtl
+                          ? 'توفير الوقت عبر تهيئة الإمكانيات، مسودات السياسات، بدايات المعرفة، وبنود الكتالوج المناسبة.'
+                          : 'Accelerate onboarding with sensible capability defaults, draft policies, knowledge starters, and catalog templates.'}
+                      </p>
+                    </div>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <button
+                        type="button"
+                        onClick={() => handlePreviewPack(getPackIdForBusinessType(businessType)!)}
+                        disabled={packLoading}
+                        style={{
+                          padding: '6px 12px',
+                          fontSize: 13,
+                          fontWeight: 600,
+                          borderRadius: 6,
+                          border: '1px solid #cbd5e1',
+                          background: '#fff',
+                          color: '#334155',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {packLoading ? (langRtl ? 'جاري المعاينة...' : 'Previewing...') : (langRtl ? 'معاينة الإعدادات' : 'Preview Setup')}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleApplyPack(getPackIdForBusinessType(businessType)!)}
+                        disabled={packLoading || packApplied}
+                        style={{
+                          padding: '6px 12px',
+                          fontSize: 13,
+                          fontWeight: 600,
+                          borderRadius: 6,
+                          border: 'none',
+                          background: packApplied ? '#10b981' : '#2563eb',
+                          color: '#fff',
+                          cursor: packApplied ? 'default' : 'pointer',
+                        }}
+                      >
+                        {packApplied
+                          ? (langRtl ? 'تم التطبيق ✓' : 'Applied ✓')
+                          : (langRtl ? 'تطبيق الحزمة' : 'Apply Pack')}
+                      </button>
+                    </div>
+                  </div>
+
+                  {packPreview && (
+                    <div style={{ marginTop: 12, padding: 12, background: '#fff', borderRadius: 6, border: '1px solid #cbd5e1' }}>
+                      <div style={{ display: 'flex', gap: 12, marginBottom: 8, fontSize: 12, fontWeight: 600, flexWrap: 'wrap' }}>
+                        <span style={{ color: '#16a34a' }}>+ {packPreview.summary.willCreate} Will Create</span>
+                        <span style={{ color: '#64748b' }}>- {packPreview.summary.willSkip} Skipped</span>
+                        <span style={{ color: '#d97706' }}>! {packPreview.summary.conflicts} Conflicts (Safe DRAFT)</span>
+                        <span style={{ color: '#0284c7' }}>= {packPreview.summary.noChange} No Change</span>
+                      </div>
+                      <div style={{ maxHeight: 180, overflowY: 'auto', fontSize: 12 }}>
+                        {packPreview.items.map((item, idx) => (
+                          <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', borderBottom: '1px solid #f1f5f9' }}>
+                            <div>
+                              <strong>[{item.category}]</strong> {item.key}
+                              {item.reason && <span style={{ color: '#64748b', marginLeft: 6 }}>({item.reason})</span>}
+                            </div>
+                            <span
+                              style={{
+                                padding: '2px 6px',
+                                borderRadius: 4,
+                                fontSize: 10,
+                                fontWeight: 700,
+                                background:
+                                  item.action === 'WILL_CREATE' ? '#dcfce7' :
+                                  item.action === 'WILL_SKIP' ? '#f1f5f9' :
+                                  item.action === 'CONFLICT' ? '#fef3c7' : '#e0f2fe',
+                                color:
+                                  item.action === 'WILL_CREATE' ? '#166534' :
+                                  item.action === 'WILL_SKIP' ? '#475569' :
+                                  item.action === 'CONFLICT' ? '#92400e' : '#0369a1',
+                              }}
+                            >
+                              {item.action}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                      <p style={{ margin: '8px 0 0 0', fontSize: 11, color: '#94a3b8' }}>
+                        * Policy, knowledge, and catalog templates default to non-active DRAFT status and will never enforce rules or display fake prices without review.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </section>
         )}

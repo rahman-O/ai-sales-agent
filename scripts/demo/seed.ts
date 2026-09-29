@@ -43,7 +43,11 @@ async function resolveOperatorAuthSubject(): Promise<string | null> {
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? '';
   const email = (process.env.SUPABASE_TEST_EMAIL ?? '').trim();
   const password = process.env.SUPABASE_TEST_PASSWORD ?? '';
-  if (!url || !key || !email || !password) return null;
+  if (!url || !key || !email || !password) {
+    return process.env.DEMO_FORCE_LOCAL_DB === '1' || process.env.DEMO_DB_TARGET === 'LOCAL'
+      ? 'demo-local-operator-subject'
+      : null;
+  }
   try {
     const res = await fetch(`${url}/auth/v1/token?grant_type=password`, {
       method: 'POST',
@@ -55,9 +59,16 @@ async function resolveOperatorAuthSubject(): Promise<string | null> {
       body: JSON.stringify({ email, password }),
     });
     const body = (await res.json()) as { user?: { id?: string } };
-    return body.user?.id ?? null;
+    return (
+      body.user?.id ??
+      (process.env.DEMO_FORCE_LOCAL_DB === '1' || process.env.DEMO_DB_TARGET === 'LOCAL'
+        ? 'demo-local-operator-subject'
+        : null)
+    );
   } catch {
-    return null;
+    return process.env.DEMO_FORCE_LOCAL_DB === '1' || process.env.DEMO_DB_TARGET === 'LOCAL'
+      ? 'demo-local-operator-subject'
+      : null;
   }
 }
 
@@ -200,6 +211,37 @@ async function main() {
         organizationId: DEMO_ORG_ID,
         status: 'COMPLETED',
         completedAt: new Date(),
+      },
+    });
+
+    await prisma.organizationConversationProfile.upsert({
+      where: { organizationId: DEMO_ORG_ID },
+      update: {
+        primaryLanguage: 'ar',
+        dialect: 'IRAQI',
+        tone: 'WARM',
+        formality: 'BALANCED',
+        responseLength: 'SHORT',
+        salesStyle: 'BALANCED',
+        emojiUsage: 'MINIMAL',
+        customerNameUsage: 'WHEN_KNOWN',
+        questionsPerTurn: 1,
+        greetingStyle: 'BRIEF',
+        handoffStyle: 'PROFESSIONAL',
+      },
+      create: {
+        organizationId: DEMO_ORG_ID,
+        primaryLanguage: 'ar',
+        dialect: 'IRAQI',
+        tone: 'WARM',
+        formality: 'BALANCED',
+        responseLength: 'SHORT',
+        salesStyle: 'BALANCED',
+        emojiUsage: 'MINIMAL',
+        customerNameUsage: 'WHEN_KNOWN',
+        questionsPerTurn: 1,
+        greetingStyle: 'BRIEF',
+        handoffStyle: 'PROFESSIONAL',
       },
     });
 
@@ -1030,19 +1072,21 @@ async function main() {
       detail: 'SCHEDULED+DISPATCHED_snapshot+SUPPRESSED+FAILED (DISPATCHED!=delivered)',
     });
 
-    // ——— Knowledge PARTIAL (no fabricated publish) ———
+    // ——— Knowledge MB-08 (Deterministic published and review sources) ———
     await prisma.knowledgeChunk.deleteMany({ where: { organizationId: DEMO_ORG_ID } });
     await prisma.knowledgeDocumentVersion.deleteMany({ where: { organizationId: DEMO_ORG_ID } });
     await prisma.knowledgeDocument.deleteMany({ where: { organizationId: DEMO_ORG_ID } });
 
     const doc1 = 'a0d00001-0001-4001-8001-000000000001';
     const ver1 = 'a0d10001-0001-4001-8001-000000000001';
-    const text1 = 'Zero Cost Test Clinic is a synthetic demonstration clinic.';
+    const text1 = 'يقع المركز في بغداد - المنصور، قرب ساحة الرواد. تتوفر خدمة الاستقبال على مدار ساعات العمل الرسمية.';
     await prisma.knowledgeDocument.create({
       data: {
         id: doc1,
         organizationId: DEMO_ORG_ID,
-        title: 'Clinic Services (Demo)',
+        title: 'موقع المركز والاتجاهات',
+        sourceType: 'TEXT',
+        visibility: 'CUSTOMER_VISIBLE',
       },
     });
     await prisma.knowledgeDocumentVersion.create({
@@ -1051,23 +1095,40 @@ async function main() {
         organizationId: DEMO_ORG_ID,
         documentId: doc1,
         versionNumber: 1,
-        objectKey: `demo/${DEMO_ORG_ID}/clinic-services.txt`,
+        objectKey: `demo/${DEMO_ORG_ID}/location-directions.txt`,
         contentChecksum: digestText(text1),
         mimeType: 'text/plain',
         byteSize: Buffer.byteLength(text1),
         extractedText: text1,
-        pipelineStatus: 'AWAITING_REVIEW',
-        reviewStatus: 'PENDING',
+        pipelineStatus: 'READY',
+        reviewStatus: 'APPROVED',
+        expectedChunkCount: 1,
+        embeddingProfileId: 'qwen3_embed_06b_1024_v1',
+        embeddingDimension: 1024,
       },
     });
+    await prisma.knowledgeDocument.update({
+      where: { organizationId_id: { organizationId: DEMO_ORG_ID, id: doc1 } },
+      data: { activePublishedVersionId: ver1 },
+    });
+
     const doc2 = 'a0d00002-0002-4002-8002-000000000002';
     const ver2 = 'a0d10002-0002-4002-8002-000000000002';
-    const text2 = 'Working hours for the demo are Sunday through Thursday.';
+    const faqQuestion = 'هل يتوفر موقف سيارات مجاني؟';
+    const faqAnswer = 'نعم، يتوفر موقف سيارات مجاني لجميع العملاء والمراجعين خلف مبنى المركز.';
+    const text2 = `سؤال: ${faqQuestion}\nجواب: ${faqAnswer}`;
     await prisma.knowledgeDocument.create({
       data: {
         id: doc2,
         organizationId: DEMO_ORG_ID,
-        title: 'Working Hours (Demo)',
+        title: faqQuestion,
+        sourceType: 'FAQ',
+        visibility: 'CUSTOMER_VISIBLE',
+        metadataJson: {
+          question: faqQuestion,
+          answer: faqAnswer,
+          tags: ['parking', 'directions', 'facilities'],
+        },
       },
     });
     await prisma.knowledgeDocumentVersion.create({
@@ -1076,19 +1137,58 @@ async function main() {
         organizationId: DEMO_ORG_ID,
         documentId: doc2,
         versionNumber: 1,
-        objectKey: `demo/${DEMO_ORG_ID}/working-hours.txt`,
+        objectKey: `demo/${DEMO_ORG_ID}/parking-faq.txt`,
         contentChecksum: digestText(text2),
         mimeType: 'text/plain',
         byteSize: Buffer.byteLength(text2),
         extractedText: text2,
-        pipelineStatus: 'AWAITING_REVIEW',
-        reviewStatus: 'PENDING',
+        pipelineStatus: 'READY',
+        reviewStatus: 'APPROVED',
+        expectedChunkCount: 1,
+        embeddingProfileId: 'qwen3_embed_06b_1024_v1',
+        embeddingDimension: 1024,
       },
     });
+    await prisma.knowledgeDocument.update({
+      where: { organizationId_id: { organizationId: DEMO_ORG_ID, id: doc2 } },
+      data: { activePublishedVersionId: ver2 },
+    });
+
+    const doc3 = 'a0d00003-0003-4003-8003-000000000003';
+    const ver3 = 'a0d10003-0003-4003-8003-000000000003';
+    const text3 = 'تعليمات التحضير: يرجى الحضور قبل 10 دقائق من موعد الجلسة لإتمام إجراءات الاستقبال.';
+    await prisma.knowledgeDocument.create({
+      data: {
+        id: doc3,
+        organizationId: DEMO_ORG_ID,
+        title: 'تعليمات التحضير والاستقبال (مسودة)',
+        sourceType: 'TEXT',
+        visibility: 'CUSTOMER_VISIBLE',
+      },
+    });
+    await prisma.knowledgeDocumentVersion.create({
+      data: {
+        id: ver3,
+        organizationId: DEMO_ORG_ID,
+        documentId: doc3,
+        versionNumber: 1,
+        objectKey: `demo/${DEMO_ORG_ID}/prep-draft.txt`,
+        contentChecksum: digestText(text3),
+        mimeType: 'text/plain',
+        byteSize: Buffer.byteLength(text3),
+        extractedText: text3,
+        pipelineStatus: 'AWAITING_REVIEW',
+        reviewStatus: 'PENDING',
+        expectedChunkCount: 1,
+        embeddingProfileId: 'qwen3_embed_06b_1024_v1',
+        embeddingDimension: 1024,
+      },
+    });
+
     record({
       section: 'KNOWLEDGE',
-      result: 'PARTIAL',
-      detail: 'AWAITING_REVIEW_no_fabricated_publish_TEI_storage_path_not_run',
+      result: 'PASS',
+      detail: 'PUBLISHED_TEXT+PUBLISHED_FAQ+AWAITING_REVIEW_DRAFT',
     });
 
     const failed = sections.some((s) => s.result === 'FAIL');

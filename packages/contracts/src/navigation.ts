@@ -18,6 +18,7 @@ export type NavModuleId =
   | 'quotes'
   | 'offers'
   | 'policies'
+  | 'settings-ai'
   | 'inventory'
   | 'listings';
 
@@ -125,8 +126,9 @@ export const DASHBOARD_NAV_ITEMS: DashboardNavItem[] = [
     group: 'OPERATIONS',
     order: 80,
     requiredCapability: 'supportsOrders',
-    implementationStatus: 'COMING_SOON',
-    description: 'Customer order tracking (Available in upcoming phase)',
+    implementationStatus: 'IMPLEMENTED',
+    description: 'Customer order tracking & fulfillment',
+    descriptionAr: 'متابعة وإدارة طلبات العملاء',
   },
   {
     id: 'inventory',
@@ -192,8 +194,9 @@ export const DASHBOARD_NAV_ITEMS: DashboardNavItem[] = [
     group: 'GROWTH',
     order: 140,
     requiredCapability: 'supportsQuotes',
-    implementationStatus: 'COMING_SOON',
-    description: 'Quotations generator (Available in upcoming phase)',
+    implementationStatus: 'IMPLEMENTED',
+    description: 'Quotations and commercial proposals',
+    descriptionAr: 'عروض الأسعار والمقترحات التجارية',
   },
 
   {
@@ -207,6 +210,18 @@ export const DASHBOARD_NAV_ITEMS: DashboardNavItem[] = [
     implementationStatus: 'IMPLEMENTED',
     description: 'Structured and informational business policies',
     descriptionAr: 'سياسات العمل المنظمة والتفسيرية',
+  },
+  {
+    id: 'settings-ai',
+    label: 'AI Style & Tone',
+    labelAr: 'أسلوب ومظهر المساعد',
+    href: '/settings/ai',
+    group: 'ADMIN',
+    order: 148,
+    requiredRole: ['OWNER', 'ADMIN'],
+    implementationStatus: 'IMPLEMENTED',
+    description: 'Assistant personality, language dialect, tone, and conversation style',
+    descriptionAr: 'شخصية المساعد، اللهجة، النبرة، وأسلوب المحادثة',
   },
 
   // ADMIN
@@ -240,6 +255,7 @@ export const ALWAYS_AVAILABLE_MODULE_IDS: NavModuleId[] = [
   'follow-ups',
   'knowledge',
   'analytics',
+  'settings-ai',
 ];
 
 export interface NavigationFilterOptions {

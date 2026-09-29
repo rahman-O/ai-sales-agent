@@ -80,25 +80,28 @@
 
 ---
 
-### ConversationProfile (Embedded in Organization — MB-07)
+### ConversationProfile (IMPLEMENTED — MB-07)
 
-**Storage:** `conversation_style_json` JSONB column on `organizations`.
+**Storage:** Dedicated `organization_conversation_profiles` table with 1-to-1 relationship to `organizations`.
 
-**Proposed structure:**
-```json
-{
-  "language": "ar",
-  "dialect": "iraqi",
-  "tone": "friendly_professional",
-  "formality": "semi_formal",
-  "responseLength": "medium",
-  "salesPressure": "low",
-  "customerNameUsage": "frequent",
-  "questionsPerTurn": 1,
-  "emojiPreference": "occasional",
-  "handoffStyle": "graceful"
-}
-```
+**Structure:**
+| Column | Type | Default | Notes |
+|--------|------|---------|-------|
+| `organization_id` | UUID (PK) | — | References `organizations(id)` ON DELETE CASCADE |
+| `assistant_name` | Text? | `null` | Presentation metadata name |
+| `primary_language` | Text | `'ar'` | Preferred response language |
+| `dialect` | Text | `'IRAQI'` | `IRAQI` / `MSA` / `AUTO` |
+| `tone` | Text | `'PROFESSIONAL'` | `WARM` / `PROFESSIONAL` / `FRIENDLY` / `DIRECT` / `NEUTRAL` |
+| `formality` | Text | `'BALANCED'` | `CASUAL` / `BALANCED` / `FORMAL` |
+| `response_length` | Text | `'BALANCED'` | `SHORT` / `BALANCED` / `DETAILED` |
+| `sales_style` | Text | `'BALANCED'` | `LOW_PRESSURE` / `BALANCED` / `PROACTIVE` |
+| `emoji_usage` | Text | `'MINIMAL'` | `NEVER` / `MINIMAL` / `NORMAL` |
+| `customer_name_usage` | Text | `'WHEN_KNOWN'` | `NEVER` / `WHEN_KNOWN` / `OCCASIONAL` |
+| `questions_per_turn` | Integer | `1` | Max questions per response (1-3) |
+| `greeting_style` | Text | `'BRIEF'` | `BRIEF` / `WARM` / `FORMAL` / `CUSTOM` |
+| `handoff_style` | Text | `'PROFESSIONAL'` | `PROFESSIONAL` / `WARM` / `DIRECT` |
+| `custom_instructions` | Text? | `null` | Scoped style guidance (max 500 chars) |
+| `created_at` / `updated_at` | Timestamptz | `now()` | Timestamp tracking |
 
 ---
 
@@ -278,16 +281,20 @@ Quote
 
 ---
 
-### KnowledgeDocument / KnowledgeChunk (EXISTING)
+### KnowledgeDocument / KnowledgeChunk (EXTENDED — MB-08)
 
-**Current status:** Already generic — document upload, versioning, chunking, pgvector embeddings.
+**Status:** Generic organization-owned unstructured and semi-structured knowledge with review and publish lifecycle.
 
-**Minor future extension (MB-08):**
-| Column | Phase |
-|--------|-------|
-| `category` on `KnowledgeDocument` | MB-08 |
+**MB-08 Columns on `KnowledgeDocument`:**
+| Column | Type | Default | Description |
+|---|---|---|---|
+| `source_type` | String | `'FILE'` | `TEXT`, `FAQ`, `FILE`, `URL`, `MANUAL_NOTE` |
+| `visibility` | String | `'CUSTOMER_VISIBLE'` | `CUSTOMER_VISIBLE`, `INTERNAL_ONLY` |
+| `metadata_json` | JSONB? | `null` | Structured Q&A, tags, source reference |
 
-Categories: `"FAQ"`, `"SERVICE_DESCRIPTION"`, `"POLICY"`, `"GENERAL"`, `"INSTRUCTIONS"`.
+- **Chunking Profile**: `chunk_v1`
+- **Embedding Model**: `qwen3_embed_06b_1024_v1` (1024-dim pgvector)
+- **Precedence**: Structured backend truth (Catalog, Offers, Policies, Booking) strictly wins over knowledge text.
 
 ---
 

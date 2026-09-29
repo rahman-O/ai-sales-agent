@@ -55,7 +55,8 @@
     "prisma:migrate:dev": "prisma migrate dev",
     "p13:image-smoke": "tsx scripts/p13/image-smoke.ts",
     "p13:mixed-load": "tsx scripts/p13/mixed-load.ts",
-    "p13:load-lock": "tsx -e \"import { summarizeLoadLock } from './scripts/p13/load-dataset-lock.ts'; console.log(summarizeLoadLock())\""
+    "p13:load-lock": "tsx -e \"import { summarizeLoadLock } from './scripts/p13/load-dataset-lock.ts'; console.log(summarizeLoadLock())\"",
+    "prod:check": "tsx scripts/prod-check.ts"
   },
   "devDependencies": {
     "prisma": "7.10.0",

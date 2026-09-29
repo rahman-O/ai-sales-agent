@@ -69,8 +69,13 @@ async function main() {
           },
           {
             jobId: row.work_id,
+            attempts: 3,
+            backoff: {
+              type: 'exponential',
+              delay: 1000,
+            },
             removeOnComplete: 100,
-            removeOnFail: 100,
+            removeOnFail: 200,
           },
         );
         await markPublished(row.work_id);
@@ -99,8 +104,13 @@ async function main() {
         { organizationId: row.organization_id, conversationId: row.work_id },
         {
           jobId: `drain:${row.work_id}:${Date.now()}`,
+          attempts: 3,
+          backoff: {
+            type: 'exponential',
+            delay: 1000,
+          },
           removeOnComplete: 50,
-          removeOnFail: 50,
+          removeOnFail: 100,
         },
       );
     }
@@ -485,7 +495,15 @@ async function main() {
   );
 
   worker.on('failed', (job, err) => {
-    console.error(JSON.stringify({ msg: 'worker_job_failed', jobId: job?.id, error: String(err) }));
+    console.error(
+      JSON.stringify({
+        msg: 'worker_job_failed',
+        jobId: job?.id,
+        name: job?.name,
+        attemptsMade: job?.attemptsMade,
+        error: String(err),
+      }),
+    );
   });
 
   // Relay loop + sweeper + low-frequency PROCESSING lease reclaim.

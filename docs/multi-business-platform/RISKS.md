@@ -135,6 +135,31 @@
 
 ---
 
+---
+
+### R-11: Production Deployment & Migration Safety
+* **Severity:** Critical
+* **Probability:** Medium
+* **Description:** Running unverified, locking, or destructive migrations against a live database, or deploying app versions that expect non-existent columns.
+* **Impact:** Database downtime, deadlocks, data corruption, failed rollbacks.
+* **Mitigation Strategy:**
+  - Strict Expand/Migrate/Contract lifecycle.
+  - Automated non-destructive `npm run prod:check` pre-deployment verification.
+  - Role separation: runtime user operates with `NOBYPASSRLS` and no DDL privileges.
+
+---
+
+### R-12: Destructive Command Inadvertent Execution
+* **Severity:** Critical
+* **Probability:** Low
+* **Description:** Executing developer scripts such as `demo:reset`, `demo:reseed`, or `db:reset:test` against a production database.
+* **Impact:** Catastrophic data loss across tenant organizations.
+* **Mitigation Strategy:**
+  - Automated fail-closed guards in `assertNonProduction()` inspecting `APP_ENV` and `DB_ENV`.
+  - Production database URLs and credentials isolated and guarded against automated scripts.
+
+---
+
 ## Risk Summary Matrix
 
 | Risk ID | Title | Impact | Probability | Mitigation Priority |
@@ -149,3 +174,6 @@
 | **R-08** | Multi-tenant data leakage | Critical | Low | P0 — Universal RLS & tenant filters |
 | **R-09** | Regressions in existing booking | Critical | High | P0 — Backward compatibility & E2E gates |
 | **R-10** | Dashboard UI complexity | Medium | High | P1 — Progressive disclosure & presets |
+| **R-11** | Production migration & deployment safety | Critical | Medium | P0 — Expand/Migrate/Contract & prod checks |
+| **R-12** | Destructive command execution in prod | Critical | Low | P0 — Multi-level fail-closed guards |
+

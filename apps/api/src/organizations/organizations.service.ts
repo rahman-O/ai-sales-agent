@@ -9,7 +9,14 @@ import { randomUUID } from 'node:crypto';
 import {
   type AddMemberRequest,
   type CompleteOnboardingResponse,
+  type ConversationProfileDto,
   type CreateOrganizationResponse,
+  type CustomerNameUsage,
+  type Dialect,
+  type EmojiUsage,
+  type Formality,
+  type GreetingStyle,
+  type HandoffStyle,
   type MemberRole,
   type OnboardingReadinessDto,
   type OnboardingStateResponse,
@@ -17,11 +24,17 @@ import {
   type OrganizationOnboardingDto,
   type OrganizationProfileDto,
   type ReadinessItem,
+  type ResponseLength,
+  type SalesStyle,
+  type Tone,
+  type UpdateConversationProfileRequest,
   type UpdateOnboardingProgressRequest,
   type UpdateOrganizationCapabilitiesRequest,
   type UpdateOrganizationProfileRequest,
+  DEFAULT_CONVERSATION_PROFILE,
   DEFAULT_ORGANIZATION_CAPABILITIES,
   ONBOARDING_STEPS,
+  UpdateConversationProfileSchema,
   UpdateOnboardingProgressSchema,
   UpdateOrganizationCapabilitiesSchema,
   UpdateOrganizationProfileSchema,
@@ -628,6 +641,115 @@ export class OrganizationsService {
         supportsProducts: updated.supportsProducts,
         supportsServices: updated.supportsServices,
         supportsListings: updated.supportsListings,
+        createdAt: updated.createdAt.toISOString(),
+        updatedAt: updated.updatedAt.toISOString(),
+      };
+    });
+  }
+
+  async getConversationProfile(actor: ActorContext, organizationId: string): Promise<ConversationProfileDto> {
+    await this.requireActive(actor, organizationId);
+    return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
+      let cp = await tx.organizationConversationProfile.findUnique({ where: { organizationId } });
+      if (!cp) {
+        cp = await tx.organizationConversationProfile.create({
+          data: {
+            organizationId,
+            ...DEFAULT_CONVERSATION_PROFILE,
+          },
+        });
+      }
+      return {
+        organizationId: cp.organizationId,
+        assistantName: cp.assistantName,
+        primaryLanguage: cp.primaryLanguage,
+        dialect: cp.dialect as Dialect,
+        tone: cp.tone as Tone,
+        formality: cp.formality as Formality,
+        responseLength: cp.responseLength as ResponseLength,
+        salesStyle: cp.salesStyle as SalesStyle,
+        emojiUsage: cp.emojiUsage as EmojiUsage,
+        customerNameUsage: cp.customerNameUsage as CustomerNameUsage,
+        questionsPerTurn: cp.questionsPerTurn,
+        greetingStyle: cp.greetingStyle as GreetingStyle,
+        handoffStyle: cp.handoffStyle as HandoffStyle,
+        customInstructions: cp.customInstructions,
+        createdAt: cp.createdAt.toISOString(),
+        updatedAt: cp.updatedAt.toISOString(),
+      };
+    });
+  }
+
+  async updateConversationProfile(
+    actor: ActorContext,
+    organizationId: string,
+    input: UpdateConversationProfileRequest,
+  ): Promise<ConversationProfileDto> {
+    const actorMembership = await this.requireActive(actor, organizationId);
+    if (actorMembership.role !== 'OWNER' && actorMembership.role !== 'ADMIN') {
+      throw new ForbiddenException('Only OWNER or ADMIN may update conversation profile');
+    }
+    const parsed = UpdateConversationProfileSchema.safeParse(input);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.message);
+    }
+
+    return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
+      let existing = await tx.organizationConversationProfile.findUnique({ where: { organizationId } });
+      if (!existing) {
+        existing = await tx.organizationConversationProfile.create({
+          data: {
+            organizationId,
+            ...DEFAULT_CONVERSATION_PROFILE,
+          },
+        });
+      }
+
+      const updated = await tx.organizationConversationProfile.update({
+        where: { organizationId },
+        data: {
+          ...(input.assistantName !== undefined && { assistantName: input.assistantName }),
+          ...(input.primaryLanguage !== undefined && { primaryLanguage: input.primaryLanguage }),
+          ...(input.dialect !== undefined && { dialect: input.dialect }),
+          ...(input.tone !== undefined && { tone: input.tone }),
+          ...(input.formality !== undefined && { formality: input.formality }),
+          ...(input.responseLength !== undefined && { responseLength: input.responseLength }),
+          ...(input.salesStyle !== undefined && { salesStyle: input.salesStyle }),
+          ...(input.emojiUsage !== undefined && { emojiUsage: input.emojiUsage }),
+          ...(input.customerNameUsage !== undefined && { customerNameUsage: input.customerNameUsage }),
+          ...(input.questionsPerTurn !== undefined && { questionsPerTurn: input.questionsPerTurn }),
+          ...(input.greetingStyle !== undefined && { greetingStyle: input.greetingStyle }),
+          ...(input.handoffStyle !== undefined && { handoffStyle: input.handoffStyle }),
+          ...(input.customInstructions !== undefined && { customInstructions: input.customInstructions }),
+        },
+      });
+
+      const changedFields = Object.keys(input).filter((k) => input[k as keyof typeof input] !== undefined);
+      await this.tenants.writeAudit(tx, {
+        organizationId,
+        actorUserId: actor.userId,
+        action: 'organization.conversation_profile_updated',
+        targetType: 'OrganizationConversationProfile',
+        targetId: organizationId,
+        metadataJson: { changedFields },
+        requestId: actor.requestId,
+      });
+
+      return {
+        organizationId: updated.organizationId,
+        assistantName: updated.assistantName,
+        primaryLanguage: updated.primaryLanguage,
+        dialect: updated.dialect as Dialect,
+        tone: updated.tone as Tone,
+        formality: updated.formality as Formality,
+        responseLength: updated.responseLength as ResponseLength,
+        salesStyle: updated.salesStyle as SalesStyle,
+        emojiUsage: updated.emojiUsage as EmojiUsage,
+        customerNameUsage: updated.customerNameUsage as CustomerNameUsage,
+        questionsPerTurn: updated.questionsPerTurn,
+        greetingStyle: updated.greetingStyle as GreetingStyle,
+        handoffStyle: updated.handoffStyle as HandoffStyle,
+        customInstructions: updated.customInstructions,
         createdAt: updated.createdAt.toISOString(),
         updatedAt: updated.updatedAt.toISOString(),
       };

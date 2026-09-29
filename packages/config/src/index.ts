@@ -3,6 +3,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const nodeEnv = z.enum(['development', 'test', 'production']);
+export const appEnvSchema = z.enum(['development', 'test', 'staging', 'production']);
+export const dbEnvSchema = z.enum(['local', 'remote_test', 'staging', 'production']);
+
+export type AppEnv = z.infer<typeof appEnvSchema>;
+export type DbEnv = z.infer<typeof dbEnvSchema>;
 
 /** Public / browser-safe fragment (Next.js). */
 export const publicEnvSchema = z.object({
@@ -14,6 +19,8 @@ export const publicEnvSchema = z.object({
 /** Server env for NestJS API / worker. Never includes MIGRATION_DATABASE_URL. */
 export const serverEnvSchema = z.object({
   NODE_ENV: nodeEnv.default('development'),
+  APP_ENV: appEnvSchema.optional(),
+  DB_ENV: dbEnvSchema.optional(),
   APP_URL: z.string().url(),
   API_URL: z.string().url(),
   DATABASE_URL: z.string().min(1),
@@ -40,11 +47,129 @@ export const migrationEnvSchema = z.object({
     .optional()
     .transform((v) => v === 'true'),
   NODE_ENV: nodeEnv.default('development'),
+  APP_ENV: appEnvSchema.optional(),
+  DB_ENV: dbEnvSchema.optional(),
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;
 export type PublicEnv = z.infer<typeof publicEnvSchema>;
 export type MigrationEnv = z.infer<typeof migrationEnvSchema>;
+
+/**
+ * Resolves the effective application environment.
+ */
+export function resolveAppEnvironment(env: NodeJS.ProcessEnv = process.env): AppEnv {
+  if (env.APP_ENV && appEnvSchema.safeParse(env.APP_ENV).success) {
+    return env.APP_ENV as AppEnv;
+  }
+  if (env.NODE_ENV === 'production') return 'production';
+  if (env.NODE_ENV === 'test') return 'test';
+  return 'development';
+}
+
+/**
+ * Asserts that the current environment is NOT production before running destructive operations.
+ * Throws a fatal error if production is detected.
+ */
+export function assertNonProduction(commandName: string, env: NodeJS.ProcessEnv = process.env): void {
+  const appEnv = resolveAppEnvironment(env);
+  const isProd =
+    appEnv === 'production' ||
+    env.NODE_ENV === 'production' ||
+    env.DB_ENV === 'production';
+
+  if (isProd) {
+    throw new Error(
+      `CRITICAL_SECURITY_GUARD: Refusing destructive command '${commandName}' in production environment (APP_ENV=${appEnv}, NODE_ENV=${env.NODE_ENV}, DB_ENV=${env.DB_ENV}).`,
+    );
+  }
+}
+
+/**
+ * Redacts sensitive tokens/passwords for safe logging.
+ */
+export function redactSecret(secret: string | undefined | null): string {
+  if (!secret) return '[EMPTY]';
+  if (secret.length <= 6) return '***';
+  return `${secret.slice(0, 3)}...${secret.slice(-3)}`;
+}
+
+/**
+ * Redacts database connection strings removing username/password.
+ */
+export function redactUrlCredentials(urlString: string | undefined | null): string {
+  if (!urlString) return '[EMPTY]';
+  try {
+    const u = new URL(urlString.replace(/^postgresql:/, 'http:').replace(/^postgres:/, 'http:'));
+    const protocol = urlString.startsWith('postgresql') ? 'postgresql:' : urlString.startsWith('postgres') ? 'postgres:' : u.protocol;
+    const user = u.username ? '***' : '';
+    const pass = u.password ? ':***@' : (user ? '@' : '');
+    const auth = user ? `${user}${pass}` : '';
+    return `${protocol}//${auth}${u.host}${u.pathname}`;
+  } catch {
+    return '[REDACTED_URL]';
+  }
+}
+
+const SENSITIVE_HEADER_KEYS = new Set([
+  'authorization',
+  'cookie',
+  'set-cookie',
+  'x-api-key',
+  'apikey',
+  'supabase-service-role-key',
+]);
+
+/**
+ * Redacts sensitive headers from a headers object.
+ */
+export function redactHeaders(headers: Record<string, unknown>): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(headers)) {
+    if (SENSITIVE_HEADER_KEYS.has(key.toLowerCase())) {
+      result[key] = '[REDACTED]';
+    } else {
+      result[key] = value;
+    }
+  }
+  return result;
+}
+
+const SENSITIVE_KEYS = new Set([
+  'password',
+  'secret',
+  'token',
+  'apikey',
+  'key',
+  'authorization',
+  'database_url',
+  'migration_database_url',
+  'redis_url',
+]);
+
+/**
+ * Recursively redacts sensitive keys from log objects.
+ */
+export function sanitizeLogObject(obj: unknown, depth = 0): unknown {
+  if (depth > 5 || obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+  if (Array.isArray(obj)) {
+    return obj.map((item) => sanitizeLogObject(item, depth + 1));
+  }
+  const sanitized: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
+    const lowerKey = key.toLowerCase();
+    if (SENSITIVE_KEYS.has(lowerKey) || lowerKey.includes('secret') || lowerKey.includes('password')) {
+      sanitized[key] = '[REDACTED]';
+    } else if (typeof value === 'object' && value !== null) {
+      sanitized[key] = sanitizeLogObject(value, depth + 1);
+    } else {
+      sanitized[key] = value;
+    }
+  }
+  return sanitized;
+}
 
 function parseEnvFile(filePath: string): Record<string, string> {
   if (!fs.existsSync(filePath)) return {};

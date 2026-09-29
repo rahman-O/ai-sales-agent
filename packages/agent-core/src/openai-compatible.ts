@@ -480,9 +480,16 @@ export function resolveAiProvider(
 
 /** Fail closed: production must not fall back to Fake. Dummy keys require loopback base URL. */
 export function resolveProductionProvider(env: Record<string, string | undefined>): ModelProvider | null {
-  const resolved = resolveAiProvider(env);
-  if (resolved.providerType === 'fake') {
-    return null; // Production resolver never returns Fake provider directly
+  try {
+    const resolved = resolveAiProvider(env);
+    if (resolved.providerType === 'fake') {
+      return null; // Production resolver never returns Fake provider directly
+    }
+    return resolved.provider;
+  } catch (err) {
+    if (err instanceof Error && err.message.includes('dummy_ai_model_api_key')) {
+      throw err;
+    }
+    return null;
   }
-  return resolved.provider;
 }

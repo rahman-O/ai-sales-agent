@@ -89,7 +89,24 @@ export interface CandidateSlotData {
 export interface ConversationWorkingStateData {
   activeIntent?: {
     type: string;
+    secondary?: string[];
+    confidence?: number;
     updatedAt: string;
+  } | null;
+  activeWorkflow?: {
+    id: string;
+    stage: string;
+    startedAt: string;
+    updatedAt: string;
+  } | null;
+  suspendedWorkflow?: {
+    id: string;
+    stage: string;
+    suspendedAt: string;
+  } | null;
+  lastCompletedWorkflow?: {
+    id: string;
+    completedAt: string;
   } | null;
   selectedEntity?: {
     entityType: string;
@@ -99,6 +116,15 @@ export interface ConversationWorkingStateData {
   candidateSlots?: CandidateSlotData[];
   selectedCandidateIndex?: number | null;
   lastConfirmedBookingId?: string | null;
+  draftQuoteId?: string | null;
+  draftOrderId?: string | null;
+  pendingTransactionConfirmation?: {
+    transactionType: 'QUOTE' | 'ORDER';
+    transactionId: string;
+    totalAmountMinor: string;
+    currency: string;
+    itemsFingerprint?: string;
+  } | null;
 }
 
 export interface OrganizationProfileSnapshot {
@@ -125,6 +151,22 @@ export interface OrganizationCapabilitiesSnapshot {
   supportsProducts?: boolean;
   supportsServices?: boolean;
   supportsListings?: boolean;
+}
+
+export interface ConversationProfileSnapshot {
+  assistantName?: string | null;
+  primaryLanguage: string;
+  dialect: string;
+  tone: string;
+  formality: string;
+  responseLength: string;
+  salesStyle: string;
+  emojiUsage: string;
+  customerNameUsage: string;
+  questionsPerTurn: number;
+  greetingStyle: string;
+  handoffStyle: string;
+  customInstructions?: string | null;
 }
 
 export interface ConversationSnapshot {
@@ -156,6 +198,7 @@ export interface ConversationSnapshot {
   } | null;
   organizationProfile?: OrganizationProfileSnapshot | null;
   organizationCapabilities?: OrganizationCapabilitiesSnapshot | null;
+  conversationProfile?: ConversationProfileSnapshot | null;
   agentConfigVersionId: string;
   promptVersion: string;
   modelProfile: string;

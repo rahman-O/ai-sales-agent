@@ -19,6 +19,15 @@ export async function countDemoTenantRows(pool: Pool, orgId = DEMO_ORG_ID): Prom
 }
 
 export async function deleteDemoTenant(pool: Pool, orgId = DEMO_ORG_ID): Promise<void> {
+  try {
+    await pool.query(
+      `UPDATE knowledge_documents SET active_published_version_id = NULL WHERE organization_id = $1::uuid`,
+      [orgId],
+    );
+  } catch {
+    /* ignore if table does not exist */
+  }
+
   for (const table of DEMO_TENANT_TABLES_DELETE_ORDER) {
     try {
       await pool.query(`DELETE FROM ${table} WHERE organization_id = $1::uuid`, [orgId]);

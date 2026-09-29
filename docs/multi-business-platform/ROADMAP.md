@@ -15,15 +15,15 @@
 | MB-04 | Generic Business Catalog | CLOSED | MB-01 |
 | MB-05 | Offers / Promotions | CLOSED | MB-04 |
 | MB-06 | Business Policies | CLOSED | MB-01 |
-| MB-07 | Conversation Style & Assistant Personality | NEXT | MB-01 |
-| MB-08 | Knowledge Setup | NOT_STARTED | MB-04, MB-06, MB-07 |
-| MB-09 | Preview / Test Assistant | NOT_STARTED | MB-08 |
-| MB-10 | Generic Workflow / Intent Layer | NOT_STARTED | MB-04, MB-07 |
-| MB-11 | Business-Type Packs / Templates | NOT_STARTED | MB-10 |
-| MB-12 | Orders / Quotes / Non-Booking Transactions | NOT_STARTED | MB-10 |
-| MB-13 | Multi-Business Analytics | NOT_STARTED | MB-10 |
-| MB-14 | Production Hardening & Migration | NOT_STARTED | MB-10, MB-13 |
-| MB-15 | External / Live Provider Acceptance | NOT_STARTED | MB-14 |
+| MB-07 | Conversation Style & Assistant Personality | CLOSED | MB-01 |
+| MB-08 | Knowledge Setup | CLOSED | MB-04, MB-06, MB-07 |
+| MB-09 | Preview / Test Assistant | CLOSED | MB-08 |
+| MB-10 | Generic Workflow / Intent Layer | CLOSED | MB-04, MB-07 |
+| MB-11 | Business-Type Packs / Templates | CLOSED | MB-10 |
+| MB-12 | Orders / Quotes / Non-Booking Transactions | CLOSED | MB-10 |
+| MB-13 | Multi-Business Analytics | CLOSED | MB-10, MB-12 |
+| MB-14 | Production Hardening & Migration | CLOSED | MB-10, MB-13 |
+| MB-15 | External / Live Provider Acceptance | NEXT | MB-14 |
 
 ---
 
@@ -356,10 +356,10 @@
 - Guardrail: AI still respects backend authority regardless of style
 
 **Acceptance criteria:**
-- [ ] Two organizations with different profiles produce different system prompts
-- [ ] Dental clinic profile produces behavior equivalent to current hardcoded prompt
-- [ ] LLM controls phrasing; backend controls facts and permissions
-- [ ] No profile setting can override backend safety (kill switch, tool auth, RLS)
+- [x] Two organizations with different profiles produce different system prompts
+- [x] Dental clinic profile produces behavior equivalent to current hardcoded prompt
+- [x] LLM controls phrasing; backend controls facts and permissions
+- [x] No profile setting can override backend safety (kill switch, tool auth, RLS)
 
 **Out-of-scope:** Per-conversation style overrides
 **Rollback:** Revert context builder to hardcoded dental prompt

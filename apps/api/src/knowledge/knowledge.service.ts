@@ -21,6 +21,13 @@ import {
 } from '@ai-sales-agent/storage';
 import { CHUNK_PROFILE_ID, chunkText } from '@ai-sales-agent/knowledge-chunking';
 import {
+  type CreateKnowledgeFaqRequest,
+  type CreateKnowledgeTextRequest,
+  type KnowledgeSearchResponseDto,
+  CreateKnowledgeFaqSchema,
+  CreateKnowledgeTextSchema,
+} from '@ai-sales-agent/contracts';
+import {
   TenantContextService,
   type ActorContext,
   type TenantTxClient,
@@ -207,6 +214,254 @@ export class KnowledgeService {
         upload: issued,
         embeddingProfileId: PROFILE.profileId,
       };
+    });
+  }
+
+  async createDirectText(
+    actor: ActorContext,
+    organizationId: string,
+    input: CreateKnowledgeTextRequest,
+  ) {
+    const m = await this.membership(actor, organizationId);
+    this.requireAdmin(m.role);
+    const parsed = CreateKnowledgeTextSchema.parse(input);
+    const text = parsed.content.trim();
+    const documentId = randomUUID();
+    const versionId = randomUUID();
+    const objectKey = `org_${organizationId}/docs/${documentId}/v1/text.txt`;
+
+    return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
+      await tx.knowledgeDocument.create({
+        data: {
+          id: documentId,
+          organizationId,
+          title: parsed.title,
+          sourceType: 'TEXT',
+          visibility: parsed.visibility ?? 'CUSTOMER_VISIBLE',
+        },
+      });
+
+      const chunks = chunkText(text);
+      await tx.knowledgeDocumentVersion.create({
+        data: {
+          id: versionId,
+          organizationId,
+          documentId,
+          versionNumber: 1,
+          objectKey,
+          contentChecksum: sha256(text),
+          mimeType: 'text/plain',
+          byteSize: Buffer.byteLength(text, 'utf8'),
+          extractedText: text,
+          pipelineStatus: 'AWAITING_REVIEW',
+          reviewStatus: 'PENDING',
+          expectedChunkCount: chunks.length,
+          embeddingProfileId: PROFILE.profileId,
+          embeddingModel: PROFILE.model,
+          embeddingModelRevision: PROFILE.modelRevision,
+          embeddingDimension: PROFILE.dimension,
+          queryInstructionVersion: PROFILE.queryInstructionVersion,
+          normalizationMode: PROFILE.normalizationMode,
+          maxDistance: PROFILE.maxDistance,
+        },
+      });
+
+      await this.audit(tx, actor, organizationId, 'knowledge.text_created', 'KnowledgeDocument', documentId);
+      return {
+        documentId,
+        versionId,
+        status: 'AWAITING_REVIEW',
+        sourceType: 'TEXT',
+        chunkCount: chunks.length,
+      };
+    });
+  }
+
+  async createFaq(
+    actor: ActorContext,
+    organizationId: string,
+    input: CreateKnowledgeFaqRequest,
+  ) {
+    const m = await this.membership(actor, organizationId);
+    this.requireAdmin(m.role);
+    const parsed = CreateKnowledgeFaqSchema.parse(input);
+    const formatted = `سؤال: ${parsed.question.trim()}\nجواب: ${parsed.answer.trim()}`;
+    const documentId = randomUUID();
+    const versionId = randomUUID();
+    const objectKey = `org_${organizationId}/docs/${documentId}/v1/faq.txt`;
+
+    return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
+      await tx.knowledgeDocument.create({
+        data: {
+          id: documentId,
+          organizationId,
+          title: parsed.question.trim(),
+          sourceType: 'FAQ',
+          visibility: parsed.visibility ?? 'CUSTOMER_VISIBLE',
+          metadataJson: {
+            question: parsed.question.trim(),
+            answer: parsed.answer.trim(),
+            tags: parsed.tags ?? [],
+          },
+        },
+      });
+
+      const chunks = chunkText(formatted);
+      await tx.knowledgeDocumentVersion.create({
+        data: {
+          id: versionId,
+          organizationId,
+          documentId,
+          versionNumber: 1,
+          objectKey,
+          contentChecksum: sha256(formatted),
+          mimeType: 'text/plain',
+          byteSize: Buffer.byteLength(formatted, 'utf8'),
+          extractedText: formatted,
+          pipelineStatus: 'AWAITING_REVIEW',
+          reviewStatus: 'PENDING',
+          expectedChunkCount: chunks.length,
+          embeddingProfileId: PROFILE.profileId,
+          embeddingModel: PROFILE.model,
+          embeddingModelRevision: PROFILE.modelRevision,
+          embeddingDimension: PROFILE.dimension,
+          queryInstructionVersion: PROFILE.queryInstructionVersion,
+          normalizationMode: PROFILE.normalizationMode,
+          maxDistance: PROFILE.maxDistance,
+        },
+      });
+
+      await this.audit(tx, actor, organizationId, 'knowledge.faq_created', 'KnowledgeDocument', documentId);
+      return {
+        documentId,
+        versionId,
+        status: 'AWAITING_REVIEW',
+        sourceType: 'FAQ',
+        chunkCount: chunks.length,
+      };
+    });
+  }
+
+  async searchKnowledge(
+    actor: ActorContext,
+    organizationId: string,
+    query: string,
+    limit = 5,
+  ): Promise<KnowledgeSearchResponseDto> {
+    await this.membership(actor, organizationId);
+    const q = query.trim();
+    if (!q) return { query: q, results: [] };
+    const maxLimit = Math.min(Math.max(limit, 1), 10);
+
+    let provider: EmbeddingProvider | null = resolveEmbeddingProvider(process.env);
+    if (!provider && (process.env.NODE_ENV === 'test' || process.env.AI_ALLOW_FAKE === 'true')) {
+      provider = new FakeEmbeddingProvider(PROFILE.dimension);
+    }
+    if (!provider) {
+      throw new ServiceUnavailableException('Embedding provider unavailable');
+    }
+
+    let embedding: number[];
+    try {
+      const emb = await provider.embedQuery(q, { deadlineMs: 30_000 });
+      embedding = emb.vectors[0]!;
+    } catch {
+      throw new ServiceUnavailableException('Embedding generation failed');
+    }
+
+    return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
+      const rows = (await tx.$queryRawUnsafe(
+        `SELECT
+           c.id AS chunk_id,
+           c.document_id AS document_id,
+           c.document_version_id AS document_version_id,
+           c.chunk_index AS chunk_index,
+           left(c.content, 1200) AS excerpt,
+           d.title AS title,
+           (c.embedding <=> $1::vector) AS distance,
+           (1 - (c.embedding <=> $1::vector)) AS similarity
+         FROM knowledge_chunks c
+         INNER JOIN knowledge_documents d
+           ON d.organization_id = c.organization_id AND d.id = c.document_id
+         INNER JOIN knowledge_document_versions v
+           ON v.organization_id = c.organization_id
+          AND v.document_id = c.document_id
+          AND v.id = c.document_version_id
+         WHERE c.organization_id = $2::uuid
+           AND d.active_published_version_id = c.document_version_id
+           AND d.archived_at IS NULL
+           AND d.deleted_at IS NULL
+           AND v.pipeline_status = 'READY'
+           AND v.review_status = 'APPROVED'
+           AND c.embedding IS NOT NULL
+           AND (c.embedding <=> $1::vector) <= $3
+         ORDER BY c.embedding <=> $1::vector ASC
+         LIMIT $4`,
+        vectorLiteral(embedding),
+        organizationId,
+        PROFILE.maxDistance,
+        maxLimit,
+      )) as Array<{
+        chunk_id: string;
+        document_id: string;
+        document_version_id: string;
+        chunk_index: number;
+        excerpt: string;
+        title: string;
+        distance: number;
+        similarity: number;
+      }>;
+
+      return {
+        query: q,
+        results: rows.map((r) => ({
+          chunkId: r.chunk_id,
+          documentId: r.document_id,
+          documentVersionId: r.document_version_id,
+          chunkIndex: Number(r.chunk_index),
+          title: r.title,
+          excerpt: r.excerpt,
+          similarity: Number(r.similarity),
+          distance: Number(r.distance),
+        })),
+      };
+    });
+  }
+
+  async reprocess(
+    actor: ActorContext,
+    organizationId: string,
+    documentId: string,
+  ) {
+    const m = await this.membership(actor, organizationId);
+    this.requireAdmin(m.role);
+    return this.tenants.runInTenantContext(organizationId, actor, async (tx) => {
+      const doc = await tx.knowledgeDocument.findUnique({
+        where: { organizationId_id: { organizationId, id: documentId } },
+        include: { versions: { orderBy: { versionNumber: 'desc' }, take: 1 } },
+      });
+      if (!doc || doc.deletedAt) throw new NotFoundException();
+      const latestVer = doc.versions[0];
+      if (!latestVer) throw new NotFoundException();
+
+      await tx.knowledgeChunk.deleteMany({
+        where: { organizationId, documentVersionId: latestVer.id },
+      });
+      await tx.knowledgeDocumentVersion.update({
+        where: { organizationId_id: { organizationId, id: latestVer.id } },
+        data: {
+          pipelineStatus: 'CHUNKING',
+          failureReason: null,
+          expectedChunkCount: null,
+        },
+      });
+      await this.tenants.writeOutbox(tx, {
+        organizationId,
+        eventType: KNOWLEDGE_EVENT_CHUNK,
+        payloadJson: { documentId, versionId: latestVer.id },
+      });
+      await this.audit(tx, actor, organizationId, 'knowledge.reprocessed', 'KnowledgeDocument', documentId);
+      return { documentId, versionId: latestVer.id, status: 'CHUNKING' };
     });
   }
 

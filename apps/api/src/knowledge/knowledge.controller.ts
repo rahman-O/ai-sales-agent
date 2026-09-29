@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard, type AuthenticatedRequest } from '../auth/auth.guard.js';
+import { CreateKnowledgeTextSchema, CreateKnowledgeFaqSchema } from '@ai-sales-agent/contracts';
 import { KnowledgeService } from './knowledge.service.js';
 
 @Controller('organizations/:organizationId/knowledge')
@@ -94,6 +95,44 @@ export class KnowledgeController {
     @Param('documentId') documentId: string,
   ) {
     return this.knowledge.softDelete(req.auth!, org, documentId);
+  }
+
+  @Post('text')
+  createText(
+    @Req() req: AuthenticatedRequest,
+    @Param('organizationId') org: string,
+    @Body() body: unknown,
+  ) {
+    const parsed = CreateKnowledgeTextSchema.parse(body);
+    return this.knowledge.createDirectText(req.auth!, org, parsed);
+  }
+
+  @Post('faq')
+  createFaq(
+    @Req() req: AuthenticatedRequest,
+    @Param('organizationId') org: string,
+    @Body() body: unknown,
+  ) {
+    const parsed = CreateKnowledgeFaqSchema.parse(body);
+    return this.knowledge.createFaq(req.auth!, org, parsed);
+  }
+
+  @Post('search')
+  search(
+    @Req() req: AuthenticatedRequest,
+    @Param('organizationId') org: string,
+    @Body() body: { query: string; limit?: number },
+  ) {
+    return this.knowledge.searchKnowledge(req.auth!, org, body.query, body.limit);
+  }
+
+  @Post('documents/:documentId/reprocess')
+  reprocess(
+    @Req() req: AuthenticatedRequest,
+    @Param('organizationId') org: string,
+    @Param('documentId') documentId: string,
+  ) {
+    return this.knowledge.reprocess(req.auth!, org, documentId);
   }
 
   /** Filesystem BlobStore helper — local/dev only; forbidden in production. */

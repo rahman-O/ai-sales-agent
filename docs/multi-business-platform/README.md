@@ -90,6 +90,14 @@ These modules are **reusable as-is** or with minor generalization:
 | [MB-04-IMPLEMENTATION.md](./MB-04-IMPLEMENTATION.md) | Implementation record for Generic Business Catalog |
 | [MB-05-IMPLEMENTATION.md](./MB-05-IMPLEMENTATION.md) | Implementation record for Offers / Promotions |
 | [MB-06-IMPLEMENTATION.md](./MB-06-IMPLEMENTATION.md) | Implementation record for Generic Business Policies |
+| [MB-07-IMPLEMENTATION.md](./MB-07-IMPLEMENTATION.md) | Implementation record for Conversation Style & Assistant Personality |
+| [MB-08-IMPLEMENTATION.md](./MB-08-IMPLEMENTATION.md) | Implementation record for Generic Knowledge Setup |
+| [MB-09-IMPLEMENTATION.md](./MB-09-IMPLEMENTATION.md) | Implementation record for Preview / Test Assistant |
+| [MB-10-IMPLEMENTATION.md](./MB-10-IMPLEMENTATION.md) | Implementation record for Generic Workflow / Intent Layer |
+| [MB-11-IMPLEMENTATION.md](./MB-11-IMPLEMENTATION.md) | Implementation record for Business-Type Packs & Templates |
+| [MB-12-IMPLEMENTATION.md](./MB-12-IMPLEMENTATION.md) | Implementation record for Orders / Quotes / Non-Booking Transactions |
+| [MB-13-IMPLEMENTATION.md](./MB-13-IMPLEMENTATION.md) | Implementation record for Multi-Business Analytics & Dashboards |
+| [MB-14-IMPLEMENTATION.md](./MB-14-IMPLEMENTATION.md) | Implementation record for Production Hardening & Migration |
 | [ROADMAP.md](./ROADMAP.md) | High-level phases and deliverables |
 | [PHASES.md](./PHASES.md) | Detailed phase breakdown with acceptance criteria |
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | Target architecture and principles |
@@ -106,10 +114,11 @@ These modules are **reusable as-is** or with minor generalization:
 
 | Field | Value |
 |---|---|
-| **CURRENT STATUS** | IN_PROGRESS (MB-06 Complete, Ready for MB-07) |
-| **CURRENT PHASE** | MB-07 (Conversation Style & Assistant Personality) |
-| **NEXT PHASE** | MB-07 (Conversation Style & Assistant Personality) |
-| **LAST COMPLETED PHASE** | MB-06 (Business Policies) |
+| **CURRENT STATUS** | IN_PROGRESS (MB-14 Complete, Ready for MB-15) |
+| **CURRENT PHASE** | MB-14 (Production Hardening & Migration) |
+| **NEXT PHASE** | MB-15 (External / Live Provider Acceptance) |
+| **LAST COMPLETED PHASE** | MB-14 (Production Hardening & Migration) |
 | **P14 STATUS** | **NOT AUTHORIZED** |
 
 > **P14 remains NOT AUTHORIZED** unless explicitly changed by a future decision. All planning must be compatible with this constraint.
+

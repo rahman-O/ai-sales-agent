@@ -152,3 +152,15 @@ Before any multi-business phase is considered closed:
 2. **DeepSeek Booking E2E:** Automated execution of `demo-docker.ts` / E2E test verifying full WhatsApp/Chat booking flow from greeting to slot reservation to post-booking finalization.
 3. **Multi-Tenant Isolation Check:** Automated test confirming that queries under Tenant B cannot view Tenant A's catalog, policies, or bookings.
 4. **Performance Gate:** Context building and prompt generation latency must remain under 150ms.
+
+---
+
+## 8. MB-14 Production Hardening & Safety Verification
+
+1. **Environment Identity:** Strict classification via `APP_ENV=development|test|staging|production` and `DB_ENV=local|remote_test|staging|production`.
+2. **Destructive Operation Guards:** Seed, reset, truncate, and drop commands fail closed in production without explicit multi-level authorization.
+3. **Database Role Separation:** `MIGRATION_DATABASE_URL` (DDL owner) is strictly isolated from `DATABASE_URL` (`app_runtime` user with `NOBYPASSRLS`).
+4. **RLS & FORCE RLS Verification:** Automated production check verifies all 47+ tenant tables have Row Level Security enabled with `FORCE ROW LEVEL SECURITY`.
+5. **Observability & Error Sanitization:** Request IDs propagated across APIs and queues; raw SQL, DB passwords, secrets, and auth tokens redacted in production logs and HTTP responses.
+6. **Worker Resilience:** Bounded queue attempts (max 3), exponential backoff with jitter, dead job logging, and clean SIGTERM/SIGINT teardown.
+

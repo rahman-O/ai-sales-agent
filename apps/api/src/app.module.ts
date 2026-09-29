@@ -18,6 +18,10 @@ import { TemplatesModule } from './templates/templates.module.js';
 import { DashboardModule } from './dashboard/dashboard.module.js';
 import { AnalyticsModule } from './analytics/analytics.module.js';
 import { HealthModule } from './health/health.module.js';
+import { PreviewModule } from './preview/preview.module.js';
+import { PacksModule } from './packs/packs.module.js';
+import { QuotesModule } from './quotes/quotes.module.js';
+import { OrdersModule } from './orders/orders.module.js';
 import { RequestIdMiddleware } from './common/request-id.middleware.js';
 import { SecurityHeadersAndRateLimitMiddleware } from './common/security.middleware.js';
 
@@ -42,6 +46,10 @@ import { SecurityHeadersAndRateLimitMiddleware } from './common/security.middlew
     DashboardModule,
     AnalyticsModule,
     HealthModule,
+    PreviewModule,
+    PacksModule,
+    QuotesModule,
+    OrdersModule,
   ],
 })
 export class AppModule implements NestModule {

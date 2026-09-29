@@ -32,3 +32,7 @@ if (fs.existsSync(demoLocalPath)) {
 process.env.APP_URL ??= 'http://localhost:3000';
 process.env.API_URL ??= 'http://127.0.0.1:3001';
 process.env.REDIS_URL ??= 'redis://127.0.0.1:6379';
+process.env.AI_ALLOW_FAKE ??= 'true';
+process.env.AI_PROVIDER ??= 'fake';
+
+

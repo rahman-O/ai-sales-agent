@@ -132,11 +132,11 @@ const activeWorkflows = deriveWorkflows(capabilities);
 
 ### 5. Conversation Style
 
-**What it is:** Organization-level preferences for how the AI assistant communicates — language, dialect, tone, formality, response length.
+**What it is:** Organization-level preferences for how the AI assistant communicates — language, dialect, tone, formality, response length, sales style, emoji usage, customer name usage, greeting style, handoff phrasing.
 
-**Where it lives:** `ConversationProfile` (JSONB on Organization or separate table).
+**Where it lives:** `organization_conversation_profiles` table (1-to-1 with `Organization`).
 
-**Runtime role:** Injected into system prompt. Controls phrasing and personality. Does NOT control facts or permissions.
+**Runtime role:** Injected into system prompt (`formatConversationProfileBlock`). Controls phrasing and personality. Does NOT control facts, prices, policies, tools, or permissions.
 
 **Key principle:** **LLM controls natural phrasing and intent understanding. Backend controls facts, permissions, workflows, and mutations.**
 
@@ -301,3 +301,18 @@ Business policies are organization-owned typed records. The policy API validates
 The agent calls `getEffectivePolicy` only when a policy is relevant. It receives authoritative structured data or an authoritative empty result. Cancellation and rescheduling tools independently enforce current cutoff rules in the backend. Informational policy types cannot authorize or claim payment, refund, return, delivery, order, or quote execution.
 
 Policies are always available as an Admin navigation module for OWNER and ADMIN roles. Capability flags influence prominence and enforcement relevance; no runtime path branches on `businessType`.
+
+---
+
+## MB-14 Production Hardening & Operational Architecture
+
+The platform provides resilient, tenant-isolated operational foundations across production tiers:
+
+1. **Environment Tiers**: Structured `APP_ENV` (`development | test | staging | production`) and `DB_ENV` (`local | remote_test | staging | production`). `assertNonProduction()` blocks destructive resets from executing against live production environments.
+2. **Database Role Separation**: Runtime API and worker operate under the non-superuser role `app_runtime` (`NOBYPASSRLS`). `MIGRATION_DATABASE_URL` is used strictly during deployment migration steps.
+3. **RLS & FORCE RLS**: All 47 tenant tables enforce `FORCE ROW LEVEL SECURITY`. Cross-tenant data access is blocked by PostgreSQL row policies.
+4. **Health & Readiness**: `/health/live` verifies process uptime; `/health/ready` validates PostgreSQL and Redis connectivity with 3-second bounded timeouts.
+5. **Worker Resilience**: BullMQ queue workers configure bounded attempts (3), exponential backoff (1000ms delay), dead-letter logging, and graceful `SIGTERM`/`SIGINT` shutdown.
+6. **Error Masking & Observability**: Standardized `GlobalHttpExceptionFilter` hides internal database errors and stack traces in production while preserving `x-request-id` tracing.
+
+

@@ -75,6 +75,10 @@ export const DEMO_TOOL_ALLOWLIST = [
 
 /** Tables with organization_id — delete/count order (children first). */
 export const DEMO_TENANT_TABLES_DELETE_ORDER = [
+  'order_line_items',
+  'orders',
+  'quote_line_items',
+  'quotes',
   'follow_ups',
   'booking_activities',
   'bookings',
