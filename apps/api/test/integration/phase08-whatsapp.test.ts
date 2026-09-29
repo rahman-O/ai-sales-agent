@@ -5,6 +5,7 @@ import type { PoolClient } from 'pg';
 import { createAppPool } from '../../src/database/pg-pool.js';
 import {
   META_WHATSAPP_PROVIDER,
+  PROVIDER_MAX_ATTEMPTS,
   canTransitionDelivery,
   dispatchOutboundMessage,
   applyDeliveryTransition,
@@ -220,6 +221,38 @@ test('Phase 08 WhatsApp: channel mapping, transitions, ambiguous dispatch, windo
     );
     const policy = await dispatchOutboundMessage(c, org, out3, { env: process.env });
     assert.equal(policy.outcome, 'POLICY_REJECTED');
+
+    // Bounded provider retries: the same logical Message fails after the durable cap.
+    await c.query(
+      `UPDATE conversations SET last_customer_inbound_at=now() WHERE id=$1`,
+      [conversationId],
+    );
+    const cappedId = randomUUID();
+    await c.query(
+      `INSERT INTO messages(
+         id,organization_id,conversation_id,channel_connection_id,direction,origin,
+         timeline_sequence,content_text,content_digest,delivery_state,authority_epoch
+       ) VALUES($1,$2,$3,$4,'OUTBOUND','AI',5,'bounded','digest-bounded','PENDING',0)`,
+      [cappedId, org, conversationId, connId],
+    );
+    for (let attempt = 1; attempt <= PROVIDER_MAX_ATTEMPTS; attempt += 1) {
+      await c.query(
+        `INSERT INTO outbound_attempts(
+           id,organization_id,message_id,attempt_number,ownership_epoch,status,dispatched_at
+         ) VALUES($1,$2,$3,$4,0,'FAILED',now())`,
+        [randomUUID(), org, cappedId, attempt],
+      );
+    }
+    const capped = await dispatchOutboundMessage(c, org, cappedId, {
+      env: process.env,
+      fetchImpl: async () => {
+        throw new Error('provider must not be called after max attempts');
+      },
+    });
+    assert.equal(capped.outcome, 'FAILED');
+    assert.equal(capped.class, 'MAX_ATTEMPTS_ENFORCED');
+    const cappedState = await c.query(`SELECT delivery_state FROM messages WHERE id=$1`, [cappedId]);
+    assert.equal(cappedState.rows[0].delivery_state, 'FAILED');
 
     // HMAC helper smoke (integration env)
     const raw = Buffer.from('{}');

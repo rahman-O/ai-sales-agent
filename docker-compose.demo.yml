@@ -13,6 +13,28 @@
 name: ai-sales-demo
 
 services:
+  provider-simulator:
+    profiles: ["provider-simulator"]
+    build:
+      context: .
+      dockerfile: Dockerfile.provider-simulator
+    container_name: ai-sales-demo-provider-simulator
+    environment:
+      APP_ENV: simulator
+      META_SIMULATOR_PORT: "3415"
+      SIMULATOR_CONTAINER_MODE: "true"
+      META_WHATSAPP_APP_SECRET: ${META_WHATSAPP_APP_SECRET:-mb15a-simulator-secret}
+    ports:
+      - "127.0.0.1:3415:3415"
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3415/health/live').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    networks:
+      - demo
+    restart: "no"
+
   postgres:
     image: pgvector/pgvector:pg17
     container_name: ai-sales-demo-postgres
@@ -179,6 +201,14 @@ services:
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:-}
       PORT: "3001"
       API_BIND_HOST: "0.0.0.0"
+      PROVIDER_MODE: meta-simulator
+      META_GRAPH_BASE_URL: http://provider-simulator:3415
+      META_GRAPH_API_VERSION: v25.0
+      META_WHATSAPP_APP_SECRET: ${META_WHATSAPP_APP_SECRET:-mb15a-simulator-secret}
+      META_WHATSAPP_VERIFY_TOKEN: ${META_WHATSAPP_VERIFY_TOKEN:-mb15a-verify-token}
+      META_WHATSAPP_ACCESS_TOKEN: ${META_WHATSAPP_ACCESS_TOKEN:-mb15a-simulator-access-token}
+      PROVIDER_ACCEPTANCE_MODE: "false"
+      PROVIDER_ACCEPTANCE_ALLOWED_RECIPIENTS: "+15555550001,+15555550002,+15555550003,+15555550004,+15555550005,+15555550006,+15555550007,+15555550008,+15555550009,+15555550010,+15555550011,+15555550012,+15555550013,+15555550014,+15555550015,+15555550016,+15555550017,+15555550018,+15555550019,+15555550020"
     ports:
       - "127.0.0.1:3001:3001"
     depends_on:
@@ -230,6 +260,14 @@ services:
       EMBEDDING_LOCAL_BASE_URL: http://tei:80
       BOOKING_SLOT_TOKEN_SECRET: ${BOOKING_SLOT_TOKEN_SECRET:?set BOOKING_SLOT_TOKEN_SECRET in .env.demo.local}
       SUPABASE_URL: ${SUPABASE_URL:?set SUPABASE_URL in .env.demo.local}
+      PROVIDER_MODE: meta-simulator
+      META_GRAPH_BASE_URL: http://provider-simulator:3415
+      META_GRAPH_API_VERSION: v25.0
+      META_WHATSAPP_APP_SECRET: ${META_WHATSAPP_APP_SECRET:-mb15a-simulator-secret}
+      META_WHATSAPP_VERIFY_TOKEN: ${META_WHATSAPP_VERIFY_TOKEN:-mb15a-verify-token}
+      META_WHATSAPP_ACCESS_TOKEN: ${META_WHATSAPP_ACCESS_TOKEN:-mb15a-simulator-access-token}
+      PROVIDER_ACCEPTANCE_MODE: "false"
+      PROVIDER_ACCEPTANCE_ALLOWED_RECIPIENTS: "+15555550001,+15555550002,+15555550003,+15555550004,+15555550005,+15555550006,+15555550007,+15555550008,+15555550009,+15555550010,+15555550011,+15555550012,+15555550013,+15555550014,+15555550015,+15555550016,+15555550017,+15555550018,+15555550019,+15555550020"
     depends_on:
       migrate:
         condition: service_completed_successfully

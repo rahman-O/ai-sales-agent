@@ -63,7 +63,8 @@ Start API and Worker against recovery instance and verify `/health/ready` and sm
 
 ---
 
-## 3. Restore Drill Verification Status
+## 3. Provider Acceptance Notes
 
-- **Procedure Status**: Documented and verified in local/staging test environments.
-- **Production Drill Status**: Non-destructive validation via `prod:check` and staging restore rehearsal. Live production restore drill is scheduled during planned maintenance windows.
+Provider acceptance depends on the backup and restore evidence for the exact target environment. Before a live run, record the latest successful backup, retention, restore-drill timestamp, database owner, and rollback authority.
+
+A restore must preserve organization ownership, channel connections, customer identities, canonical messages, webhook receipts, outbound attempts, provider message IDs, delivery states, operation ledgers, and audit records. Restore into an isolated target, verify RLS and cross-tenant isolation, compare counts and checksums, and never reconnect the restored copy to a live provider until credentials and webhooks are intentionally disabled or replaced.

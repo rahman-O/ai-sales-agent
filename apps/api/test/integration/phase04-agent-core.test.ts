@@ -24,7 +24,9 @@ async function context(c: PoolClient, org: string, user: string) {
 test('Phase 04 agent core: watermark, replay, handoff, mode cursor, RLS', async () => {
   const prevFake = process.env.AI_ALLOW_FAKE;
   const prevNode = process.env.NODE_ENV;
+  const prevProvider = process.env.AI_PROVIDER;
   process.env.AI_ALLOW_FAKE = 'true';
+  process.env.AI_PROVIDER = 'fake';
   process.env.NODE_ENV = 'test';
 
   const user = randomUUID();
@@ -405,6 +407,8 @@ test('Phase 04 agent core: watermark, replay, handoff, mode cursor, RLS', async 
     c5.release();
     if (prevFake === undefined) delete process.env.AI_ALLOW_FAKE;
     else process.env.AI_ALLOW_FAKE = prevFake;
+    if (prevProvider === undefined) delete process.env.AI_PROVIDER;
+    else process.env.AI_PROVIDER = prevProvider;
     if (prevNode === undefined) delete process.env.NODE_ENV;
     else process.env.NODE_ENV = prevNode;
   }

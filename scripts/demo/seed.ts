@@ -10,6 +10,8 @@ import { requireLocalDemoDb } from './assert-local-demo-db.ts';
 import { digestText, nextValidAvailabilitySlots } from './availability-slots.ts';
 import {
   DEMO_CHANNEL_ID,
+  DEMO_META_SIMULATOR_CHANNEL_ID,
+  DEMO_META_SIMULATOR_PHONE_NUMBER_ID,
   DEMO_CUSTOMER_COUNT,
   DEMO_LOCATION_ID,
   DEMO_OPERATOR_USER_ID,
@@ -540,6 +542,27 @@ async function main() {
         status: 'ACTIVE',
         healthStatus: 'ACTIVE',
         displayPhoneNumber: '+15555550000',
+      },
+    });
+    await prisma.channelConnection.upsert({
+      where: { id: DEMO_META_SIMULATOR_CHANNEL_ID },
+      update: {
+        organizationId: DEMO_ORG_ID,
+        provider: 'meta_whatsapp',
+        externalChannelId: DEMO_META_SIMULATOR_PHONE_NUMBER_ID,
+        status: 'ACTIVE',
+        healthStatus: 'ACTIVE',
+        displayPhoneNumber: '+15555559999',
+        credentialRef: null,
+      },
+      create: {
+        id: DEMO_META_SIMULATOR_CHANNEL_ID,
+        organizationId: DEMO_ORG_ID,
+        provider: 'meta_whatsapp',
+        externalChannelId: DEMO_META_SIMULATOR_PHONE_NUMBER_ID,
+        status: 'ACTIVE',
+        healthStatus: 'ACTIVE',
+        displayPhoneNumber: '+15555559999',
       },
     });
     record({ section: 'CHANNEL', result: 'PASS' });

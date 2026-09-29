@@ -1,5 +1,7 @@
 # Multi-Business AI Sales Platform — Planning Hub
 
+Provider acceptance evidence and its current limitations are tracked in [MB-15-IMPLEMENTATION.md](./MB-15-IMPLEMENTATION.md). Operational controls are under [`docs/operations`](../operations/PRODUCTION-RELEASE-CHECKLIST.md).
+
 > **This folder is the single source of truth for the multi-business platform evolution.**
 > No implementation code lives here — only planning, architecture, and decision documentation.
 

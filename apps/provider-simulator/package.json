@@ -1,0 +1,21 @@
+{
+  "name": "@ai-sales-agent/provider-simulator",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/main.js",
+    "dev": "tsx src/main.ts",
+    "test": "node --import tsx --test src/**/*.test.ts"
+  },
+  "dependencies": {
+    "@ai-sales-agent/agent-adapters": "*"
+  },
+  "devDependencies": {
+    "@types/node": "24.5.2",
+    "typescript": "5.9.2"
+  }
+}

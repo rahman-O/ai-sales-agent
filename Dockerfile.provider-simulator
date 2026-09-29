@@ -1,0 +1,32 @@
+FROM node:24-bookworm AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
+COPY apps/provider-simulator/package.json apps/provider-simulator/
+COPY packages/agent-adapters/package.json packages/agent-adapters/
+COPY packages/agent-core/package.json packages/agent-core/
+COPY packages/contracts/package.json packages/contracts/
+COPY packages/embeddings/package.json packages/embeddings/
+COPY packages/knowledge-chunking/package.json packages/knowledge-chunking/
+COPY packages/storage/package.json packages/storage/
+COPY packages/config/package.json packages/config/
+RUN npm ci
+COPY apps/provider-simulator apps/provider-simulator
+COPY packages packages
+RUN npm run build -w @ai-sales-agent/config \
+    && npm run build -w @ai-sales-agent/contracts \
+    && npm run build -w @ai-sales-agent/embeddings \
+    && npm run build -w @ai-sales-agent/knowledge-chunking \
+    && npm run build -w @ai-sales-agent/storage \
+    && npm run build -w @ai-sales-agent/agent-core \
+    && npm run build -w @ai-sales-agent/agent-adapters \
+    && npm run build -w @ai-sales-agent/provider-simulator
+
+FROM node:24-bookworm-slim
+WORKDIR /app
+ENV APP_ENV=simulator
+COPY --from=build /app/package.json /app/package-lock.json ./
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/apps/provider-simulator ./apps/provider-simulator
+COPY --from=build /app/packages ./packages
+EXPOSE 3415
+CMD ["node", "apps/provider-simulator/dist/main.js"]

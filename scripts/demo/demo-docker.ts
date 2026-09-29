@@ -17,6 +17,7 @@ const DEMO_PORTS = [
   { port: 5433, name: 'POSTGRES' },
   { port: 6380, name: 'REDIS' },
   { port: 11434, name: 'OLLAMA' },
+  { port: 3415, name: 'PROVIDER_SIMULATOR' },
 ] as const;
 
 function run(cmd: string, args: string[], opts: { allowFail?: boolean } = {}) {
@@ -84,7 +85,9 @@ async function checkPortsForUp() {
             ? 'postgres'
             : name === 'REDIS'
               ? 'redis'
-              : 'ollama';
+              : name === 'OLLAMA'
+                ? 'ollama'
+                : 'provider-simulator';
     const id = spawnSync('docker', composeArgs(['ps', '-q', which]), {
       cwd: ROOT,
       encoding: 'utf8',
@@ -259,9 +262,39 @@ async function main() {
       );
       break;
     }
+    case 'simulator:up': {
+      ensureEnv();
+      run('docker', composeArgs([
+        '--profile',
+        'provider-simulator',
+        'up',
+        '-d',
+        '--build',
+        'provider-simulator',
+        'api',
+        'worker',
+      ]));
+      const simulatorOk = await waitHttp('http://127.0.0.1:3415/health/live');
+      const apiOk = await waitHttp('http://127.0.0.1:3001/health/live');
+      console.log(
+        JSON.stringify({
+          MB15_SIMULATOR_UP: simulatorOk && apiOk ? 'PASS' : 'FAIL',
+          SIMULATOR: simulatorOk ? 'PASS' : 'FAIL',
+          API: apiOk ? 'PASS' : 'FAIL',
+        }),
+      );
+      if (!simulatorOk || !apiOk) process.exit(1);
+      break;
+    }
+    case 'simulator:down': {
+      ensureEnv();
+      run('docker', composeArgs(['stop', 'provider-simulator']));
+      console.log(JSON.stringify({ MB15_SIMULATOR_DOWN: 'PASS' }));
+      break;
+    }
     default:
       console.log(
-        'Usage: demo-docker.ts <build|up|down|stop|logs|ps|wipe|start|ollama:up|ollama:down|ollama:logs|ollama:status>',
+        'Usage: demo-docker.ts <build|up|down|stop|logs|ps|wipe|start|ollama:up|ollama:down|ollama:logs|ollama:status|simulator:up|simulator:down>',
       );
       process.exit(1);
   }

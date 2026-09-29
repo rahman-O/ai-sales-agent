@@ -60,11 +60,13 @@ Operational troubleshooting and mitigation procedures for live platform incident
 
 ---
 
-### Incident D: Bad Deployment / Schema Migration Regression
+### Incident D: Messaging Provider Incident & Failures
 
-1. **Assess Impact**:
-   Determine whether code rollback is sufficient without touching the database schema.
-2. **Execute Code Rollback**:
-   Roll back container tags to the previous stable release.
-3. **Evaluate Database Forward-Fix**:
-   If a migration added a column or table, existing code ignoring the new column will function normally. If a constraint or column was dropped mistakenly, apply a targeted forward-fix migration.
+1. Stop new sends by setting the affected `ChannelConnection` inactive or unhealthy through the authorized operator path.
+2. Preserve messages, webhook receipts, outbound attempts, request IDs, and provider IDs. Do not delete or replay evidence.
+3. Classify the failure: signature/authentication, rate limit, provider outage, invalid recipient/content, or ambiguous dispatch.
+4. For a credential incident, revoke and rotate at Meta, update the secret store referenced by `credentialRef`, restart affected workloads, and verify with an authorized test target. Never paste the secret into logs or chat.
+5. For ambiguous dispatch, leave the message `UNKNOWN`; reconcile with provider evidence or an operator before any replacement send.
+6. For 401/403, keep the channel `AUTH_FAILED` and do not retry indefinitely. For 429/5xx, use bounded backoff and provider guidance.
+7. Confirm business mutations remain authoritative and deduplicated, then document customer remediation if delivery was uncertain.
+8. Restore service gradually, monitor error/dedup/status metrics, and close only after cause, impact, rotation/repair, and regression evidence are recorded.

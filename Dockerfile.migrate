@@ -8,6 +8,7 @@ COPY package.json package-lock.json ./
 COPY apps/api/package.json apps/api/
 COPY apps/worker/package.json apps/worker/
 COPY apps/web/package.json apps/web/
+COPY apps/provider-simulator/package.json apps/provider-simulator/
 COPY packages/config/package.json packages/config/
 COPY packages/contracts/package.json packages/contracts/
 COPY packages/embeddings/package.json packages/embeddings/

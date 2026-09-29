@@ -4,11 +4,12 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
-process.env.DEMO_FORCE_LOCAL_DB = '1';
+const useHostedDatabase = process.env.INTEGRATION_USE_HOSTED === '1';
+if (!useHostedDatabase) process.env.DEMO_FORCE_LOCAL_DB = '1';
 loadLocalEnv(root);
 
 const demoLocalPath = path.join(root, '.env.demo.local');
-if (fs.existsSync(demoLocalPath)) {
+if (!useHostedDatabase && fs.existsSync(demoLocalPath)) {
   for (const line of fs.readFileSync(demoLocalPath, 'utf8').split(/\r?\n/)) {
     const t = line.trim();
     if (!t || t.startsWith('#')) continue;

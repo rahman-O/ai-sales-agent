@@ -350,6 +350,14 @@ export class OpenAiCompatibleModelProvider implements ModelProvider {
         }
       }
 
+      if (!decision && message?.content && message.content.trim().length > 0) {
+        decision = {
+          type: 'final_response',
+          text: message.content.trim(),
+          claims: [],
+        };
+      }
+
       if (!decision) {
         decision = { type: 'safe_stop', reason: 'unparseable_provider_json' };
       }

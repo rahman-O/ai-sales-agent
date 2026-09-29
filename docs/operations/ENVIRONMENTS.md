@@ -46,3 +46,11 @@ The platform strictly separates database credentials across roles:
   - Role attributes: `NOSUPERUSER`, `NOCREATEDB`, `NOCREATEROLE`, `NOINHERIT`, `NOBYPASSRLS`.
   - Bound by Row Level Security (`FORCE ROW LEVEL SECURITY` on all tenant-owned tables).
   - Cannot bypass tenant boundaries.
+
+---
+
+## 4. Provider Acceptance Mode
+
+For a controlled acceptance run, set `PROVIDER_ACCEPTANCE_MODE=true` and list exact E.164 recipients in `PROVIDER_ACCEPTANCE_ALLOWED_RECIPIENTS`. The list must be non-empty and has no wildcard behavior. Also configure `PUBLIC_WEBHOOK_URL` with the stable HTTPS endpoint. Acceptance mode retains normal RLS, workflow, capability, and business-authority checks.
+
+MB-15A simulator mode uses `PROVIDER_MODE=meta-simulator` and `META_GRAPH_BASE_URL=http://127.0.0.1:3415` for host execution or the exact private Docker service `http://provider-simulator:3415`. The override fails closed in production and rejects every other host.

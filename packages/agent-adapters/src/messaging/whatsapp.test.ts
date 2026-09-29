@@ -8,7 +8,84 @@ import {
   verifyMetaSignature256,
   applyDeliveryTransition,
   MetaWhatsAppChannel,
+  PROVIDER_MAX_ATTEMPTS,
+  PROVIDER_RETRY_BACKOFF_MS,
+  incrementProviderMetric,
+  isRetryableProviderFailure,
+  isAcceptanceRecipientAllowed,
+  providerMetricSnapshot,
+  resolveMetaGraphBaseUrl,
+  resetProviderMetricsForTests,
 } from '@ai-sales-agent/agent-adapters';
+
+test('provider retry policy is bounded and retries only safe classes', () => {
+  assert.equal(PROVIDER_MAX_ATTEMPTS, 4);
+  assert.equal(PROVIDER_RETRY_BACKOFF_MS, 5_000);
+  assert.equal(isRetryableProviderFailure('DEFINITE_TRANSIENT_FAILURE'), true);
+  assert.equal(isRetryableProviderFailure('RATE_LIMITED'), true);
+  assert.equal(isRetryableProviderFailure('AUTH_FAILURE'), false);
+  assert.equal(isRetryableProviderFailure('PERMANENT_FAILURE'), false);
+  assert.equal(isRetryableProviderFailure('AMBIGUOUS_DISPATCH'), false);
+});
+
+test('Meta simulator base URL is loopback-only and forbidden in production', () => {
+  assert.equal(resolveMetaGraphBaseUrl({}), 'https://graph.facebook.com');
+  assert.equal(
+    resolveMetaGraphBaseUrl({
+      PROVIDER_MODE: 'meta-simulator',
+      META_GRAPH_BASE_URL: 'http://127.0.0.1:3415/',
+    }),
+    'http://127.0.0.1:3415',
+  );
+  assert.throws(() =>
+    resolveMetaGraphBaseUrl({
+      NODE_ENV: 'production',
+      PROVIDER_MODE: 'meta-simulator',
+      META_GRAPH_BASE_URL: 'http://127.0.0.1:3415',
+    }),
+  );
+  assert.throws(() =>
+    resolveMetaGraphBaseUrl({
+      PROVIDER_MODE: 'meta-simulator',
+      META_GRAPH_BASE_URL: 'https://example.com',
+    }),
+  );
+});
+
+test('acceptance mode fails closed outside the explicit recipient allowlist', () => {
+  const env = {
+    PROVIDER_ACCEPTANCE_MODE: 'true',
+    PROVIDER_ACCEPTANCE_ALLOWED_RECIPIENTS: '+15550000001,+15550000002',
+  };
+  assert.equal(isAcceptanceRecipientAllowed('+15550000001', env), true);
+  assert.equal(isAcceptanceRecipientAllowed('+15550000003', env), false);
+  assert.equal(
+    isAcceptanceRecipientAllowed('+15550000001', {
+      PROVIDER_ACCEPTANCE_MODE: 'true',
+      PROVIDER_ACCEPTANCE_ALLOWED_RECIPIENTS: '',
+    }),
+    false,
+  );
+});
+
+test('provider metrics increment with bounded labels and no customer identifiers', () => {
+  resetProviderMetricsForTests();
+  incrementProviderMetric('provider_outbound_failure', {
+    provider: 'meta_whatsapp',
+    eventType: 'send',
+    result: 'retry',
+    failureClass: 'RATE_LIMITED',
+  });
+  incrementProviderMetric('provider_outbound_failure', {
+    provider: 'meta_whatsapp',
+    eventType: 'send',
+    result: 'retry',
+    failureClass: 'RATE_LIMITED',
+  });
+  const snapshot = providerMetricSnapshot();
+  assert.equal(Object.values(snapshot)[0], 2);
+  assert.equal(Object.keys(snapshot).some((key) => /messageId|customerId|phone/i.test(key)), false);
+});
 
 test('delivery transition table rejects regressions', () => {
   assert.equal(canTransitionDelivery('ACCEPTED', 'DELIVERED'), true);
@@ -90,6 +167,83 @@ test('ambiguous send classification on timeout', async () => {
   );
   assert.equal(result.ok, false);
   if (!result.ok) assert.equal(result.class, 'AMBIGUOUS_DISPATCH');
+});
+
+test('Meta send classifies provider failures without exposing credentials', async () => {
+  const ch = new MetaWhatsAppChannel();
+  const env = {
+    META_GRAPH_API_VERSION: 'v25.0',
+    META_WHATSAPP_ACCESS_TOKEN: 'private-test-token',
+  };
+  const intent = {
+    organizationId: 'o',
+    channelConnectionId: 'c',
+    messageId: 'm',
+    phoneNumberId: 'pn',
+    toE164: '+15551234567',
+    text: 'hi',
+    credentialRef: null,
+  };
+
+  const cases = [
+    { status: 401, expected: 'AUTH_FAILURE' },
+    { status: 403, expected: 'AUTH_FAILURE' },
+    { status: 400, expected: 'PERMANENT_FAILURE' },
+    { status: 500, expected: 'DEFINITE_TRANSIENT_FAILURE' },
+  ] as const;
+  for (const item of cases) {
+    const result = await ch.send(intent, {
+      env,
+      fetchImpl: async () => new Response('{}', { status: item.status }),
+    });
+    assert.equal(result.ok, false);
+    if (!result.ok) {
+      assert.equal(result.class, item.expected);
+      assert.doesNotMatch(JSON.stringify(result), /private-test-token/);
+    }
+  }
+
+  const limited = await ch.send(intent, {
+    env,
+    fetchImpl: async () => new Response('{}', { status: 429, headers: { 'retry-after': '7' } }),
+  });
+  assert.equal(limited.ok, false);
+  if (!limited.ok) {
+    assert.equal(limited.class, 'RATE_LIMITED');
+    assert.equal(limited.retryAfterMs, 7_000);
+  }
+});
+
+test('Meta send treats malformed success as ambiguous and network refusal as retryable', async () => {
+  const ch = new MetaWhatsAppChannel();
+  const env = {
+    META_GRAPH_API_VERSION: 'v25.0',
+    META_WHATSAPP_ACCESS_TOKEN: 'token',
+  };
+  const intent = {
+    organizationId: 'o',
+    channelConnectionId: 'c',
+    messageId: 'm',
+    phoneNumberId: 'pn',
+    toE164: '+15551234567',
+    text: 'hi',
+    credentialRef: null,
+  };
+  const malformed = await ch.send(intent, {
+    env,
+    fetchImpl: async () => new Response('{', { status: 200 }),
+  });
+  assert.equal(malformed.ok, false);
+  if (!malformed.ok) assert.equal(malformed.class, 'AMBIGUOUS_DISPATCH');
+
+  const refused = await ch.send(intent, {
+    env,
+    fetchImpl: async () => {
+      throw new Error('connect ECONNREFUSED');
+    },
+  });
+  assert.equal(refused.ok, false);
+  if (!refused.ok) assert.equal(refused.class, 'DEFINITE_TRANSIENT_FAILURE');
 });
 
 test('normalize inbound text and status digest', () => {

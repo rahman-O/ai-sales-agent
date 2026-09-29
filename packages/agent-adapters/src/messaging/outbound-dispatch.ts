@@ -7,6 +7,11 @@ import {
 } from './messaging-channel.js';
 import { MetaWhatsAppChannel } from './meta-whatsapp.channel.js';
 import { META_WHATSAPP_PROVIDER } from './messaging-channel.js';
+import {
+  PROVIDER_MAX_ATTEMPTS,
+  incrementProviderMetric,
+  isRetryableProviderFailure,
+} from './provider-operations.js';
 
 export type OutboundDispatchResult = {
   outcome:
@@ -172,6 +177,20 @@ export async function dispatchOutboundMessage(
     [organizationId, messageId],
   );
   const nextAttempt = Number(attemptNo.rows[0].n) + 1;
+  if (nextAttempt > PROVIDER_MAX_ATTEMPTS) {
+    await c.query(
+      `UPDATE messages SET delivery_state='FAILED'
+       WHERE organization_id=$1 AND id=$2 AND delivery_state IN ('PENDING','DISPATCHING')`,
+      [organizationId, messageId],
+    );
+    incrementProviderMetric('provider_outbound_failure', {
+      provider: META_WHATSAPP_PROVIDER,
+      eventType: 'send',
+      result: 'max_attempts',
+      failureClass: 'DEFINITE_TRANSIENT_FAILURE',
+    });
+    return { outcome: 'FAILED', class: 'MAX_ATTEMPTS_ENFORCED' };
+  }
   const attemptId = randomUUID();
   const attemptEpoch =
     row.authority_epoch == null ? Number(row.conversation_epoch) : Number(row.authority_epoch);
@@ -223,8 +242,19 @@ export async function dispatchOutboundMessage(
     },
     { fetchImpl: opts?.fetchImpl, env: opts?.env },
   );
+  incrementProviderMetric('provider_outbound_attempts', {
+    provider: META_WHATSAPP_PROVIDER,
+    eventType: 'send',
+    result: result.ok ? 'success' : 'failure',
+    failureClass: result.ok ? 'SUCCESS' : result.class,
+  });
 
   if (result.ok) {
+    incrementProviderMetric('provider_outbound_success', {
+      provider: META_WHATSAPP_PROVIDER,
+      eventType: 'send',
+      result: 'accepted',
+    });
     // Persist wamid before marking ACCEPTED — crash between these is still single Message
     await c.query(
       `UPDATE outbound_attempts SET status='ACCEPTED', provider_message_id=$3, accepted_at=now()
@@ -245,6 +275,14 @@ export async function dispatchOutboundMessage(
   }
 
   if (result.class === 'AMBIGUOUS_DISPATCH') {
+    if (result.safeMessage === 'dispatch_timeout') {
+      incrementProviderMetric('provider_timeouts', {
+        provider: META_WHATSAPP_PROVIDER,
+        eventType: 'send',
+        result: 'unknown',
+        failureClass: result.class,
+      });
+    }
     await c.query(
       `UPDATE outbound_attempts SET status='UNKNOWN', error_text=$3
        WHERE organization_id=$1 AND id=$2`,
@@ -258,7 +296,15 @@ export async function dispatchOutboundMessage(
     return { outcome: 'UNKNOWN', attemptId, class: result.class };
   }
 
-  if (result.class === 'DEFINITE_TRANSIENT_FAILURE' || result.class === 'RATE_LIMITED') {
+  if (isRetryableProviderFailure(result.class)) {
+    if (result.class === 'RATE_LIMITED') {
+      incrementProviderMetric('provider_rate_limit_errors', {
+        provider: META_WHATSAPP_PROVIDER,
+        eventType: 'send',
+        result: 'retry',
+        failureClass: result.class,
+      });
+    }
     await c.query(
       `UPDATE outbound_attempts SET status='FAILED', error_text=$3
        WHERE organization_id=$1 AND id=$2`,
@@ -274,6 +320,12 @@ export async function dispatchOutboundMessage(
   }
 
   if (result.class === 'AUTH_FAILURE') {
+    incrementProviderMetric('provider_auth_errors', {
+      provider: META_WHATSAPP_PROVIDER,
+      eventType: 'send',
+      result: 'failed',
+      failureClass: result.class,
+    });
     await c.query(
       `UPDATE channel_connections SET health_status='AUTH_FAILED', updated_at=now()
        WHERE organization_id=$1 AND id=$2`,
@@ -286,6 +338,12 @@ export async function dispatchOutboundMessage(
      WHERE organization_id=$1 AND id=$2`,
     [organizationId, attemptId, result.safeMessage ?? result.class],
   );
+  incrementProviderMetric('provider_outbound_failure', {
+    provider: META_WHATSAPP_PROVIDER,
+    eventType: 'send',
+    result: 'failed',
+    failureClass: result.class,
+  });
   await c.query(
     `UPDATE messages SET delivery_state='FAILED'
      WHERE organization_id=$1 AND id=$2`,

@@ -7,6 +7,7 @@ import {
 import {
   META_WHATSAPP_PROVIDER,
   applyDeliveryTransition,
+  incrementProviderMetric,
   mapMetaStatusToDelivery,
 } from '@ai-sales-agent/agent-adapters';
 import { MetaWhatsAppChannel } from './meta-whatsapp.channel.js';
@@ -37,7 +38,17 @@ export class WhatsAppWebhookService {
     rawBody: Buffer,
     headers: Record<string, string | undefined>,
   ): Promise<{ ok: true; processed: number; unknownChannel?: boolean }> {
+    incrementProviderMetric('provider_webhooks_received', {
+      provider: META_WHATSAPP_PROVIDER,
+      eventType: 'messages',
+      result: 'received',
+    });
     if (!this.meta.verifyWebhookPost(rawBody, headers)) {
+      incrementProviderMetric('provider_webhooks_rejected', {
+        provider: META_WHATSAPP_PROVIDER,
+        eventType: 'messages',
+        result: 'invalid_signature',
+      });
       return Promise.reject(Object.assign(new Error('invalid_signature'), { status: 403 }));
     }
     if (rawBody.length > 1_000_000) {
@@ -57,22 +68,24 @@ export class WhatsAppWebhookService {
       return { ok: true, processed: 0 };
     }
 
-    const conn = (await this.tenants.runAsActor(SYSTEM_ACTOR, (tx) =>
-      tx.channelConnection.findUnique({
-        where: {
-          provider_externalChannelId: {
-            provider: META_WHATSAPP_PROVIDER,
-            externalChannelId: batch.phoneNumberId,
-          },
-        },
-      }),
-    )) as {
+    const connections = (await this.tenants.runAsActor(SYSTEM_ACTOR, (tx) =>
+      tx.$queryRaw`
+        SELECT id, organization_id
+        FROM resolve_active_channel_connection(
+          ${META_WHATSAPP_PROVIDER},
+          ${batch.phoneNumberId}
+        )
+      `,
+    )) as Array<{
       id: string;
-      organizationId: string;
-      status: string;
-    } | null;
+      organization_id: string;
+    }>;
+    const resolved = connections[0];
+    const conn = resolved
+      ? { id: resolved.id, organizationId: resolved.organization_id }
+      : null;
 
-    if (!conn || conn.status !== 'ACTIVE') {
+    if (!conn) {
       this.log.warn(
         JSON.stringify({
           msg: 'whatsapp_unknown_channel',
@@ -94,7 +107,20 @@ export class WhatsAppWebhookService {
           organizationId,
           channelConnectionId: conn.id,
         });
-        if (!result.replay) processed += 1;
+        if (result.replay) {
+          incrementProviderMetric('provider_duplicate_events', {
+            provider: META_WHATSAPP_PROVIDER,
+            eventType: 'inbound',
+            result: 'deduplicated',
+          });
+        } else {
+          processed += 1;
+          incrementProviderMetric('provider_inbound_processed', {
+            provider: META_WHATSAPP_PROVIDER,
+            eventType: 'inbound',
+            result: 'persisted',
+          });
+        }
       }
 
       for (const st of batch.statuses) {
@@ -106,7 +132,14 @@ export class WhatsAppWebhookService {
             },
           },
         });
-        if (existing) continue;
+        if (existing) {
+          incrementProviderMetric('provider_duplicate_events', {
+            provider: META_WHATSAPP_PROVIDER,
+            eventType: 'status',
+            result: 'deduplicated',
+          });
+          continue;
+        }
 
         const target = mapMetaStatusToDelivery(st.status);
         const msg = await tx.message.findFirst({

@@ -645,6 +645,8 @@
 
 ## MB-15 — External / Live Provider Acceptance
 
+**Current repository evidence (2026-09-29):** `PARTIAL / NOT_CLOSED`. Mocked Meta transport and database integration evidence exists, but the prerequisite MB-14 evidence and authorized live provider target are absent. See [MB-15-IMPLEMENTATION.md](./MB-15-IMPLEMENTATION.md). This note does not advance the authoritative phase sequence below.
+
 **Objective:** Live validation with real external providers (WhatsApp, DeepSeek) across multiple business types.
 
 **Scope:**

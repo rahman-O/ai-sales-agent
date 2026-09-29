@@ -1,6 +1,8 @@
 import { loadLocalEnv, loadServerEnv } from '@ai-sales-agent/config';
 import {
   dispatchOutboundMessage,
+  PROVIDER_MAX_ATTEMPTS,
+  PROVIDER_RETRY_BACKOFF_MS,
   executeFollowUp,
   resolveWorkerLeaseTtlSeconds,
   runConversationAgent,
@@ -68,12 +70,8 @@ async function main() {
             workKind: row.work_kind,
           },
           {
-            jobId: row.work_id,
-            attempts: 3,
-            backoff: {
-              type: 'exponential',
-              delay: 1000,
-            },
+            attempts: PROVIDER_MAX_ATTEMPTS,
+            backoff: { type: 'exponential', delay: PROVIDER_RETRY_BACKOFF_MS },
             removeOnComplete: 100,
             removeOnFail: 200,
           },
@@ -412,6 +410,10 @@ async function main() {
               ]);
               await c2.query(`SELECT set_config('app.current_user_id', $1, true)`, [workerId]);
               const dispatched = await dispatchOutboundMessage(c2, organizationId, outboundMessageId);
+              if (dispatched.outcome === 'RETRY') {
+                await c2.query('COMMIT');
+                throw new Error(`provider_retryable:${dispatched.class ?? 'TRANSIENT'}`);
+              }
               await c2.query(
                 `INSERT INTO consumer_receipts (organization_id, consumer_name, event_id)
                  VALUES ($1::uuid, $2, $3::uuid)

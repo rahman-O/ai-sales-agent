@@ -148,6 +148,19 @@ export function resolveMetaGraphApiVersion(env: NodeJS.ProcessEnv = process.env)
   return v;
 }
 
+export function resolveMetaGraphBaseUrl(env: NodeJS.ProcessEnv = process.env): string {
+  const configured = env.META_GRAPH_BASE_URL?.trim();
+  if (!configured) return 'https://graph.facebook.com';
+  if (env.PROVIDER_MODE !== 'meta-simulator' || env.NODE_ENV === 'production') {
+    throw new Error('META_GRAPH_BASE_URL is restricted to non-production meta-simulator mode');
+  }
+  const url = new URL(configured);
+  if (url.protocol !== 'http:' || !['127.0.0.1', 'localhost', '::1', 'provider-simulator'].includes(url.hostname)) {
+    throw new Error('Meta simulator base URL must use loopback or the private provider-simulator service');
+  }
+  return url.toString().replace(/\/$/, '');
+}
+
 export function resolveAppVerifyToken(env: NodeJS.ProcessEnv = process.env): string {
   const t = env.META_WHATSAPP_VERIFY_TOKEN?.trim();
   if (!t) {

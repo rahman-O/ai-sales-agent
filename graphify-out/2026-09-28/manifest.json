@@ -1,0 +1,3074 @@
+{
+  "apps/api/package.json": {
+    "mtime": 1790258971.8046803,
+    "seen": 1790613036.890387,
+    "ast_hash": "0537c6040f1a6abc3824d901994c7488",
+    "semantic_hash": ""
+  },
+  "apps/api/src/agent/agent.controller.ts": {
+    "mtime": 1790257432.2483435,
+    "seen": 1790613036.8903923,
+    "ast_hash": "cc776626a61f3d01e67060d620f49cf4",
+    "semantic_hash": ""
+  },
+  "apps/api/src/agent/agent.module.ts": {
+    "mtime": 1790257432.2493377,
+    "seen": 1790613036.8903944,
+    "ast_hash": "dbe40bac40740061acda15c7d75fb52b",
+    "semantic_hash": ""
+  },
+  "apps/api/src/agent/agent.service.ts": {
+    "mtime": 1790257432.2493377,
+    "seen": 1790613036.8903954,
+    "ast_hash": "2f558d88c6fb67dd2b0f308e3b161ab4",
+    "semantic_hash": ""
+  },
+  "apps/api/src/agent/eval-fixtures.ts": {
+    "mtime": 1790257432.250345,
+    "seen": 1790613036.8903966,
+    "ast_hash": "29456cfa76c22c4958219c4247647e67",
+    "semantic_hash": ""
+  },
+  "apps/api/src/analytics/analytics.controller.ts": {
+    "mtime": 1790258125.1523454,
+    "seen": 1790613036.8903978,
+    "ast_hash": "b5163ebc66d059e43732c16b2be23826",
+    "semantic_hash": ""
+  },
+  "apps/api/src/analytics/analytics.module.ts": {
+    "mtime": 1790258124.911843,
+    "seen": 1790613036.8903987,
+    "ast_hash": "b9bfd7d38ee1de6b40846763846a1f45",
+    "semantic_hash": ""
+  },
+  "apps/api/src/analytics/analytics.service.ts": {
+    "mtime": 1790258360.6649823,
+    "seen": 1790613036.8903997,
+    "ast_hash": "0e5390a89c53fb3b12920c8d8f3231b1",
+    "semantic_hash": ""
+  },
+  "apps/api/src/analytics/range.test.ts": {
+    "mtime": 1790258124.639823,
+    "seen": 1790613036.890401,
+    "ast_hash": "5d1157bf040a113d4388dc3fac4f95f8",
+    "semantic_hash": ""
+  },
+  "apps/api/src/analytics/range.ts": {
+    "mtime": 1790258124.3876903,
+    "seen": 1790613036.890402,
+    "ast_hash": "614dfce8d2804a34890c1ac8d2404509",
+    "semantic_hash": ""
+  },
+  "apps/api/src/app.module.ts": {
+    "mtime": 1790262952.1799662,
+    "seen": 1790613036.890403,
+    "ast_hash": "1bfbb8a52b7984b6cc7442380ed83947",
+    "semantic_hash": ""
+  },
+  "apps/api/src/auth/auth.controller.ts": {
+    "mtime": 1790157154.2735994,
+    "seen": 1790613036.8904045,
+    "ast_hash": "c36e8ef87d7a7f66fe2c59209790c842",
+    "semantic_hash": ""
+  },
+  "apps/api/src/auth/auth.guard.ts": {
+    "mtime": 1790157149.3225665,
+    "seen": 1790613036.890406,
+    "ast_hash": "8aad7a6dfd0b59feeaa95711c773fb68",
+    "semantic_hash": ""
+  },
+  "apps/api/src/auth/auth.module.ts": {
+    "mtime": 1790157140.5927587,
+    "seen": 1790613036.8904068,
+    "ast_hash": "2d65145163341094ea67227060e166db",
+    "semantic_hash": ""
+  },
+  "apps/api/src/auth/auth.service.ts": {
+    "mtime": 1790157830.6101654,
+    "seen": 1790613036.890408,
+    "ast_hash": "206aeb7d35deb080cdd068624a61b663",
+    "semantic_hash": ""
+  },
+  "apps/api/src/auth/jwt-verifier.service.ts": {
+    "mtime": 1790157143.302178,
+    "seen": 1790613036.8904092,
+    "ast_hash": "bd4253798cedffebebd0a9e6d014ef03",
+    "semantic_hash": ""
+  },
+  "apps/api/src/bookings/bookings.controller.ts": {
+    "mtime": 1790257432.251338,
+    "seen": 1790613036.8904102,
+    "ast_hash": "f841e693549c0717b917659446714f40",
+    "semantic_hash": ""
+  },
+  "apps/api/src/bookings/bookings.module.ts": {
+    "mtime": 1790257432.251338,
+    "seen": 1790613036.8904114,
+    "ast_hash": "c3be72e20a9c6c25de9892176b6e9e74",
+    "semantic_hash": ""
+  },
+  "apps/api/src/bookings/bookings.service.ts": {
+    "mtime": 1790257432.2523375,
+    "seen": 1790613036.8904126,
+    "ast_hash": "7f730b100645b04f174794fb5cbd4783",
+    "semantic_hash": ""
+  },
+  "apps/api/src/catalog/catalog.controller.ts": {
+    "mtime": 1790166995.222036,
+    "seen": 1790613036.8904138,
+    "ast_hash": "9d7463c990b97e8e0561b5079ab5d0d7",
+    "semantic_hash": ""
+  },
+  "apps/api/src/catalog/catalog.module.ts": {
+    "mtime": 1790167720.7668295,
+    "seen": 1790613036.8904152,
+    "ast_hash": "bbde9f43ee36d435570c18e60d0655f4",
+    "semantic_hash": ""
+  },
+  "apps/api/src/catalog/catalog.service.ts": {
+    "mtime": 1790167487.1753361,
+    "seen": 1790613036.8904161,
+    "ast_hash": "037662dcf70e4f7bab7cfd216aba0935",
+    "semantic_hash": ""
+  },
+  "apps/api/src/common/phase13-fault-matrix.test.ts": {
+    "mtime": 1790265334.9148464,
+    "seen": 1790613036.8904173,
+    "ast_hash": "52616ba33b7fcb215ad0e0a626124706",
+    "semantic_hash": ""
+  },
+  "apps/api/src/common/phase13-observability-drills.test.ts": {
+    "mtime": 1790265373.9345841,
+    "seen": 1790613036.8904185,
+    "ast_hash": "808865b4e83e42c45d6ff2b4634aa061",
+    "semantic_hash": ""
+  },
+  "apps/api/src/common/request-id.middleware.ts": {
+    "mtime": 1790262952.6882365,
+    "seen": 1790613036.8904195,
+    "ast_hash": "98a650f61b59ad3914bbc97d614baca1",
+    "semantic_hash": ""
+  },
+  "apps/api/src/common/security.middleware.test.ts": {
+    "mtime": 1790263014.509592,
+    "seen": 1790613036.8904204,
+    "ast_hash": "aca63af224f470b834b43cf86fb6cd15",
+    "semantic_hash": ""
+  },
+  "apps/api/src/common/security.middleware.ts": {
+    "mtime": 1790262971.8325095,
+    "seen": 1790613036.890422,
+    "ast_hash": "befc31d218cf46059fc16847fc670a96",
+    "semantic_hash": ""
+  },
+  "apps/api/src/config/config.module.ts": {
+    "mtime": 1790157113.0019896,
+    "seen": 1790613036.890423,
+    "ast_hash": "6ac6c2b7f6b341219f768e40543811cd",
+    "semantic_hash": ""
+  },
+  "apps/api/src/config/config.service.ts": {
+    "mtime": 1790265266.1527307,
+    "seen": 1790613036.8904243,
+    "ast_hash": "781b8fac409b7f3924567da5888b8a85",
+    "semantic_hash": ""
+  },
+  "apps/api/src/conversations/conversation-control.service.ts": {
+    "mtime": 1790257432.2533388,
+    "seen": 1790613036.8904254,
+    "ast_hash": "f52c863ed543a96409e41948a93b97ab",
+    "semantic_hash": ""
+  },
+  "apps/api/src/conversations/conversation-events.hub.ts": {
+    "mtime": 1790257432.2533388,
+    "seen": 1790613036.8904264,
+    "ast_hash": "77775bf09310e61c8a2f01d733eae0e5",
+    "semantic_hash": ""
+  },
+  "apps/api/src/conversations/conversations.controller.ts": {
+    "mtime": 1790257432.2543397,
+    "seen": 1790613036.8904274,
+    "ast_hash": "c1fc1c6b26a1b99fa3d4d005eec1b855",
+    "semantic_hash": ""
+  },
+  "apps/api/src/conversations/conversations.module.ts": {
+    "mtime": 1790257432.2543397,
+    "seen": 1790613036.8904283,
+    "ast_hash": "cda5530ff892f926e10bc469ba1457d7",
+    "semantic_hash": ""
+  },
+  "apps/api/src/conversations/conversations.service.ts": {
+    "mtime": 1790257432.2543397,
+    "seen": 1790613036.8904295,
+    "ast_hash": "dee3ab2edc418804ffdcf3aba0779b35",
+    "semantic_hash": ""
+  },
+  "apps/api/src/customers/customers.controller.ts": {
+    "mtime": 1790167412.443706,
+    "seen": 1790613036.8904307,
+    "ast_hash": "053267b55f94112469f8ef2f3d2c7199",
+    "semantic_hash": ""
+  },
+  "apps/api/src/customers/customers.module.ts": {
+    "mtime": 1790167720.5219293,
+    "seen": 1790613036.8904316,
+    "ast_hash": "d09a63702966320aafde6fb97682fa0a",
+    "semantic_hash": ""
+  },
+  "apps/api/src/customers/customers.service.ts": {
+    "mtime": 1790257432.2553394,
+    "seen": 1790613036.890433,
+    "ast_hash": "c1ebeb63e93383f9b6fb4653af160f5f",
+    "semantic_hash": ""
+  },
+  "apps/api/src/dashboard/attention.test.ts": {
+    "mtime": 1790257432.256338,
+    "seen": 1790613036.8904338,
+    "ast_hash": "07a8bb4afae1977b6bb8516527d9518f",
+    "semantic_hash": ""
+  },
+  "apps/api/src/dashboard/attention.ts": {
+    "mtime": 1790257432.256338,
+    "seen": 1790613036.8904347,
+    "ast_hash": "50ad5e0e98c3b2a0cfe65edef66eb77c",
+    "semantic_hash": ""
+  },
+  "apps/api/src/dashboard/dashboard.controller.ts": {
+    "mtime": 1790257432.2573376,
+    "seen": 1790613036.8904362,
+    "ast_hash": "88dd2e39c885ab8bda791a23e458678c",
+    "semantic_hash": ""
+  },
+  "apps/api/src/dashboard/dashboard.module.ts": {
+    "mtime": 1790257432.2573376,
+    "seen": 1790613036.890437,
+    "ast_hash": "e4b8e02a9fd6722e09af0825a68d4778",
+    "semantic_hash": ""
+  },
+  "apps/api/src/dashboard/dashboard.service.ts": {
+    "mtime": 1790257432.2583427,
+    "seen": 1790613036.8904378,
+    "ast_hash": "8b3f35692eeaaab9fd06f62bf57d4d74",
+    "semantic_hash": ""
+  },
+  "apps/api/src/dashboard/dashboard.types.ts": {
+    "mtime": 1790257432.2583427,
+    "seen": 1790613036.8904388,
+    "ast_hash": "2a150bb0b328d1b8e42d3924881dca6c",
+    "semantic_hash": ""
+  },
+  "apps/api/src/database/database.module.ts": {
+    "mtime": 1790157118.9374847,
+    "seen": 1790613036.8904407,
+    "ast_hash": "0f8dd5ee466c48a073cd57681285fd24",
+    "semantic_hash": ""
+  },
+  "apps/api/src/database/pg-pool.ts": {
+    "mtime": 1790162935.9489691,
+    "seen": 1790613036.8904417,
+    "ast_hash": "831ba0cee9af7f1c5bf505306f27b1a4",
+    "semantic_hash": ""
+  },
+  "apps/api/src/database/prisma.service.ts": {
+    "mtime": 1790270742.100027,
+    "seen": 1790613036.8904428,
+    "ast_hash": "782aef314a154743e2f76d6f163215e5",
+    "semantic_hash": ""
+  },
+  "apps/api/src/database/tenant-context.service.ts": {
+    "mtime": 1790257432.2603374,
+    "seen": 1790613036.890444,
+    "ast_hash": "1b44f7f8591eab389ecf979f95968819",
+    "semantic_hash": ""
+  },
+  "apps/api/src/domain/booking-time.test.ts": {
+    "mtime": 1790257432.2603374,
+    "seen": 1790613036.8904452,
+    "ast_hash": "77bdac45cde30fde833e19d0a1810a8a",
+    "semantic_hash": ""
+  },
+  "apps/api/src/domain/booking-time.ts": {
+    "mtime": 1790257432.26134,
+    "seen": 1790613036.8904467,
+    "ast_hash": "4055a889233a86f11a3a32bbe0d0a4eb",
+    "semantic_hash": ""
+  },
+  "apps/api/src/domain/domain-event.ts": {
+    "mtime": 1790166807.1974833,
+    "seen": 1790613036.8904476,
+    "ast_hash": "d547cfe6b795aedf757d467f0167e599",
+    "semantic_hash": ""
+  },
+  "apps/api/src/domain/lead-state.test.ts": {
+    "mtime": 1790257432.26134,
+    "seen": 1790613036.8904486,
+    "ast_hash": "3b5682e5ca82cd14f9c4fe8cd66e898a",
+    "semantic_hash": ""
+  },
+  "apps/api/src/domain/lead-state.ts": {
+    "mtime": 1790257432.26134,
+    "seen": 1790613036.89045,
+    "ast_hash": "9e2c5cc432ace3e42f0b054ba85924ac",
+    "semantic_hash": ""
+  },
+  "apps/api/src/domain/slot-token.ts": {
+    "mtime": 1790257432.2623377,
+    "seen": 1790613036.890451,
+    "ast_hash": "b371b933db4158a3094770cb1f1e057e",
+    "semantic_hash": ""
+  },
+  "apps/api/src/domain/value-objects.test.ts": {
+    "mtime": 1790166807.445862,
+    "seen": 1790613036.8904521,
+    "ast_hash": "f5de6c4ce2c22d8fd5ad39b403938bba",
+    "semantic_hash": ""
+  },
+  "apps/api/src/domain/value-objects.ts": {
+    "mtime": 1790166806.9338138,
+    "seen": 1790613036.890453,
+    "ast_hash": "ed59bb38bcaf2b73592809ffc80feb47",
+    "semantic_hash": ""
+  },
+  "apps/api/src/followups/followups.controller.ts": {
+    "mtime": 1790257432.2623377,
+    "seen": 1790613036.8904543,
+    "ast_hash": "af1da0e34dfe0c6b7ea7e4269560cb1a",
+    "semantic_hash": ""
+  },
+  "apps/api/src/followups/followups.module.ts": {
+    "mtime": 1790257432.2633388,
+    "seen": 1790613036.8904552,
+    "ast_hash": "74051ce5514f3c8fc2a538ea5ca60505",
+    "semantic_hash": ""
+  },
+  "apps/api/src/followups/followups.service.ts": {
+    "mtime": 1790257432.2643392,
+    "seen": 1790613036.8904564,
+    "ast_hash": "67e8b4e309c57f4f6846386af2726662",
+    "semantic_hash": ""
+  },
+  "apps/api/src/health/health.controller.ts": {
+    "mtime": 1790157129.361273,
+    "seen": 1790613036.8904576,
+    "ast_hash": "2a4e3fb1e90770297b7ee838c071f257",
+    "semantic_hash": ""
+  },
+  "apps/api/src/health/health.module.ts": {
+    "mtime": 1790157190.0319767,
+    "seen": 1790613036.8904583,
+    "ast_hash": "95db8fedc381a854561b025a6b974690",
+    "semantic_hash": ""
+  },
+  "apps/api/src/knowledge/chunk.test.ts": {
+    "mtime": 1790257432.2643392,
+    "seen": 1790613036.8904593,
+    "ast_hash": "b2c78b4606a9b01f59433b61449e18d1",
+    "semantic_hash": ""
+  },
+  "apps/api/src/knowledge/knowledge.controller.ts": {
+    "mtime": 1790257432.2643392,
+    "seen": 1790613036.8904607,
+    "ast_hash": "97430eabf64f39369cb08496362a8657",
+    "semantic_hash": ""
+  },
+  "apps/api/src/knowledge/knowledge.module.ts": {
+    "mtime": 1790257432.2653387,
+    "seen": 1790613036.8904614,
+    "ast_hash": "54180ca0cb4b23eb2cc503ce638c26d0",
+    "semantic_hash": ""
+  },
+  "apps/api/src/knowledge/knowledge.service.ts": {
+    "mtime": 1790257432.2653387,
+    "seen": 1790613036.8904626,
+    "ast_hash": "da3be4aaf705ef405d9306562b0a2432",
+    "semantic_hash": ""
+  },
+  "apps/api/src/leads/lead-merge.ts": {
+    "mtime": 1790257432.2663379,
+    "seen": 1790613036.8904638,
+    "ast_hash": "82f8aa7abee087f8f0d7f0bed6549981",
+    "semantic_hash": ""
+  },
+  "apps/api/src/leads/leads.controller.ts": {
+    "mtime": 1790257432.2663379,
+    "seen": 1790613036.8904645,
+    "ast_hash": "9ed739dfef8417b84443795bcb673830",
+    "semantic_hash": ""
+  },
+  "apps/api/src/leads/leads.module.ts": {
+    "mtime": 1790257432.2673383,
+    "seen": 1790613036.8904657,
+    "ast_hash": "59e55cacaa65c159d686901299435fe6",
+    "semantic_hash": ""
+  },
+  "apps/api/src/leads/leads.service.ts": {
+    "mtime": 1790257432.268339,
+    "seen": 1790613036.8904672,
+    "ast_hash": "0339c93f3e10fa3802eb70dbf6f97640",
+    "semantic_hash": ""
+  },
+  "apps/api/src/main.ts": {
+    "mtime": 1790524752.9614143,
+    "seen": 1790613036.8904681,
+    "ast_hash": "da2f277e90523bf6fc11b7b3079f3980",
+    "semantic_hash": ""
+  },
+  "apps/api/src/messaging/channels.controller.ts": {
+    "mtime": 1790257432.2693403,
+    "seen": 1790613036.890469,
+    "ast_hash": "e40596c4f2a9bab562a13abff868e53b",
+    "semantic_hash": ""
+  },
+  "apps/api/src/messaging/fake-channel.test.ts": {
+    "mtime": 1790257432.2693403,
+    "seen": 1790613036.89047,
+    "ast_hash": "f7b5de8051c231bc64c15908a46f5c2a",
+    "semantic_hash": ""
+  },
+  "apps/api/src/messaging/fake-channel.ts": {
+    "mtime": 1790257432.2703385,
+    "seen": 1790613036.8904712,
+    "ast_hash": "ac2e3f7282d9b11b7ea7f2fa70f36f71",
+    "semantic_hash": ""
+  },
+  "apps/api/src/messaging/inbound.service.ts": {
+    "mtime": 1790257432.2703385,
+    "seen": 1790613036.8904722,
+    "ast_hash": "bd474818875cd5217dd15043d6edfe24",
+    "semantic_hash": ""
+  },
+  "apps/api/src/messaging/messaging-channel.ts": {
+    "mtime": 1790257432.271342,
+    "seen": 1790613036.8904731,
+    "ast_hash": "f3f15ffe8ee52d5f9ef5a70f32b6ea8c",
+    "semantic_hash": ""
+  },
+  "apps/api/src/messaging/messaging.module.ts": {
+    "mtime": 1790257432.271342,
+    "seen": 1790613036.8904743,
+    "ast_hash": "a00a1e338933f2471cd0cc116abfa996",
+    "semantic_hash": ""
+  },
+  "apps/api/src/messaging/meta-whatsapp.channel.ts": {
+    "mtime": 1790257432.271342,
+    "seen": 1790613036.8904753,
+    "ast_hash": "e4a6f22626f12324353719328d6ac708",
+    "semantic_hash": ""
+  },
+  "apps/api/src/messaging/whatsapp-webhook.controller.ts": {
+    "mtime": 1790257432.2723427,
+    "seen": 1790613036.890476,
+    "ast_hash": "d2f280d9ca032b31ac9f54c71d6886ae",
+    "semantic_hash": ""
+  },
+  "apps/api/src/messaging/whatsapp-webhook.service.ts": {
+    "mtime": 1790257432.2723427,
+    "seen": 1790613036.890477,
+    "ast_hash": "502a21b8227dc6acb3fa2a0245fa4cc3",
+    "semantic_hash": ""
+  },
+  "apps/api/src/organizations/membership-rules.test.ts": {
+    "mtime": 1790157192.26026,
+    "seen": 1790613036.8904784,
+    "ast_hash": "b2e1435f193154c20983878628dd32a7",
+    "semantic_hash": ""
+  },
+  "apps/api/src/organizations/organization-onboarding.test.ts": {
+    "mtime": 1790612553.4439201,
+    "seen": 1790613036.8904793,
+    "ast_hash": "1061daea78704cad17e2d31a6719a6e0",
+    "semantic_hash": ""
+  },
+  "apps/api/src/organizations/organization-profile-capabilities.test.ts": {
+    "mtime": 1790611415.9794426,
+    "seen": 1790613036.8904803,
+    "ast_hash": "eeb8858fdb03748176637a0ba77b9bb5",
+    "semantic_hash": ""
+  },
+  "apps/api/src/organizations/organizations.controller.ts": {
+    "mtime": 1790612445.9123278,
+    "seen": 1790613036.8904812,
+    "ast_hash": "acaa35b07df01ebc8db2805ef35274f2",
+    "semantic_hash": ""
+  },
+  "apps/api/src/organizations/organizations.module.ts": {
+    "mtime": 1790157176.717587,
+    "seen": 1790613036.8904822,
+    "ast_hash": "7360f09022c2144d3a34c11bf9ab05f0",
+    "semantic_hash": ""
+  },
+  "apps/api/src/organizations/organizations.service.ts": {
+    "mtime": 1790612404.2549522,
+    "seen": 1790613036.8904831,
+    "ast_hash": "a30850bd74d11e373f2ecc6c0b0c31d6",
+    "semantic_hash": ""
+  },
+  "apps/api/src/templates/templates.controller.ts": {
+    "mtime": 1790257432.2733388,
+    "seen": 1790613036.8904843,
+    "ast_hash": "225c545a55fb966b0a3ba46f8e7a9420",
+    "semantic_hash": ""
+  },
+  "apps/api/src/templates/templates.module.ts": {
+    "mtime": 1790257432.2733388,
+    "seen": 1790613036.8904853,
+    "ast_hash": "9e5c630b358fc06fdaf29654ea25c1bd",
+    "semantic_hash": ""
+  },
+  "apps/api/src/templates/templates.service.ts": {
+    "mtime": 1790257432.274343,
+    "seen": 1790613036.8904872,
+    "ast_hash": "c2614e4a0cbb1fffb2bfb73ec7293627",
+    "semantic_hash": ""
+  },
+  "apps/api/test/integration/phase02-core-domain.test.ts": {
+    "mtime": 1790257432.2753437,
+    "seen": 1790613036.8904886,
+    "ast_hash": "8d1b5b92a6b772011d3b51bc73238eec",
+    "semantic_hash": ""
+  },
+  "apps/api/test/integration/phase03-conversations.test.ts": {
+    "mtime": 1790257432.2753437,
+    "seen": 1790613036.8904893,
+    "ast_hash": "3ce0d28ee980572b56964ad81d45f3a1",
+    "semantic_hash": ""
+  },
+  "apps/api/test/integration/phase04-agent-core.test.ts": {
+    "mtime": 1790257432.2773378,
+    "seen": 1790613036.8904903,
+    "ast_hash": "e80556cda9087a19b90cc5fb61138e4a",
+    "semantic_hash": ""
+  },
+  "apps/api/test/integration/phase05-knowledge.test.ts": {
+    "mtime": 1790257432.2773378,
+    "seen": 1790613036.890492,
+    "ast_hash": "422bbb900c31181219482becfd49e548",
+    "semantic_hash": ""
+  },
+  "apps/api/test/integration/phase05-retrieval-threshold.test.ts": {
+    "mtime": 1790257432.2773378,
+    "seen": 1790613036.8904927,
+    "ast_hash": "c5ab59b77ddb2710ca41706b6848db87",
+    "semantic_hash": ""
+  },
+  "apps/api/test/integration/phase06-leads.test.ts": {
+    "mtime": 1790257432.278805,
+    "seen": 1790613036.8904936,
+    "ast_hash": "05335341d94f15a00e56a14c5a0ff1a9",
+    "semantic_hash": ""
+  },
+  "apps/api/test/integration/phase07-bookings.test.ts": {
+    "mtime": 1790257432.278805,
+    "seen": 1790613036.8904948,
+    "ast_hash": "2dfe1c4b56155a3f6b4baa13e9073c7f",
+    "semantic_hash": ""
+  },
+  "apps/api/test/integration/phase08-whatsapp.test.ts": {
+    "mtime": 1790257432.2798104,
+    "seen": 1790613036.8904958,
+    "ast_hash": "ce95f4a32db2b75a7d3a7378c1db0c0d",
+    "semantic_hash": ""
+  },
+  "apps/api/test/integration/phase09-human-takeover.test.ts": {
+    "mtime": 1790257432.2798104,
+    "seen": 1790613036.8904967,
+    "ast_hash": "8b62d696d394ce201fc3cab2d1061bbb",
+    "semantic_hash": ""
+  },
+  "apps/api/test/integration/phase10-followups.test.ts": {
+    "mtime": 1790257432.280826,
+    "seen": 1790613036.8904977,
+    "ast_hash": "31141e5f4d9cb22bf6f3d619ee0239c3",
+    "semantic_hash": ""
+  },
+  "apps/api/test/integration/phase11-dashboard.test.ts": {
+    "mtime": 1790257432.280826,
+    "seen": 1790613036.8904989,
+    "ast_hash": "405bf228a21b93c4dfc599a99abd3fec",
+    "semantic_hash": ""
+  },
+  "apps/api/test/integration/phase12-analytics.test.ts": {
+    "mtime": 1790258998.793082,
+    "seen": 1790613036.8904996,
+    "ast_hash": "bab9ea61574197c2ccb405f79e7074ee",
+    "semantic_hash": ""
+  },
+  "apps/api/test/integration/tenant-isolation.test.ts": {
+    "mtime": 1790257432.281833,
+    "seen": 1790613036.8905005,
+    "ast_hash": "59fd7aa665d0a4b76fc8740816942bb4",
+    "semantic_hash": ""
+  },
+  "apps/api/test/setup-env.ts": {
+    "mtime": 1790258994.2866998,
+    "seen": 1790613036.890502,
+    "ast_hash": "75b883c7268418c12e8aee173cfc0e4a",
+    "semantic_hash": ""
+  },
+  "apps/api/tsconfig.json": {
+    "mtime": 1790270372.076992,
+    "seen": 1790613036.8905027,
+    "ast_hash": "f3a57382ac0d4fdadfa34141d3f51e31",
+    "semantic_hash": ""
+  },
+  "apps/web/next-env.d.ts": {
+    "mtime": 1790524752.9619336,
+    "seen": 1790613036.8905036,
+    "ast_hash": "0e4a65e8b2b9aa3ed0f8957b9406bd41",
+    "semantic_hash": ""
+  },
+  "apps/web/next.config.ts": {
+    "mtime": 1790157204.430463,
+    "seen": 1790613036.8905046,
+    "ast_hash": "c722415cf451bf56820ee9dd37b2370b",
+    "semantic_hash": ""
+  },
+  "apps/web/package.json": {
+    "mtime": 1790157199.8358984,
+    "seen": 1790613036.8905058,
+    "ast_hash": "40bdfef59c131ac32fac79f85f656b90",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/analytics/page.tsx": {
+    "mtime": 1790258185.3801575,
+    "seen": 1790613036.8905065,
+    "ast_hash": "eb0c3b62d8763dc9dca8ef94a6b9473a",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/me/route.ts": {
+    "mtime": 1790157211.8540478,
+    "seen": 1790613036.8905077,
+    "ast_hash": "44896ee8b9b0e270801f8e394bace9fe",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/analytics/overview/route.ts": {
+    "mtime": 1790258184.9818013,
+    "seen": 1790613036.8905091,
+    "ast_hash": "30285bb824c027ecb5f7dd4e5d928c5c",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/availability/route.ts": {
+    "mtime": 1790257432.282833,
+    "seen": 1790613036.89051,
+    "ast_hash": "0984a2eceafb0fd617c3f8edc5a1d3c7",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/bookings/[[...path]]/route.ts": {
+    "mtime": 1790257432.282833,
+    "seen": 1790613036.890511,
+    "ast_hash": "f90c55c347cb0fdb73d2691bdb33a721",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/capabilities/route.ts": {
+    "mtime": 1790612716.093495,
+    "seen": 1790613036.8905122,
+    "ast_hash": "8bd3e80dbac5b229d3bc429703c10fd9",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/channels/[[...path]]/route.ts": {
+    "mtime": 1790257432.2838337,
+    "seen": 1790613036.8905134,
+    "ast_hash": "fd4c69848a21417f152e70c3a9ff21a6",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/conversations/[[...path]]/route.ts": {
+    "mtime": 1790257432.2848697,
+    "seen": 1790613036.8905144,
+    "ast_hash": "a3a4248dcea4ed7f32f3b62706ecdfae",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/conversations/events/route.ts": {
+    "mtime": 1790257432.2858734,
+    "seen": 1790613036.8905156,
+    "ast_hash": "bc0c24d0c9e53e8a6ff4b4d73b7025cd",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/dashboard/route.ts": {
+    "mtime": 1790257432.2858734,
+    "seen": 1790613036.8905165,
+    "ast_hash": "fdb30a718852d3d9c33288b1543bcac9",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/follow-ups/[[...path]]/route.ts": {
+    "mtime": 1790257432.286874,
+    "seen": 1790613036.8905175,
+    "ast_hash": "054ec1a79357ef7d35fd7dc9dc6a38a9",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/knowledge/[[...path]]/route.ts": {
+    "mtime": 1790257432.2878764,
+    "seen": 1790613036.8905184,
+    "ast_hash": "764eecadafe73c4798926be6a550bb06",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/leads/[[...path]]/route.ts": {
+    "mtime": 1790257432.2888744,
+    "seen": 1790613036.8905194,
+    "ast_hash": "52fb1e35d11b9b9be870d28bf5f14377",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/message-templates/[[...path]]/route.ts": {
+    "mtime": 1790257432.2898743,
+    "seen": 1790613036.8905203,
+    "ast_hash": "aaa4880064c7ed9037d1a0996e15463d",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/onboarding-progress/route.ts": {
+    "mtime": 1790612694.7868185,
+    "seen": 1790613036.890521,
+    "ast_hash": "6f6c211d7955b01ec485413c1ed05bb1",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/onboarding/complete/route.ts": {
+    "mtime": 1790612701.1771011,
+    "seen": 1790613036.890522,
+    "ast_hash": "d8aea8522a8d9389122137eed04ec1b7",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/onboarding/route.ts": {
+    "mtime": 1790612688.186713,
+    "seen": 1790613036.8905232,
+    "ast_hash": "359da7bfaa0afbdd17f5bab83161897d",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/profile/route.ts": {
+    "mtime": 1790612708.2829547,
+    "seen": 1790613036.890524,
+    "ast_hash": "1402afeccb62ec2bca55886cb45851f1",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/backend/organizations/[organizationId]/schedule/[[...path]]/route.ts": {
+    "mtime": 1790257432.2898743,
+    "seen": 1790613036.8905246,
+    "ast_hash": "acd7259136c400ac9c6e5b077e280821",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/app/page.tsx": {
+    "mtime": 1790257432.2908742,
+    "seen": 1790613036.8905256,
+    "ast_hash": "ea9185f4a69bc0be58087523f962103c",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/auth/callback/route.ts": {
+    "mtime": 1790160294.8708699,
+    "seen": 1790613036.8905268,
+    "ast_hash": "0259e310daf83d0cf1e91b6fb20822bd",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/bookings/page.tsx": {
+    "mtime": 1790257432.291874,
+    "seen": 1790613036.8905277,
+    "ast_hash": "06b3af10025bbfdb68c1cfcf7128bdab",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/dashboard/page.tsx": {
+    "mtime": 1790257432.291874,
+    "seen": 1790613036.8905287,
+    "ast_hash": "a0218771f2040a981114bd0a62877b24",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/follow-ups/page.tsx": {
+    "mtime": 1790257432.292874,
+    "seen": 1790613036.8905299,
+    "ast_hash": "d912381c1c793ca2eaeb5ee3182ead69",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/global-error.tsx": {
+    "mtime": 1790257432.292874,
+    "seen": 1790613036.890531,
+    "ast_hash": "205e72d6a8fd6e3b5f2f8cf9619b5d62",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/inbox/page.tsx": {
+    "mtime": 1790257432.2938743,
+    "seen": 1790613036.890532,
+    "ast_hash": "83715f4c6b07d27647b5c2443d7a4c87",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/knowledge/page.tsx": {
+    "mtime": 1790257432.2938743,
+    "seen": 1790613036.8905332,
+    "ast_hash": "efad0cb6508e488127922adeab145111",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/layout.tsx": {
+    "mtime": 1790257432.2948744,
+    "seen": 1790613036.890534,
+    "ast_hash": "61877140992c5e0ca9733f0fa9d55110",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/leads/page.tsx": {
+    "mtime": 1790257432.2948744,
+    "seen": 1790613036.8905349,
+    "ast_hash": "b30e76fb69118fbea742f0c6c40ba765",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/login/page.tsx": {
+    "mtime": 1790157220.6010532,
+    "seen": 1790613036.8905356,
+    "ast_hash": "45a42a9322fb51a86ae819c8b18e60e3",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/onboarding/page.tsx": {
+    "mtime": 1790612781.3741598,
+    "seen": 1790613036.8905368,
+    "ast_hash": "a0a232d3cf6196b12ea28008415d3439",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/page.tsx": {
+    "mtime": 1790612796.9440649,
+    "seen": 1790613036.8905375,
+    "ast_hash": "9d02803f5e1c2e7f6cd6db94da809056",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/schedule/page.tsx": {
+    "mtime": 1790257432.2963648,
+    "seen": 1790613036.890539,
+    "ast_hash": "4c530bdce763d83424ff1a81bd3b9ea1",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/settings/channels/page.tsx": {
+    "mtime": 1790257432.2974148,
+    "seen": 1790613036.89054,
+    "ast_hash": "b78de4873280043ca17feb8ac6663276",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/settings/templates/page.tsx": {
+    "mtime": 1790257432.2979655,
+    "seen": 1790613036.8905408,
+    "ast_hash": "32383120c42d3234f5e2829c29a4c45b",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/unauthorized/page.tsx": {
+    "mtime": 1790157222.2829027,
+    "seen": 1790613036.890542,
+    "ast_hash": "f38dbf8ba959c5e1d6319c8755bd0e2e",
+    "semantic_hash": ""
+  },
+  "apps/web/src/components/OperatorNav.tsx": {
+    "mtime": 1790258185.618047,
+    "seen": 1790613036.8905427,
+    "ast_hash": "9be722fe05a2529eec65599ac150a321",
+    "semantic_hash": ""
+  },
+  "apps/web/src/lib/dashboard-refresh.test.ts": {
+    "mtime": 1790257432.2989733,
+    "seen": 1790613036.890544,
+    "ast_hash": "6b67a4ec4e90d8e20780b5cd3c495111",
+    "semantic_hash": ""
+  },
+  "apps/web/src/lib/dashboard-refresh.ts": {
+    "mtime": 1790257432.2989733,
+    "seen": 1790613036.890545,
+    "ast_hash": "24a08194f1f74095a9febcfb86f445ae",
+    "semantic_hash": ""
+  },
+  "apps/web/src/lib/supabase/browser.ts": {
+    "mtime": 1790157211.6520526,
+    "seen": 1790613036.8905458,
+    "ast_hash": "18545850d1f22466cf8342b0d8ea54c6",
+    "semantic_hash": ""
+  },
+  "apps/web/src/lib/supabase/server.ts": {
+    "mtime": 1790157208.3760848,
+    "seen": 1790613036.8905468,
+    "ast_hash": "68e0f30a33e4e5e02f1e60eb43a074d1",
+    "semantic_hash": ""
+  },
+  "apps/web/src/proxy.ts": {
+    "mtime": 1790612745.3256366,
+    "seen": 1790613036.8905478,
+    "ast_hash": "f68fb88af02422fb0c084e74a05f865e",
+    "semantic_hash": ""
+  },
+  "apps/web/tsconfig.json": {
+    "mtime": 1790257432.2999809,
+    "seen": 1790613036.8905487,
+    "ast_hash": "3ae1544af7b072174507ac15823e13be",
+    "semantic_hash": ""
+  },
+  "apps/worker/package.json": {
+    "mtime": 1790263318.4676275,
+    "seen": 1790613036.8905497,
+    "ast_hash": "305d7e1a4987d8fdeda803af5168ab1f",
+    "semantic_hash": ""
+  },
+  "apps/worker/src/chunk-text.js": {
+    "mtime": 1790257432.3009808,
+    "seen": 1790613036.8905509,
+    "ast_hash": "4a255c25d81078fc2ddb176dbca77167",
+    "semantic_hash": ""
+  },
+  "apps/worker/src/chunk-text.ts": {
+    "mtime": 1790257432.3019779,
+    "seen": 1790613036.8905516,
+    "ast_hash": "62cec56e0960e44a4aa75bdb7b0b467d",
+    "semantic_hash": ""
+  },
+  "apps/worker/src/knowledge-jobs.ts": {
+    "mtime": 1790261261.6830087,
+    "seen": 1790613036.8905525,
+    "ast_hash": "43ac60324d741505ca348a10040b2258",
+    "semantic_hash": ""
+  },
+  "apps/worker/src/main.ts": {
+    "mtime": 1790524752.9629822,
+    "seen": 1790613036.8905537,
+    "ast_hash": "d9b23d6e2efa941066217f046b108cdb",
+    "semantic_hash": ""
+  },
+  "apps/worker/tsconfig.json": {
+    "mtime": 1790157231.9535282,
+    "seen": 1790613036.8905547,
+    "ast_hash": "e22b79007af0b37a2092c71b7010cdd7",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/pre-p14-patch-validation-results.json": {
+    "mtime": 1790524752.964534,
+    "seen": 1790613036.8905556,
+    "ast_hash": "f0995ca6968487fd818b1ba767fae215",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/pre-p14-protocol-audit-results.json": {
+    "mtime": 1790524752.965049,
+    "seen": 1790613036.8905642,
+    "ast_hash": "f2bda3befcb6fffc835d56d31b6793cd",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/_checks/validate_docs.py": {
+    "mtime": 1790152490.415894,
+    "seen": 1790613036.8905652,
+    "ast_hash": "11a4c1cd8eb2639ae5a260ab1a20c6b5",
+    "semantic_hash": ""
+  },
+  "package.json": {
+    "mtime": 1790601647.9266248,
+    "seen": 1790613036.8905663,
+    "ast_hash": "38ff870b498383cad97131a27a6ee418",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/package.json": {
+    "mtime": 1790601647.9271474,
+    "seen": 1790613036.890567,
+    "ast_hash": "375eb97720e20f5c3a3a80c7c26390b9",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/ai-emergency-kill.test.ts": {
+    "mtime": 1790265935.1907165,
+    "seen": 1790613036.890568,
+    "ast_hash": "5eebcb3c18a92cdce7ee19ed7afa1832",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/ai-emergency-kill.ts": {
+    "mtime": 1790265248.558013,
+    "seen": 1790613036.8905692,
+    "ast_hash": "0cf1913de739f49d05f99243cf8caaec",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/booking-time.test.ts": {
+    "mtime": 1790257432.3338375,
+    "seen": 1790613036.8905704,
+    "ast_hash": "77bdac45cde30fde833e19d0a1810a8a",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/booking-time.ts": {
+    "mtime": 1790257432.3338375,
+    "seen": 1790613036.8905716,
+    "ast_hash": "bda7aae7126b19ffa096b211dc3ce5bb",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/booking-tools.ts": {
+    "mtime": 1790611257.2565873,
+    "seen": 1790613036.8905728,
+    "ast_hash": "62bb6175c9ab42a563ff53b892a34260",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/conversation-working-state.test.ts": {
+    "mtime": 1790603934.3751378,
+    "seen": 1790613036.8905737,
+    "ast_hash": "7665680c83ec848ada48c6dfda9ca574",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/conversation-working-state.ts": {
+    "mtime": 1790603934.1339633,
+    "seen": 1790613036.8905747,
+    "ast_hash": "f47ec280dc4a8acfdcf43362a9f608ac",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/followups/execute-followup.ts": {
+    "mtime": 1790257432.334839,
+    "seen": 1790613036.8905756,
+    "ast_hash": "ea95c90b5428a42b463f312310eec093",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/followups/quiet-hours.ts": {
+    "mtime": 1790257432.3358395,
+    "seen": 1790613036.8905766,
+    "ast_hash": "eeac0b8f6f87f36c1b530a56ddd248a0",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/index.ts": {
+    "mtime": 1790524752.9711077,
+    "seen": 1790613036.890578,
+    "ast_hash": "5ee40f49ff8df9b0f4d32b6aa529e713",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/lead-tools.ts": {
+    "mtime": 1790529578.6049676,
+    "seen": 1790613036.890579,
+    "ast_hash": "a02e7593e88564aa88a5256d7e24ba16",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/lease-heartbeat.test.ts": {
+    "mtime": 1790524752.9721143,
+    "seen": 1790613036.89058,
+    "ast_hash": "dc2e2e996800f1f90774ee0d67c8c014",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/mb01-capability-enforcement.test.ts": {
+    "mtime": 1790611456.0890667,
+    "seen": 1790613036.8905823,
+    "ast_hash": "145a278f9744f02cae906aa50f2e633e",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/messaging/messaging-channel.ts": {
+    "mtime": 1790257432.3368368,
+    "seen": 1790613036.890583,
+    "ast_hash": "b4b900c412262209dcf2bd0a1a0bda7b",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/messaging/meta-whatsapp.channel.ts": {
+    "mtime": 1790257432.3378382,
+    "seen": 1790613036.890584,
+    "ast_hash": "86a4f19739e6fc7c9c8b6bf2a421ae8f",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/messaging/outbound-dispatch.ts": {
+    "mtime": 1790257432.3378382,
+    "seen": 1790613036.890585,
+    "ast_hash": "a034d5ad4b0bd0eddbc772d76fc065e9",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/messaging/whatsapp.test.ts": {
+    "mtime": 1790257432.3388374,
+    "seen": 1790613036.890586,
+    "ast_hash": "20ab09d295af9c6f5b44ff495d4f0125",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/pg-run-store.ts": {
+    "mtime": 1790606287.9213428,
+    "seen": 1790613036.8905866,
+    "ast_hash": "609aaa0166d7c749a7866f79640db5da",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/run-conversation-agent.ts": {
+    "mtime": 1790611350.3979263,
+    "seen": 1790613036.8905876,
+    "ast_hash": "086af577cd0672458918524675604c86",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/service-search.test.ts": {
+    "mtime": 1790524752.9737134,
+    "seen": 1790613036.8905888,
+    "ast_hash": "40b2cb227cb912b233245ec73a564157",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/service-search.ts": {
+    "mtime": 1790524752.97472,
+    "seen": 1790613036.8905895,
+    "ast_hash": "0759cd684aa8d081ee390642c128030c",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/slot-token.ts": {
+    "mtime": 1790257432.3398383,
+    "seen": 1790613036.8905907,
+    "ast_hash": "ff55b1dd2426db94fb0bc4a70f4e50cd",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/tool-contract-hardening.test.ts": {
+    "mtime": 1790601647.92983,
+    "seen": 1790613036.8905914,
+    "ast_hash": "74c4cc181b353e555b2477791dac7be9",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/tool-executor.ts": {
+    "mtime": 1790611332.2735329,
+    "seen": 1790613036.8905926,
+    "ast_hash": "abecb91152c8d186f8eb5de55ec67c9e",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/src/uuid-validator.ts": {
+    "mtime": 1790524752.9787183,
+    "seen": 1790613036.8905933,
+    "ast_hash": "503896483bc0f405c75b3b5fcc0c6240",
+    "semantic_hash": ""
+  },
+  "packages/agent-adapters/tsconfig.json": {
+    "mtime": 1790265934.3323662,
+    "seen": 1790613036.8905942,
+    "ast_hash": "c733e7c52366083c0bd7cff636971ed2",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/package.json": {
+    "mtime": 1790524752.9787183,
+    "seen": 1790613036.890595,
+    "ast_hash": "d0a8ad89042c1acc5022f31af15404a7",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/agent-decision-contract.test.ts": {
+    "mtime": 1790601647.9308815,
+    "seen": 1790613036.8905962,
+    "ast_hash": "d9e7f20887ecdaa0f49e5d80750d4353",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/context-builder.ts": {
+    "mtime": 1790611203.4641085,
+    "seen": 1790613036.890597,
+    "ast_hash": "b7b90ac67bdd300c59a7f3f16776d5fc",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/demo-scripted-provider.test.ts": {
+    "mtime": 1790269689.2727451,
+    "seen": 1790613036.8905978,
+    "ast_hash": "f4a737958537a0818ce199bf7bd7fc23",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/demo-scripted-provider.ts": {
+    "mtime": 1790269715.8392007,
+    "seen": 1790613036.890599,
+    "ast_hash": "a49be6baac0c591052d837cd42cf4de6",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/fake-provider.ts": {
+    "mtime": 1790257432.342836,
+    "seen": 1790613036.8905997,
+    "ast_hash": "9f3bf09dfbc392543422fd7462fc14aa",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/index.test.ts": {
+    "mtime": 1790607693.7178688,
+    "seen": 1790613036.8906007,
+    "ast_hash": "03cda550c08a41ae77b3afe892ff887f",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/index.ts": {
+    "mtime": 1790524752.9811025,
+    "seen": 1790613036.8906014,
+    "ast_hash": "95d5321aa5b6920b8279ca34f662205b",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/local-provider-guard.test.ts": {
+    "mtime": 1790524752.9811025,
+    "seen": 1790613036.8906026,
+    "ast_hash": "47a0fac00a699642738e9887734c9d83",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/local-provider-guard.ts": {
+    "mtime": 1790530117.5525568,
+    "seen": 1790613036.8906035,
+    "ast_hash": "cbf23143ffe0081a9af51617e266732b",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/openai-compatible.test.ts": {
+    "mtime": 1790534300.3162277,
+    "seen": 1790613036.8906043,
+    "ast_hash": "a354d05eb1d5b44ff761350770d2062d",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/openai-compatible.ts": {
+    "mtime": 1790534567.2504792,
+    "seen": 1790613036.8906052,
+    "ast_hash": "025da480d270438fa3a8f86ddc1b05b2",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/orchestrator.ts": {
+    "mtime": 1790607675.9507773,
+    "seen": 1790613036.8906062,
+    "ast_hash": "6822b60ace99e7d46c9bca6c690688b0",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/output-claim.ts": {
+    "mtime": 1790257432.345119,
+    "seen": 1790613036.890607,
+    "ast_hash": "44a9c15e8c1023d7bb2ba0e91e21e1d0",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/ports.ts": {
+    "mtime": 1790611179.3502686,
+    "seen": 1790613036.890608,
+    "ast_hash": "e87a88ce0f85efd10f79608fd9b425e2",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/run-key.ts": {
+    "mtime": 1790257432.346118,
+    "seen": 1790613036.8906088,
+    "ast_hash": "aa0f0622b0519b78078d251d52be6346",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/src/summary-cas.ts": {
+    "mtime": 1790257432.346118,
+    "seen": 1790613036.89061,
+    "ast_hash": "88e8ae2d0318244214b1a269860e4762",
+    "semantic_hash": ""
+  },
+  "packages/agent-core/tsconfig.json": {
+    "mtime": 1790257432.3471186,
+    "seen": 1790613036.890611,
+    "ast_hash": "c733e7c52366083c0bd7cff636971ed2",
+    "semantic_hash": ""
+  },
+  "packages/config/package.json": {
+    "mtime": 1790157017.8652089,
+    "seen": 1790613036.890612,
+    "ast_hash": "ae0525dd7cf653477de96d3d425cda36",
+    "semantic_hash": ""
+  },
+  "packages/config/src/index.test.ts": {
+    "mtime": 1790257432.3481188,
+    "seen": 1790613036.8906128,
+    "ast_hash": "e17342bb2127b5e91d716eca1fcd58a5",
+    "semantic_hash": ""
+  },
+  "packages/config/src/index.ts": {
+    "mtime": 1790270733.6645179,
+    "seen": 1790613036.8906138,
+    "ast_hash": "7f5b0474509a435502c0070849fb9b72",
+    "semantic_hash": ""
+  },
+  "packages/config/tsconfig.json": {
+    "mtime": 1790157511.4123812,
+    "seen": 1790613036.8906145,
+    "ast_hash": "c733e7c52366083c0bd7cff636971ed2",
+    "semantic_hash": ""
+  },
+  "packages/contracts/package.json": {
+    "mtime": 1790524752.9856465,
+    "seen": 1790613036.8906155,
+    "ast_hash": "f98da3f9e13e6a2c6f76a3271dd87f04",
+    "semantic_hash": ""
+  },
+  "packages/contracts/src/agent.ts": {
+    "mtime": 1790257432.3491192,
+    "seen": 1790613036.8906167,
+    "ast_hash": "613c880adde39bd9c459d8adfc48a73e",
+    "semantic_hash": ""
+  },
+  "packages/contracts/src/index.ts": {
+    "mtime": 1790610968.928026,
+    "seen": 1790613036.8906174,
+    "ast_hash": "bb6d44aad40983bc33f7b6e89d7256aa",
+    "semantic_hash": ""
+  },
+  "packages/contracts/src/organization.ts": {
+    "mtime": 1790612105.2654035,
+    "seen": 1790613036.890618,
+    "ast_hash": "a9ca40c4462e46f09165b17c3a2c2f4b",
+    "semantic_hash": ""
+  },
+  "packages/contracts/tsconfig.json": {
+    "mtime": 1790157034.2412043,
+    "seen": 1790613036.890619,
+    "ast_hash": "2ae5ca29ba2adf994dfbfa88e93bd23a",
+    "semantic_hash": ""
+  },
+  "packages/embeddings/package.json": {
+    "mtime": 1790601647.9319334,
+    "seen": 1790613036.8906202,
+    "ast_hash": "4c97a106e66368f6aeb0c006484d1c3b",
+    "semantic_hash": ""
+  },
+  "packages/embeddings/src/bakeoff/golden-set.ts": {
+    "mtime": 1790257432.3511198,
+    "seen": 1790613036.8906212,
+    "ast_hash": "cad0116f1012f6c762f71954a4256b9c",
+    "semantic_hash": ""
+  },
+  "packages/embeddings/src/bakeoff/run-bakeoff.ts": {
+    "mtime": 1790257432.3511198,
+    "seen": 1790613036.8906221,
+    "ast_hash": "291f171dabdadf74e0bb2be787ed432c",
+    "semantic_hash": ""
+  },
+  "packages/embeddings/src/fake-provider.ts": {
+    "mtime": 1790257432.3521185,
+    "seen": 1790613036.890623,
+    "ast_hash": "b11ef35bef11951f8cc4327fe0c1e722",
+    "semantic_hash": ""
+  },
+  "packages/embeddings/src/index.test.ts": {
+    "mtime": 1790257432.3521185,
+    "seen": 1790613036.8906238,
+    "ast_hash": "9eb9f719b35ff92d5b47140e7cbf0688",
+    "semantic_hash": ""
+  },
+  "packages/embeddings/src/index.ts": {
+    "mtime": 1790257432.353119,
+    "seen": 1790613036.8906245,
+    "ast_hash": "595a2692a2388b969d759957eaf364b5",
+    "semantic_hash": ""
+  },
+  "packages/embeddings/src/local-qwen.ts": {
+    "mtime": 1790257432.353119,
+    "seen": 1790613036.8906255,
+    "ast_hash": "1cfd317a074333c84562f58d5ae57928",
+    "semantic_hash": ""
+  },
+  "packages/embeddings/src/openai-compatible.ts": {
+    "mtime": 1790257432.3541205,
+    "seen": 1790613036.8906262,
+    "ast_hash": "ff6722563047dc322a74acbee5700030",
+    "semantic_hash": ""
+  },
+  "packages/embeddings/src/ports.ts": {
+    "mtime": 1790257432.3541205,
+    "seen": 1790613036.8906271,
+    "ast_hash": "16d481769b1ec4598e71de0dd10dc6e0",
+    "semantic_hash": ""
+  },
+  "packages/embeddings/src/similarity.ts": {
+    "mtime": 1790257432.3541205,
+    "seen": 1790613036.890628,
+    "ast_hash": "f85075b68ed3c1e5fb62e1587fa37332",
+    "semantic_hash": ""
+  },
+  "packages/embeddings/tsconfig.json": {
+    "mtime": 1790257432.3551207,
+    "seen": 1790613036.890629,
+    "ast_hash": "2f1ba4dd8b16c6f247072d79f9a9f386",
+    "semantic_hash": ""
+  },
+  "packages/knowledge-chunking/package.json": {
+    "mtime": 1790257432.3561194,
+    "seen": 1790613036.89063,
+    "ast_hash": "e602b9468916e7d5b89cce9682b269ce",
+    "semantic_hash": ""
+  },
+  "packages/knowledge-chunking/src/chunk-v1.test.ts": {
+    "mtime": 1790257432.3571215,
+    "seen": 1790613036.890631,
+    "ast_hash": "24891d09add1bc50dea041b41b8c11e0",
+    "semantic_hash": ""
+  },
+  "packages/knowledge-chunking/src/chunk-v1.ts": {
+    "mtime": 1790257432.3571215,
+    "seen": 1790613036.8906317,
+    "ast_hash": "e0e69c7ccd6e3be27539ce84289b989d",
+    "semantic_hash": ""
+  },
+  "packages/knowledge-chunking/src/index.ts": {
+    "mtime": 1790257432.3581178,
+    "seen": 1790613036.8906324,
+    "ast_hash": "5ce03f8c96bc10073899067107f12401",
+    "semantic_hash": ""
+  },
+  "packages/knowledge-chunking/tsconfig.json": {
+    "mtime": 1790257432.3581178,
+    "seen": 1790613036.8906336,
+    "ast_hash": "c733e7c52366083c0bd7cff636971ed2",
+    "semantic_hash": ""
+  },
+  "packages/storage/package.json": {
+    "mtime": 1790257432.3581178,
+    "seen": 1790613036.8906343,
+    "ast_hash": "b81b672155a1140854fe7e951e8c4a3f",
+    "semantic_hash": ""
+  },
+  "packages/storage/src/blob-store.test.ts": {
+    "mtime": 1790257432.3591185,
+    "seen": 1790613036.8906353,
+    "ast_hash": "ad346cd1cbfcd3858fe5e110c207a79e",
+    "semantic_hash": ""
+  },
+  "packages/storage/src/blob-store.ts": {
+    "mtime": 1790257432.3601766,
+    "seen": 1790613036.890636,
+    "ast_hash": "3aee27bcab9162f0d05a50a0f2e65770",
+    "semantic_hash": ""
+  },
+  "packages/storage/src/index.ts": {
+    "mtime": 1790257432.3601766,
+    "seen": 1790613036.8906372,
+    "ast_hash": "d52e907943143217eaaa347f2f273003",
+    "semantic_hash": ""
+  },
+  "packages/storage/tsconfig.json": {
+    "mtime": 1790257432.3601766,
+    "seen": 1790613036.890638,
+    "ast_hash": "c733e7c52366083c0bd7cff636971ed2",
+    "semantic_hash": ""
+  },
+  "prisma.config.ts": {
+    "mtime": 1790269792.6256156,
+    "seen": 1790613036.8906388,
+    "ast_hash": "7595864b150f767011010fb5f4d1202b",
+    "semantic_hash": ""
+  },
+  "prisma/seed.ts": {
+    "mtime": 1790157243.8967376,
+    "seen": 1790613036.8906395,
+    "ast_hash": "f11c1874545a84a6e6c1a2e2d92128bb",
+    "semantic_hash": ""
+  },
+  "scripts/audit-phase13-db.ts": {
+    "mtime": 1790263258.4580338,
+    "seen": 1790613036.8906407,
+    "ast_hash": "8985223c320d07774be069f15913997b",
+    "semantic_hash": ""
+  },
+  "scripts/db-provision-runtime-role.ts": {
+    "mtime": 1790162491.7099037,
+    "seen": 1790613036.8906417,
+    "ast_hash": "9228461b6a15f9c47aace6453436e870",
+    "semantic_hash": ""
+  },
+  "scripts/db-reset-test.ts": {
+    "mtime": 1790157244.0494227,
+    "seen": 1790613036.8906424,
+    "ast_hash": "43403c627fdc276e0c3ef424419bf3fe",
+    "semantic_hash": ""
+  },
+  "scripts/dedupe-test-password.ts": {
+    "mtime": 1790164014.8673184,
+    "seen": 1790613036.8906434,
+    "ast_hash": "3041040d059a9a6981957cbc4050bd33",
+    "semantic_hash": ""
+  },
+  "scripts/demo/assert-local-demo-db.test.ts": {
+    "mtime": 1790272783.1003838,
+    "seen": 1790613036.8906446,
+    "ast_hash": "8c99b4d94d35ac21e8f2dbb883fa14bd",
+    "semantic_hash": ""
+  },
+  "scripts/demo/assert-local-demo-db.ts": {
+    "mtime": 1790272774.3190804,
+    "seen": 1790613036.8906455,
+    "ast_hash": "f0f784f4abd94631aaf9929a1542c3c6",
+    "semantic_hash": ""
+  },
+  "scripts/demo/availability-slots.test.ts": {
+    "mtime": 1790272816.1271992,
+    "seen": 1790613036.8906465,
+    "ast_hash": "1dccde0b486a07a00cadb31273328f0e",
+    "semantic_hash": ""
+  },
+  "scripts/demo/availability-slots.ts": {
+    "mtime": 1790272811.4431934,
+    "seen": 1790613036.8906474,
+    "ast_hash": "592aef3748aa136719e178b15468ace3",
+    "semantic_hash": ""
+  },
+  "scripts/demo/constants.ts": {
+    "mtime": 1790524752.9881525,
+    "seen": 1790613036.8906484,
+    "ast_hash": "f8bc51dfc1e963a549708c05fbf96f34",
+    "semantic_hash": ""
+  },
+  "scripts/demo/demo-docker.ts": {
+    "mtime": 1790601867.8693454,
+    "seen": 1790613036.890649,
+    "ast_hash": "07038e512b039eb7ffebab998b24e808",
+    "semantic_hash": ""
+  },
+  "scripts/demo/ensure-demo-env.ts": {
+    "mtime": 1790273598.6988945,
+    "seen": 1790613036.89065,
+    "ast_hash": "9f4fb900d77814e8be6ee0e3dcf17bcf",
+    "semantic_hash": ""
+  },
+  "scripts/demo/load-demo-cli-env.ts": {
+    "mtime": 1790601647.9324586,
+    "seen": 1790613036.8906512,
+    "ast_hash": "f533c24ed23bde988492238c2fab0844",
+    "semantic_hash": ""
+  },
+  "scripts/demo/prepare-local-migrate.ts": {
+    "mtime": 1790274259.415841,
+    "seen": 1790613036.890652,
+    "ast_hash": "41555bc22a94565e8591414b727d26d7",
+    "semantic_hash": ""
+  },
+  "scripts/demo/reseed.ts": {
+    "mtime": 1790272949.5076272,
+    "seen": 1790613036.890653,
+    "ast_hash": "fe938053e1c51a7a54861beb2e361685",
+    "semantic_hash": ""
+  },
+  "scripts/demo/reset-residual.test.ts": {
+    "mtime": 1790273029.6702726,
+    "seen": 1790613036.8906536,
+    "ast_hash": "659d2fb1603f693de477faf1701be89f",
+    "semantic_hash": ""
+  },
+  "scripts/demo/reset.ts": {
+    "mtime": 1790272934.7621064,
+    "seen": 1790613036.8906548,
+    "ast_hash": "6c4df6251e60a7284596bdf96d0d935f",
+    "semantic_hash": ""
+  },
+  "scripts/demo/residual.ts": {
+    "mtime": 1790272816.419744,
+    "seen": 1790613036.8906555,
+    "ast_hash": "8ff91d29056cd96e7d11a1a236f7c54f",
+    "semantic_hash": ""
+  },
+  "scripts/demo/seed.ts": {
+    "mtime": 1790273101.8987293,
+    "seen": 1790613036.8906567,
+    "ast_hash": "2a5056af7b15c39325c4c21033c4ff06",
+    "semantic_hash": ""
+  },
+  "scripts/demo/status.ts": {
+    "mtime": 1790272946.454784,
+    "seen": 1790613036.8906574,
+    "ast_hash": "b0ca39e240ef12213cdec029da87345d",
+    "semantic_hash": ""
+  },
+  "scripts/demo/verify.ts": {
+    "mtime": 1790272949.2972195,
+    "seen": 1790613036.8906589,
+    "ast_hash": "3ba317a6b7d2c295a4fa830508f2510b",
+    "semantic_hash": ""
+  },
+  "scripts/diagnose-outbox.ts": {
+    "mtime": 1790260007.9858758,
+    "seen": 1790613036.8906596,
+    "ast_hash": "54c9b13bcc2a5e5a5d53d2dbbaa499f4",
+    "semantic_hash": ""
+  },
+  "scripts/env-classify-lib.ts": {
+    "mtime": 1790160342.0336702,
+    "seen": 1790613036.8906605,
+    "ast_hash": "a09a1cf68bc22947b9b15194fb234410",
+    "semantic_hash": ""
+  },
+  "scripts/env-classify.ts": {
+    "mtime": 1790160342.03223,
+    "seen": 1790613036.8906617,
+    "ast_hash": "07c21dc0ffb873d27d41c2f97b432d5e",
+    "semantic_hash": ""
+  },
+  "scripts/explain-phase12.ts": {
+    "mtime": 1790260456.0308805,
+    "seen": 1790613036.8906624,
+    "ast_hash": "b4bd4b2da17006682c63a581c880fd22",
+    "semantic_hash": ""
+  },
+  "scripts/hosted-acceptance.ts": {
+    "mtime": 1790260303.6158948,
+    "seen": 1790613036.8906634,
+    "ast_hash": "f05a42618061e0cb707353e0b971239f",
+    "semantic_hash": ""
+  },
+  "scripts/load-local-env.ts": {
+    "mtime": 1790270739.781963,
+    "seen": 1790613036.890664,
+    "ast_hash": "9b1be9de98c948c30a62a0ee6d9087c2",
+    "semantic_hash": ""
+  },
+  "scripts/p13/image-smoke.ts": {
+    "mtime": 1790265372.213673,
+    "seen": 1790613036.8906653,
+    "ast_hash": "69451d1e560f0506e4438cf0d3337a2c",
+    "semantic_hash": ""
+  },
+  "scripts/p13/in-image-inspect.sh": {
+    "mtime": 1790266083.5867493,
+    "seen": 1790613036.890666,
+    "ast_hash": "8c8569c92a6a88b660f81d5a9842f398",
+    "semantic_hash": ""
+  },
+  "scripts/p13/load-dataset-lock.ts": {
+    "mtime": 1790265335.0715353,
+    "seen": 1790613036.890667,
+    "ast_hash": "0934a57228def9960159c661d598d8a4",
+    "semantic_hash": ""
+  },
+  "scripts/p13/mixed-load.ts": {
+    "mtime": 1790265365.4086766,
+    "seen": 1790613036.8906677,
+    "ast_hash": "f2e6a54eaf1fd2538335b27f5b6e01ca",
+    "semantic_hash": ""
+  },
+  "scripts/p13/run-image-inspect.mjs": {
+    "mtime": 1790266119.137231,
+    "seen": 1790613036.8906689,
+    "ast_hash": "c93531d1bceda115187cf98988ce54ac",
+    "semantic_hash": ""
+  },
+  "scripts/pg-pool.ts": {
+    "mtime": 1790162924.7210507,
+    "seen": 1790613036.8906698,
+    "ast_hash": "60c3b0c8afbef051d2868169f5deca81",
+    "semantic_hash": ""
+  },
+  "scripts/pre-p14/deepseek-probe.ts": {
+    "mtime": 1790534543.1753592,
+    "seen": 1790613036.8906705,
+    "ast_hash": "dbf52c62d92af898096b680b0dee8d79",
+    "semantic_hash": ""
+  },
+  "scripts/pre-p14/direct-working-state-validation.ts": {
+    "mtime": 1790524752.9891589,
+    "seen": 1790613036.890672,
+    "ast_hash": "5b8fc10c7dc9f6d4eb9c0d244cd6604b",
+    "semantic_hash": ""
+  },
+  "scripts/pre-p14/inspect-latest-runs.ts": {
+    "mtime": 1790524752.9901578,
+    "seen": 1790613036.890673,
+    "ast_hash": "b9ac5a846982cee20a59e09a0c7f5103",
+    "semantic_hash": ""
+  },
+  "scripts/pre-p14/load-demo-env.ps1": {
+    "mtime": 1790271336.1386263,
+    "seen": 1790613036.8906736,
+    "ast_hash": "23a9beb2d8dcce9f5c180dd99a1abe7a",
+    "semantic_hash": ""
+  },
+  "scripts/pre-p14/local-model-capability-search.ts": {
+    "mtime": 1790524752.9901578,
+    "seen": 1790613036.8906746,
+    "ast_hash": "8157e21b94a1ee113f359effef0d6c73",
+    "semantic_hash": ""
+  },
+  "scripts/pre-p14/path-b-demo.ts": {
+    "mtime": 1790271645.745291,
+    "seen": 1790613036.8906758,
+    "ast_hash": "db425cf1a4ba50d8f37accdb92fd16e8",
+    "semantic_hash": ""
+  },
+  "scripts/pre-p14/real-llm-compat-probe.ts": {
+    "mtime": 1790530825.992467,
+    "seen": 1790613036.8906765,
+    "ast_hash": "1d902de1fe0bd1c67a04a02674de15b0",
+    "semantic_hash": ""
+  },
+  "scripts/pre-p14/real-llm-path-b-e2e.ts": {
+    "mtime": 1790530330.8152816,
+    "seen": 1790613036.8906772,
+    "ast_hash": "7ef61b24942d9af21412bceb8ada1ebf",
+    "semantic_hash": ""
+  },
+  "scripts/pre-p14/test-direct-bilingual-search.ts": {
+    "mtime": 1790524752.9921608,
+    "seen": 1790613036.8906782,
+    "ast_hash": "2429b0eac835534595f2e5d24a7ec8e5",
+    "semantic_hash": ""
+  },
+  "scripts/pre-p14/test-tool-hardening-direct.ts": {
+    "mtime": 1790524752.9931593,
+    "seen": 1790613036.8906791,
+    "ast_hash": "725edd84e14ee0e04a0c1c39f2e41741",
+    "semantic_hash": ""
+  },
+  "scripts/pre-p14/valid-slot-booking-e2e.ts": {
+    "mtime": 1790606402.2938597,
+    "seen": 1790613036.89068,
+    "ast_hash": "73226beef3e4a1b8613b5a3ee5c03dac",
+    "semantic_hash": ""
+  },
+  "scripts/probe-auth-login.ts": {
+    "mtime": 1790163992.334147,
+    "seen": 1790613036.8906808,
+    "ast_hash": "a5f9dea5d438076da7f2f4c89dcef2b8",
+    "semantic_hash": ""
+  },
+  "scripts/probe-auth-minimal.ts": {
+    "mtime": 1790164215.4907286,
+    "seen": 1790613036.8906817,
+    "ast_hash": "0c345661ed95f08d19b9d2c3dbf187eb",
+    "semantic_hash": ""
+  },
+  "scripts/probe-auth-shape.ts": {
+    "mtime": 1790163328.6688354,
+    "seen": 1790613036.8906827,
+    "ast_hash": "f7cade098f6d24f1fca13efe8d3d8198",
+    "semantic_hash": ""
+  },
+  "scripts/probe-hosted-schema.ts": {
+    "mtime": 1790162318.3515747,
+    "seen": 1790613036.8906837,
+    "ast_hash": "89cb866863dd8e1ad1cf5bb60d83c744",
+    "semantic_hash": ""
+  },
+  "scripts/probe-me-error.ts": {
+    "mtime": 1790165529.7129328,
+    "seen": 1790613036.8906846,
+    "ast_hash": "ce66045800f0bb3d0b79e85f319a1bf5",
+    "semantic_hash": ""
+  },
+  "scripts/probe-migration.ts": {
+    "mtime": 1790162217.1232212,
+    "seen": 1790613036.8906856,
+    "ast_hash": "32ecccdc1b01f50f30fe766dd0243185",
+    "semantic_hash": ""
+  },
+  "scripts/probe-prisma-tx.ts": {
+    "mtime": 1790165663.2772703,
+    "seen": 1790613036.8906863,
+    "ast_hash": "15659f5ea2c9ba99ede02807b5d5560e",
+    "semantic_hash": ""
+  },
+  "scripts/probe-provision-steps.ts": {
+    "mtime": 1790162459.413109,
+    "seen": 1790613036.8906872,
+    "ast_hash": "cf812e490ddcdb13ef28e5f38597634f",
+    "semantic_hash": ""
+  },
+  "scripts/probe-role-privs.ts": {
+    "mtime": 1790162390.7850986,
+    "seen": 1790613036.8906882,
+    "ast_hash": "20a852afb42cb8ff43071f2b8e1b3327",
+    "semantic_hash": ""
+  },
+  "scripts/probe-runtime.ts": {
+    "mtime": 1790162558.770007,
+    "seen": 1790613036.8906891,
+    "ast_hash": "79e5f1ce028ad33f252d9ef4e118cdbb",
+    "semantic_hash": ""
+  },
+  "scripts/provision-supabase-test-user.ts": {
+    "mtime": 1790257432.3691826,
+    "seen": 1790613036.8906903,
+    "ast_hash": "7a306b01402760ab66c53e632af25bc5",
+    "semantic_hash": ""
+  },
+  "scripts/run-with-local-env.ts": {
+    "mtime": 1790257432.3691826,
+    "seen": 1790613036.890691,
+    "ast_hash": "33b8a0751f3c6fe1969e07faea13e65e",
+    "semantic_hash": ""
+  },
+  "scripts/tei-compose.sh": {
+    "mtime": 1790257432.370181,
+    "seen": 1790613036.890692,
+    "ast_hash": "da42adecf7c7ee1272b048124e97bdc6",
+    "semantic_hash": ""
+  },
+  "scripts/tei-ops-baseline.sh": {
+    "mtime": 1790257432.370181,
+    "seen": 1790613036.890693,
+    "ast_hash": "a2b7ab8118c20964d22be549edabf945",
+    "semantic_hash": ""
+  },
+  "spikes/database-compatibility/auth-boundary.test.mjs": {
+    "mtime": 1790153536.203963,
+    "seen": 1790613036.890694,
+    "ast_hash": "94286ac9b7b95969600f337ed54c4bae",
+    "semantic_hash": ""
+  },
+  "spikes/database-compatibility/package.json": {
+    "mtime": 1790155948.3093264,
+    "seen": 1790613036.890695,
+    "ast_hash": "ca6af2f2fd984987df1eb57f329b750e",
+    "semantic_hash": ""
+  },
+  "spikes/database-compatibility/prisma.config.ts": {
+    "mtime": 1790155835.6555376,
+    "seen": 1790613036.8906963,
+    "ast_hash": "0c0c3f31ede9e208f0a4ef447b28a2cb",
+    "semantic_hash": ""
+  },
+  "spikes/database-compatibility/test/run.mjs": {
+    "mtime": 1790155950.2509744,
+    "seen": 1790613036.890697,
+    "ast_hash": "dd642c11578fec53ff9a2dfa3d6d394f",
+    "semantic_hash": ""
+  },
+  ".agents/rules/graphify.md": {
+    "mtime": 1790609718.1846018,
+    "seen": 1790613036.890698,
+    "ast_hash": "a0e4d192b9e2e17256124dbfc8e24e6a",
+    "semantic_hash": ""
+  },
+  ".agents/workflows/graphify.md": {
+    "mtime": 1790609718.1856039,
+    "seen": 1790613036.8906987,
+    "ast_hash": "a831cf3669f1e6ab85d8a80ebe655f99",
+    "semantic_hash": ""
+  },
+  ".github/workflows/ci.yml": {
+    "mtime": 1790160308.057302,
+    "seen": 1790613036.8906999,
+    "ast_hash": "5d65b2973a7a2837a4f8b699cfad42d0",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1790168351.6277087,
+    "seen": 1790613036.8907008,
+    "ast_hash": "bc8b4bcea70d00cf251c92ddd4b11f36",
+    "semantic_hash": ""
+  },
+  "apps/web/AGENTS.md": {
+    "mtime": 1790271586.1240718,
+    "seen": 1790613036.8907018,
+    "ast_hash": "01e8142356e15c3404e0d84c48187cd0",
+    "semantic_hash": ""
+  },
+  "apps/web/CLAUDE.md": {
+    "mtime": 1790271586.1240718,
+    "seen": 1790613036.8907025,
+    "ast_hash": "5c27369b226fcf2be8a6cfe52224e767",
+    "semantic_hash": ""
+  },
+  "docker-compose.demo.yml": {
+    "mtime": 1790602872.428144,
+    "seen": 1790613036.8907037,
+    "ast_hash": "578712759a1023499c3c2dc7b58c5198",
+    "semantic_hash": ""
+  },
+  "docker-compose.override.yml": {
+    "mtime": 1790257432.3029783,
+    "seen": 1790613036.8907044,
+    "ast_hash": "d7927bf4fb773a9c6278f83cc6cccf0c",
+    "semantic_hash": ""
+  },
+  "docker-compose.yml": {
+    "mtime": 1790257432.3039804,
+    "seen": 1790613036.890705,
+    "ast_hash": "ec3bc4ee0e6d555cdebb289c2dce271f",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/00-overview/assumptions.md": {
+    "mtime": 1790152416.1065917,
+    "seen": 1790613036.890706,
+    "ast_hash": "ed361951ab467a533759a2c77c2ae1c7",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/00-overview/goals-and-non-goals.md": {
+    "mtime": 1790150871.580457,
+    "seen": 1790613036.890707,
+    "ast_hash": "9eeacc1e354cba97f6d3029ffaadb3a3",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/00-overview/problem-statement.md": {
+    "mtime": 1790150871.5784452,
+    "seen": 1790613036.890708,
+    "ast_hash": "6e5b5d8ecfb05dc277e1fe0c84656787",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/00-overview/product-scope.md": {
+    "mtime": 1790150871.579458,
+    "seen": 1790613036.8907087,
+    "ast_hash": "f2b71a10fe27650e06ff196489583f48",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/00-overview/sources.md": {
+    "mtime": 1790152459.9429195,
+    "seen": 1790613036.8907099,
+    "ast_hash": "39acab2b0c30b6ac7b549081740f485b",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/00-overview/terminology.md": {
+    "mtime": 1790150871.581453,
+    "seen": 1790613036.8907106,
+    "ast_hash": "6cde3a7f0b34657221ad1ce03b930ddf",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/00-overview/vision.md": {
+    "mtime": 1790150871.5784452,
+    "seen": 1790613036.8907115,
+    "ast_hash": "86026b717e74c6fc2ff0e75cf0771707",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/01-mind-map/dependency-map.md": {
+    "mtime": 1790150871.5854545,
+    "seen": 1790613036.8907123,
+    "ast_hash": "5f0f3becc4c055392faf474215df1887",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/01-mind-map/product-capabilities.md": {
+    "mtime": 1790150871.5834465,
+    "seen": 1790613036.8907135,
+    "ast_hash": "5841f3fa452d459d507ffac230da6202",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/01-mind-map/system-mind-map.md": {
+    "mtime": 1790150871.5834465,
+    "seen": 1790613036.8907142,
+    "ast_hash": "fb070cca0544d9293df6ea020ece082d",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/01-mind-map/user-journeys.md": {
+    "mtime": 1790150871.5844457,
+    "seen": 1790613036.8907151,
+    "ast_hash": "a26a93923273558e783ca2e09422d780",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/02-architecture/agent-architecture.md": {
+    "mtime": 1790150871.5879512,
+    "seen": 1790613036.890716,
+    "ast_hash": "b86ca9cf3ef73595fad6e99ae0c73316",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/02-architecture/backend-architecture.md": {
+    "mtime": 1790150871.5864606,
+    "seen": 1790613036.890717,
+    "ast_hash": "ea77f262ae1c85f072daec9d9d24c3cd",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/02-architecture/container-architecture.md": {
+    "mtime": 1790150871.5864606,
+    "seen": 1790613036.890718,
+    "ast_hash": "155c3b964a5a41330ca76852f7abaa30",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/02-architecture/data-architecture.md": {
+    "mtime": 1790150871.5900395,
+    "seen": 1790613036.8907187,
+    "ast_hash": "f01ee287c18c4676b1bd2f802b22626c",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/02-architecture/followup-architecture.md": {
+    "mtime": 1790257432.306981,
+    "seen": 1790613036.8907194,
+    "ast_hash": "2e8a63b51184ff59071548326a44879e",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/02-architecture/frontend-architecture.md": {
+    "mtime": 1790150871.5879512,
+    "seen": 1790613036.8907206,
+    "ast_hash": "cd1c7c99dab79c92a838df719ae6a145",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/02-architecture/messaging-architecture.md": {
+    "mtime": 1790150871.5890324,
+    "seen": 1790613036.8907216,
+    "ast_hash": "d68e16d17bf0e22da7c49bd122f5090e",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/02-architecture/multi-tenancy.md": {
+    "mtime": 1790150871.5910387,
+    "seen": 1790613036.8907223,
+    "ast_hash": "67993d8a36d421753a7f31d13ca21e0e",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/02-architecture/observability.md": {
+    "mtime": 1790150871.5930426,
+    "seen": 1790613036.8907232,
+    "ast_hash": "4aecabc253568180c5fb5ea98f5bd44e",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/02-architecture/queue-architecture.md": {
+    "mtime": 1790150871.5900395,
+    "seen": 1790613036.8907244,
+    "ast_hash": "7a2a1cd4c2e259c5c33d47000a9bf84e",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/02-architecture/rag-architecture.md": {
+    "mtime": 1790150871.5910387,
+    "seen": 1790613036.8907251,
+    "ast_hash": "9ad11f1640ce1b990ff6a0ced415fd86",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/02-architecture/security-architecture.md": {
+    "mtime": 1790150871.5920386,
+    "seen": 1790613036.890726,
+    "ast_hash": "e8f7c5b4c6d1f4cdc9bfae095321b3ce",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/02-architecture/system-context.md": {
+    "mtime": 1790150871.5864606,
+    "seen": 1790613036.8907273,
+    "ast_hash": "9790ea275e4296b8e2f7fb67b94106ff",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/03-domain/aggregates.md": {
+    "mtime": 1790150871.5930426,
+    "seen": 1790613036.8907282,
+    "ast_hash": "df1002c44a9c4a38d1fd9ac31cc1dc79",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/03-domain/booking-state-machine.md": {
+    "mtime": 1790257432.307978,
+    "seen": 1790613036.8907292,
+    "ast_hash": "0530dc93002fa356fa79761fe5e6fab8",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/03-domain/conversation-state-machine.md": {
+    "mtime": 1790257432.307978,
+    "seen": 1790613036.89073,
+    "ast_hash": "eb0799f2b6f5148dcdfbf57eabe57013",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/03-domain/domain-events.md": {
+    "mtime": 1790150871.5950398,
+    "seen": 1790613036.890731,
+    "ast_hash": "203ed071cec0a7368a435177bd8ff87d",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/03-domain/domain-model.md": {
+    "mtime": 1790150871.5930426,
+    "seen": 1790613036.8907318,
+    "ast_hash": "dad862ef7a2688c5f94cce51335525fe",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/03-domain/entities.md": {
+    "mtime": 1790257432.3089793,
+    "seen": 1790613036.8907328,
+    "ast_hash": "cf655071f7d37851a6c3cf47c2e27e3d",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/03-domain/lead-state-machine.md": {
+    "mtime": 1790257432.3089793,
+    "seen": 1790613036.8907337,
+    "ast_hash": "e7b523af275316f95d80119518668224",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/03-domain/value-objects.md": {
+    "mtime": 1790150871.594039,
+    "seen": 1790613036.8907347,
+    "ast_hash": "7f2756df3740e9b8ef753a9f0b6c48b9",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/04-agent/agent-runtime.md": {
+    "mtime": 1790150871.6021297,
+    "seen": 1790613036.8907356,
+    "ast_hash": "426f4a6619eb01ab8377370bd64029a2",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/04-agent/context-builder.md": {
+    "mtime": 1790150871.6021297,
+    "seen": 1790613036.8907363,
+    "ast_hash": "d8e676e9240f501ab14e4fb9ac4d4738",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/04-agent/evaluation-strategy.md": {
+    "mtime": 1790150871.6082375,
+    "seen": 1790613036.8907373,
+    "ast_hash": "8e1e105db633008cbf9c9b20ca8f2848",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/04-agent/failure-handling.md": {
+    "mtime": 1790150871.607232,
+    "seen": 1790613036.8907385,
+    "ast_hash": "132824ff1b35d250514ac9cb081ffe4b",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/04-agent/guardrails.md": {
+    "mtime": 1790150871.605638,
+    "seen": 1790613036.8907394,
+    "ast_hash": "32e340bf1e9dfc7020345032a7a03e9d",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/04-agent/memory-strategy.md": {
+    "mtime": 1790150871.6031232,
+    "seen": 1790613036.8907468,
+    "ast_hash": "ab835d37685abcb7429c989ffd6ec0f5",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/04-agent/model-provider-abstraction.md": {
+    "mtime": 1790150871.606218,
+    "seen": 1790613036.8907478,
+    "ast_hash": "bb7a166e103d14094f098495a5463c5a",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/04-agent/prompt-strategy.md": {
+    "mtime": 1790150871.606218,
+    "seen": 1790613036.890749,
+    "ast_hash": "2f6c1b6d88e51f94e7d4f1ce7c1695b8",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/04-agent/tool-contracts.md": {
+    "mtime": 1790257432.3099778,
+    "seen": 1790613036.89075,
+    "ast_hash": "d6415c7eef4d7f50426f25b34bc3df76",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/04-agent/tool-execution-loop.md": {
+    "mtime": 1790150871.604638,
+    "seen": 1790613036.890751,
+    "ast_hash": "7fb694c79ce2ae235d437ab29d9317cc",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/04-agent/tool-registry.md": {
+    "mtime": 1790150871.603631,
+    "seen": 1790613036.890752,
+    "ast_hash": "1901edd67c322bdfc8c498b422ee48d6",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/05-integrations/calendar-booking.md": {
+    "mtime": 1790150871.612247,
+    "seen": 1790613036.8907528,
+    "ast_hash": "facd35d247edd017fe044b54dffba7ac",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/05-integrations/future-integrations.md": {
+    "mtime": 1790150871.6132338,
+    "seen": 1790613036.8907535,
+    "ast_hash": "0470e2164d5b99a8aa3edc1c061e7b02",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/05-integrations/messaging-channel-contract.md": {
+    "mtime": 1790150871.6102238,
+    "seen": 1790613036.8907545,
+    "ast_hash": "b8ff7b7376b6ee0ca88ada18a3da55aa",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/05-integrations/storage.md": {
+    "mtime": 1790257432.3099778,
+    "seen": 1790613036.8907554,
+    "ast_hash": "6396215f326b5c44d50f8689bda4f105",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/05-integrations/webhooks.md": {
+    "mtime": 1790150871.6112258,
+    "seen": 1790613036.8907564,
+    "ast_hash": "031703928a88f925ae559ff4714a9e8f",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/05-integrations/whatsapp.md": {
+    "mtime": 1790257432.3109787,
+    "seen": 1790613036.890757,
+    "ast_hash": "4f8500311c30c13f2c01a3f85964cba8",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/06-data/audit-log.md": {
+    "mtime": 1790150871.6000974,
+    "seen": 1790613036.890758,
+    "ast_hash": "2b6d51d313fe7e70affd646e8454ee20",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/06-data/database-design.md": {
+    "mtime": 1790150871.597068,
+    "seen": 1790613036.8907592,
+    "ast_hash": "886464b523314c8ac76f04b5365ceb46",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/06-data/idempotency.md": {
+    "mtime": 1790150871.6000974,
+    "seen": 1790613036.89076,
+    "ast_hash": "86e9d4f95edc6877f9673d017843c029",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/06-data/indexing-strategy.md": {
+    "mtime": 1790150871.5990908,
+    "seen": 1790613036.8907607,
+    "ast_hash": "07e009095fb38dc8f2622cc8d49bb6e3",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/06-data/migration-strategy.md": {
+    "mtime": 1790150871.601118,
+    "seen": 1790613036.8907616,
+    "ast_hash": "b119c587b49365ee034a76c478659130",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/06-data/prisma-model-plan.md": {
+    "mtime": 1790150871.5980704,
+    "seen": 1790613036.8907628,
+    "ast_hash": "3776236d175088889405b5be84df8598",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/06-data/retention-policy.md": {
+    "mtime": 1790150871.601118,
+    "seen": 1790613036.8907635,
+    "ast_hash": "43899bb035be848ecff93e5da20de24e",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/06-data/tenant-isolation.md": {
+    "mtime": 1790150871.5990908,
+    "seen": 1790613036.8907645,
+    "ast_hash": "8433f8e51a0bf48af2765b6e38d9022a",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/07-api/agent-api.md": {
+    "mtime": 1790150871.6192324,
+    "seen": 1790613036.8907657,
+    "ast_hash": "73bb7ad4a83bf0659e66858463285cd4",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/07-api/api-principles.md": {
+    "mtime": 1790150871.614233,
+    "seen": 1790613036.8907664,
+    "ast_hash": "c4e263212d05397670cb315a4e1f55d6",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/07-api/auth-api.md": {
+    "mtime": 1790160614.4261534,
+    "seen": 1790613036.8907673,
+    "ast_hash": "5b7586eabc73fca7293dff63073dd7ec",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/07-api/booking-api.md": {
+    "mtime": 1790151041.8200758,
+    "seen": 1790613036.8907683,
+    "ast_hash": "f0f5476cc82412ffb066765f2fbe146c",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/07-api/conversation-api.md": {
+    "mtime": 1790257432.3109787,
+    "seen": 1790613036.8907695,
+    "ast_hash": "06897cc20cd4d17b02c65d94085e447e",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/07-api/customer-api.md": {
+    "mtime": 1790150871.6172335,
+    "seen": 1790613036.8907702,
+    "ast_hash": "f523c0f9ec61ca387147c46dd87a66c1",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/07-api/knowledge-api.md": {
+    "mtime": 1790150871.6182356,
+    "seen": 1790613036.890771,
+    "ast_hash": "65cbc227e36b757062a49a912d7a8c03",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/07-api/lead-api.md": {
+    "mtime": 1790257432.3119786,
+    "seen": 1790613036.8907719,
+    "ast_hash": "340b3a163f4e112f98fed80bafc801c7",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/07-api/organization-api.md": {
+    "mtime": 1790150871.6152327,
+    "seen": 1790613036.8907728,
+    "ast_hash": "64922d5ff0614fbd355794f84f55aa64",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/07-api/webhook-api.md": {
+    "mtime": 1790257432.3119786,
+    "seen": 1790613036.8907738,
+    "ast_hash": "4a5fdf71bacba6a180c373e249f549b1",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/08-frontend/agent-settings.md": {
+    "mtime": 1790150871.6252322,
+    "seen": 1790613036.8907747,
+    "ast_hash": "d847de534f3e5281fbab67d82d7c70ac",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/08-frontend/analytics.md": {
+    "mtime": 1790150871.6267378,
+    "seen": 1790613036.8907754,
+    "ast_hash": "b4e1bc42b4d7925d22961877fa101d97",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/08-frontend/bookings.md": {
+    "mtime": 1790150871.6242454,
+    "seen": 1790613036.8907766,
+    "ast_hash": "5f9dcd84d68c7a5043e1ff2c8c20bbe5",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/08-frontend/conversations.md": {
+    "mtime": 1790257432.31298,
+    "seen": 1790613036.8907773,
+    "ast_hash": "3f52d9749f2d4e6d4b7d94b40e09584a",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/08-frontend/dashboard.md": {
+    "mtime": 1790150871.6222315,
+    "seen": 1790613036.8907783,
+    "ast_hash": "0a79088be0c60bf515c17627e09ba847",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/08-frontend/information-architecture.md": {
+    "mtime": 1790150871.621235,
+    "seen": 1790613036.890779,
+    "ast_hash": "970b2d4b68195ffe6caa94fc3db948d1",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/08-frontend/knowledge-base.md": {
+    "mtime": 1790150871.6252322,
+    "seen": 1790613036.89078,
+    "ast_hash": "33ad01cca133ee1d88f0c985effc23d0",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/08-frontend/leads.md": {
+    "mtime": 1790150871.623231,
+    "seen": 1790613036.890781,
+    "ast_hash": "ca8b0950c1e0aaa480662be5c2473068",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/08-frontend/organization-settings.md": {
+    "mtime": 1790150871.6262314,
+    "seen": 1790613036.8907816,
+    "ast_hash": "526a917432cb6ec94de36720d1eddb7c",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/09-testing/agent-evaluation.md": {
+    "mtime": 1790150871.6307483,
+    "seen": 1790613036.8907828,
+    "ast_hash": "a84ea8927afcbf23f5300a5d5260e5bc",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/09-testing/e2e-tests.md": {
+    "mtime": 1790150871.6307483,
+    "seen": 1790613036.8907835,
+    "ast_hash": "10866c4775eef0699280504c0536aeec",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/09-testing/integration-tests.md": {
+    "mtime": 1790150871.629747,
+    "seen": 1790613036.8907845,
+    "ast_hash": "46449b6f08f9228aad364f30912ff316",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/09-testing/load-tests.md": {
+    "mtime": 1790150871.6332698,
+    "seen": 1790613036.8907852,
+    "ast_hash": "abbf5d9fce590902bca2413d726c8613",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/09-testing/security-tests.md": {
+    "mtime": 1790150871.6332698,
+    "seen": 1790613036.8907864,
+    "ast_hash": "548e170805ee885a048ab67f7607bf24",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/09-testing/testing-strategy.md": {
+    "mtime": 1790150871.6267378,
+    "seen": 1790613036.8907874,
+    "ast_hash": "8a66e2abdab9330e54441706ac91da03",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/09-testing/tool-tests.md": {
+    "mtime": 1790150871.6307483,
+    "seen": 1790613036.890788,
+    "ast_hash": "646afaef6f60cae00a12851e6b51d948",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/09-testing/unit-tests.md": {
+    "mtime": 1790150871.6287472,
+    "seen": 1790613036.890789,
+    "ast_hash": "4b53e34be6af5ce31f18edbc35537f1e",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/09-testing/webhook-tests.md": {
+    "mtime": 1790150871.6322572,
+    "seen": 1790613036.89079,
+    "ast_hash": "b4448d7509fe00593ce59c9290fae6f2",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/10-devops/backup-and-recovery.md": {
+    "mtime": 1790150871.6388717,
+    "seen": 1790613036.890791,
+    "ast_hash": "c9e2381a149af0d234ab9784900ce501",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/10-devops/ci-cd.md": {
+    "mtime": 1790150871.6362667,
+    "seen": 1790613036.8907917,
+    "ast_hash": "a57157dd26a3fa5a715b07ffa38f5a3b",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/10-devops/deployment.md": {
+    "mtime": 1790150871.637267,
+    "seen": 1790613036.8907926,
+    "ast_hash": "0e17c9c1270372d8b1642310426bdf90",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/10-devops/docker.md": {
+    "mtime": 1790150871.6352665,
+    "seen": 1790613036.8907936,
+    "ast_hash": "ea5654d28ad67e0985556b7934855a14",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/10-devops/environments.md": {
+    "mtime": 1790150871.6342666,
+    "seen": 1790613036.8907945,
+    "ast_hash": "fcebd0c1568fa9a7cb7b7f6c1197a802",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/10-devops/local-development.md": {
+    "mtime": 1790257432.31398,
+    "seen": 1790613036.8907955,
+    "ast_hash": "99bef4cb180f6c1ac50d2fc0a76b3945",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/10-devops/monitoring.md": {
+    "mtime": 1790150871.6378615,
+    "seen": 1790613036.8907967,
+    "ast_hash": "3500cb3c127783eac873c2b3c7efed52",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/11-product-metrics/ai-cost-metrics.md": {
+    "mtime": 1790150871.641871,
+    "seen": 1790613036.8907974,
+    "ast_hash": "b4eaf348339580d529829cd725c0aef7",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/11-product-metrics/business-outcomes.md": {
+    "mtime": 1790150871.6428723,
+    "seen": 1790613036.890798,
+    "ast_hash": "46b8a2d242918c6caf33da271fa32d2a",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/11-product-metrics/funnel.md": {
+    "mtime": 1790150871.6398726,
+    "seen": 1790613036.890799,
+    "ast_hash": "950db18e515041d794b5224a35f5f15d",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/11-product-metrics/metrics-model.md": {
+    "mtime": 1790150871.6398726,
+    "seen": 1790613036.8908002,
+    "ast_hash": "72b40e8670f03a09a7e6dcb411c9c065",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/11-product-metrics/usage-metrics.md": {
+    "mtime": 1790150871.640872,
+    "seen": 1790613036.890801,
+    "ast_hash": "5e60e54a192d5439e1c1e4c572363787",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/12-decisions/ADR-001-modular-monolith.md": {
+    "mtime": 1790158037.1760929,
+    "seen": 1790613036.890802,
+    "ast_hash": "9a0ddb02b375dce382b58ba38fafdaa1",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/12-decisions/ADR-002-postgresql.md": {
+    "mtime": 1790156053.6497815,
+    "seen": 1790613036.8908026,
+    "ast_hash": "f22d102c81045884a73dc7e5dd48be48",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/12-decisions/ADR-003-pgvector.md": {
+    "mtime": 1790156057.4137166,
+    "seen": 1790613036.8908038,
+    "ast_hash": "9f0dd7f1847837d2f7d639549334c2ed",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/12-decisions/ADR-004-bullmq.md": {
+    "mtime": 1790150871.6468718,
+    "seen": 1790613036.8908045,
+    "ast_hash": "2da45c8a47cccdf9b677774427ab2933",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/12-decisions/ADR-005-backend-tools.md": {
+    "mtime": 1790150871.6478722,
+    "seen": 1790613036.8908055,
+    "ast_hash": "9cc91ff961a8f6227a50cf70b093be80",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/12-decisions/ADR-006-messaging-channel.md": {
+    "mtime": 1790257432.3144896,
+    "seen": 1790613036.8908062,
+    "ast_hash": "6da652cccd64bbbdce636804ae6a9fdf",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/12-decisions/ADR-007-layered-memory.md": {
+    "mtime": 1790150871.6488712,
+    "seen": 1790613036.8908074,
+    "ast_hash": "1c326f36f29bfb32e1711fbf72758baa",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/12-decisions/ADR-008-tenant-isolation.md": {
+    "mtime": 1790156057.6159596,
+    "seen": 1790613036.8908083,
+    "ast_hash": "b329481bdd088bcf4c95814bb8e0f8b2",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/12-decisions/ADR-009-booking-authority.md": {
+    "mtime": 1790257432.3144896,
+    "seen": 1790613036.890809,
+    "ast_hash": "ca94ab3857b1dbfaf0858cc1ad94d819",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/12-decisions/ADR-010-outbound-uncertainty.md": {
+    "mtime": 1790150871.6508691,
+    "seen": 1790613036.89081,
+    "ast_hash": "062883e8b554070564a7370fdbce7571",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/12-decisions/ADR-011-privileged-work-claim.md": {
+    "mtime": 1790257432.3154967,
+    "seen": 1790613036.890811,
+    "ast_hash": "002409bd7c550331f9cc7e0702b095e3",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/12-decisions/ADR-template.md": {
+    "mtime": 1790150871.6438732,
+    "seen": 1790613036.890812,
+    "ast_hash": "68e83f2d92fecd50ebcb7718acf18709",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/12-decisions/README.md": {
+    "mtime": 1790257432.3154967,
+    "seen": 1790613036.8908129,
+    "ast_hash": "957d860ffefc7fc3fa958c9233eeca37",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/13-risks/ai-risks.md": {
+    "mtime": 1790150871.6553192,
+    "seen": 1790613036.890814,
+    "ast_hash": "cec300d6163dac0ba4737272daf20fde",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/13-risks/integration-risks.md": {
+    "mtime": 1790150871.656322,
+    "seen": 1790613036.890815,
+    "ast_hash": "389ca09fad23529f1d40e49ebc570f93",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/13-risks/product-risks.md": {
+    "mtime": 1790150871.6543114,
+    "seen": 1790613036.890816,
+    "ast_hash": "ecb110ef2295fdc61ac7fd09036fd5df",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/13-risks/risk-register.md": {
+    "mtime": 1790152415.7878435,
+    "seen": 1790613036.890817,
+    "ast_hash": "5285c9b6f9d0108f820dfe3f68bc6d2a",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/13-risks/technical-risks.md": {
+    "mtime": 1790150871.652876,
+    "seen": 1790613036.8908179,
+    "ast_hash": "bd840b6bb2fd6af499d278ca52d89d83",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/README.md": {
+    "mtime": 1790262503.7703638,
+    "seen": 1790613036.8908188,
+    "ast_hash": "60d4c441c2851e8505c44a65b08cac43",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/future-roadmap.md": {
+    "mtime": 1790150871.6698427,
+    "seen": 1790613036.8908195,
+    "ast_hash": "d61a1539c41ad6d7252d7082e8de2dbb",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/local-demo-dataset.md": {
+    "mtime": 1790273126.8509586,
+    "seen": 1790613036.8908205,
+    "ast_hash": "5c068bb3698a1c644b3d14322b8c1d38",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/master-plan.md": {
+    "mtime": 1790269196.5478282,
+    "seen": 1790613036.8908215,
+    "ast_hash": "17df31232a6a7f5f456dab7d0b5d6aaa",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-adr-review.md": {
+    "mtime": 1790156074.8919227,
+    "seen": 1790613036.8908224,
+    "ast_hash": "6d15d1b8e27e594180c0a6c9be6795a0",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-ai-trust-boundary.md": {
+    "mtime": 1790152270.710273,
+    "seen": 1790613036.8908231,
+    "ast_hash": "376cbb2fed0350c92642fa6348e6b69f",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-audit.md": {
+    "mtime": 1790152009.4250183,
+    "seen": 1790613036.8908238,
+    "ast_hash": "cceab28e772396597adb8d77319ae581",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-booking-authority.md": {
+    "mtime": 1790152130.643547,
+    "seen": 1790613036.890825,
+    "ast_hash": "c60c387559e794475ae00757e6853ee4",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-closure.md": {
+    "mtime": 1790262486.2175443,
+    "seen": 1790613036.890826,
+    "ast_hash": "4b490f3846f999dd026f0e64db2493de",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-database-spike.md": {
+    "mtime": 1790156075.2052536,
+    "seen": 1790613036.8908267,
+    "ast_hash": "6233bed4bcd23ce7142775994b7293e2",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-decision-register.md": {
+    "mtime": 1790156088.2010808,
+    "seen": 1790613036.890828,
+    "ast_hash": "6cf8d1b5a66c5a0ab8a9951bf262380f",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-discovery.md": {
+    "mtime": 1790262464.4746969,
+    "seen": 1790613036.8908286,
+    "ast_hash": "ef376e8563b8b05315136593832e125d",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-evaluation-fixtures.md": {
+    "mtime": 1790152271.0087595,
+    "seen": 1790613036.8908296,
+    "ast_hash": "0b8c9e4c64b6e7ab4e951200a2d3ae5b",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-pilot-metrics.md": {
+    "mtime": 1790152414.0846443,
+    "seen": 1790613036.8908303,
+    "ast_hash": "3174a03156f3d48213750e274711906b",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-product-boundary.md": {
+    "mtime": 1790152010.013155,
+    "seen": 1790613036.8908315,
+    "ast_hash": "9532932667f6f19bbf0b25dea4c4e6d5",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-technical-readiness.md": {
+    "mtime": 1790156110.3542705,
+    "seen": 1790613036.8908324,
+    "ast_hash": "e446a2ea867435cae4a376709012932e",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-tenancy-validation.md": {
+    "mtime": 1790156102.1742084,
+    "seen": 1790613036.8908331,
+    "ast_hash": "40cffe8cd6933d02d190c2263ae5e261",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-threat-review.md": {
+    "mtime": 1790152270.4056675,
+    "seen": 1790613036.8908339,
+    "ast_hash": "30daf30e33ea4690dbed5fa6aa293282",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-00-whatsapp-discovery.md": {
+    "mtime": 1790152131.5734541,
+    "seen": 1790613036.890835,
+    "ast_hash": "b31bd7eb66898b384faaf99f80b59888",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-01-closure.md": {
+    "mtime": 1790165904.0632083,
+    "seen": 1790613036.8908358,
+    "ast_hash": "28f94bd4a5452b759a5352a7a66dfcf0",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-01-foundation.md": {
+    "mtime": 1790262464.720914,
+    "seen": 1790613036.8908367,
+    "ast_hash": "d06065ee5a4c2cdcd66782b80e1d8c8a",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-02-closure.md": {
+    "mtime": 1790167894.5043333,
+    "seen": 1790613036.8908374,
+    "ast_hash": "f50ce54278389585071876ca3537c264",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-02-core-domain.md": {
+    "mtime": 1790167893.9923892,
+    "seen": 1790613036.8908386,
+    "ast_hash": "8c1d340dda98122efccea5bae242dffa",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-02-scope-manifest.md": {
+    "mtime": 1790167022.0245879,
+    "seen": 1790613036.8908396,
+    "ast_hash": "a6fffb5a26ef4f88ade99e5cfd6a258e",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-03-closure.md": {
+    "mtime": 1790257432.3164957,
+    "seen": 1790613036.8908403,
+    "ast_hash": "4b530ad1008c1be7e0b0f93f65bd38f9",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-03-conversations.md": {
+    "mtime": 1790262465.0198507,
+    "seen": 1790613036.890841,
+    "ast_hash": "72423137548a966a860751ec38ee6836",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-03-pre-migration-gate.md": {
+    "mtime": 1790257432.317832,
+    "seen": 1790613036.8908422,
+    "ast_hash": "5f2fbd361e9556ea4ee5bc73b192292a",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-03-scope-manifest.md": {
+    "mtime": 1790257432.317832,
+    "seen": 1790613036.890843,
+    "ast_hash": "bbfbf5f701805a5c823243cbe2d621ac",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-04-agent-core.md": {
+    "mtime": 1790257432.3188367,
+    "seen": 1790613036.8908439,
+    "ast_hash": "e6a6cc4b065866847d2f70b6c16d23a5",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-04-closure.md": {
+    "mtime": 1790257432.3188367,
+    "seen": 1790613036.8908448,
+    "ast_hash": "0d6b452d54ef0201621d9968d88b5bfa",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-04-pre-migration-gate.md": {
+    "mtime": 1790257432.3198366,
+    "seen": 1790613036.8908458,
+    "ast_hash": "3424b9223fd11c90c783f656ad42f5bd",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-04-scope-manifest.md": {
+    "mtime": 1790257432.3198366,
+    "seen": 1790613036.8908467,
+    "ast_hash": "fcd6b734023ce333d0e9f648e61cecf4",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-05-closure.md": {
+    "mtime": 1790257432.3198366,
+    "seen": 1790613036.8908477,
+    "ast_hash": "f521793f118e454b213b4a3737d71b88",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-05-embedding-bakeoff.md": {
+    "mtime": 1790257432.3208375,
+    "seen": 1790613036.8908484,
+    "ast_hash": "39590891bf4a80a93bf8f98836ce29c9",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-05-knowledge-rag.md": {
+    "mtime": 1790262465.3084972,
+    "seen": 1790613036.8908496,
+    "ast_hash": "a2c8f24cf9cabcb34117ee4f34d713cc",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-05-pre-migration-gate.md": {
+    "mtime": 1790257432.3218389,
+    "seen": 1790613036.8908503,
+    "ast_hash": "09076bebc7abaaa206c4b672a5c848d1",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-05-scope-manifest.md": {
+    "mtime": 1790257432.3218389,
+    "seen": 1790613036.8908515,
+    "ast_hash": "d2daf24177a5413062446d0633ee9ae8",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-05-tei-ops-baseline.md": {
+    "mtime": 1790257432.3228383,
+    "seen": 1790613036.8908525,
+    "ast_hash": "25313ead240ad15ab41b75e5b325df59",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-05-tei-ops.md": {
+    "mtime": 1790257432.3228383,
+    "seen": 1790613036.8908534,
+    "ast_hash": "9f84eef2e0051d590cc8b8b3e13d0c25",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-06-closure.md": {
+    "mtime": 1790257432.3238392,
+    "seen": 1790613036.8908541,
+    "ast_hash": "bc7c41959b7f92e72f38fbd388e3188d",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-06-leads-crm.md": {
+    "mtime": 1790257432.3238392,
+    "seen": 1790613036.890855,
+    "ast_hash": "7f66d44f73739496693055f15f9be372",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-06-scope-manifest.md": {
+    "mtime": 1790257432.3248367,
+    "seen": 1790613036.890856,
+    "ast_hash": "bc3808bc8696ab92cfc96a58963aa486",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-07-booking-tools.md": {
+    "mtime": 1790262465.6355934,
+    "seen": 1790613036.890857,
+    "ast_hash": "89819c50e514bde8dfdfdd154824db68",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-07-closure.md": {
+    "mtime": 1790257432.3248367,
+    "seen": 1790613036.8908577,
+    "ast_hash": "d2de8f9eb2ce7360734dfbae41660908",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-07-scope-manifest.md": {
+    "mtime": 1790257432.3258364,
+    "seen": 1790613036.8908587,
+    "ast_hash": "91ce3dfc89df04a36c4ece5a9cad06a6",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-08-closure.md": {
+    "mtime": 1790262427.0843234,
+    "seen": 1790613036.8908596,
+    "ast_hash": "d35ecf8b72e85989d3fb74e8449e51a5",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-08-scope-manifest.md": {
+    "mtime": 1790257432.3258364,
+    "seen": 1790613036.8908603,
+    "ast_hash": "248a3387e862b86b8b55933c52869ef7",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-08-whatsapp.md": {
+    "mtime": 1790262465.9044275,
+    "seen": 1790613036.8908613,
+    "ast_hash": "e5b608882f7abb17195ccb107761a0ed",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-09-closure.md": {
+    "mtime": 1790257432.326848,
+    "seen": 1790613036.890862,
+    "ast_hash": "f8f584d9187984ade8297a5fb1a27685",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-09-human-handoff.md": {
+    "mtime": 1790257432.326848,
+    "seen": 1790613036.8908632,
+    "ast_hash": "b7fce19c369eb3ebfa15c2dc3148a3e3",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-09-scope-manifest.md": {
+    "mtime": 1790257432.3278368,
+    "seen": 1790613036.890864,
+    "ast_hash": "7d84c1b5c7fef3bfb710f6f139686406",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-10-closure.md": {
+    "mtime": 1790262427.3444161,
+    "seen": 1790613036.8908646,
+    "ast_hash": "1acd003571214bf92e5dc9b8c99ccd26",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-10-followups.md": {
+    "mtime": 1790257432.328837,
+    "seen": 1790613036.8908656,
+    "ast_hash": "38d01a93672e1983655c7897856a6fe6",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-10-scope-manifest.md": {
+    "mtime": 1790257432.328837,
+    "seen": 1790613036.8908665,
+    "ast_hash": "1a02f83ce99ede8c897c617658cbc0df",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-11-closure.md": {
+    "mtime": 1790257432.3298361,
+    "seen": 1790613036.8908672,
+    "ast_hash": "75c87bb1d9f861bf75daa22e3dba27a5",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-11-dashboard.md": {
+    "mtime": 1790257432.3298361,
+    "seen": 1790613036.8908682,
+    "ast_hash": "895469b0b73215433c36829f628aad4b",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-12-analytics.md": {
+    "mtime": 1790262222.0320313,
+    "seen": 1790613036.8908691,
+    "ast_hash": "4a0945e1c99897ee4cab9a6f0b0e9da0",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-12-discovery-report.md": {
+    "mtime": 1790258053.8503797,
+    "seen": 1790613036.89087,
+    "ast_hash": "ee791743749d617b48ce3b1b8413c983",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-12-metric-definitions-lock.md": {
+    "mtime": 1790258054.1068368,
+    "seen": 1790613036.8908708,
+    "ast_hash": "ea8ad1affb5a0ce8d41b85bdf27024f1",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-12-validation-report.md": {
+    "mtime": 1790262201.5934296,
+    "seen": 1790613036.8908718,
+    "ast_hash": "4fd449b5315ed653306f476ecae59780",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-13-closure.md": {
+    "mtime": 1790267087.2327347,
+    "seen": 1790613036.8908727,
+    "ast_hash": "e069f5b4e86067ff5f8d9a0f6e2111a1",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-13-design-lock.md": {
+    "mtime": 1790262912.085112,
+    "seen": 1790613036.8908737,
+    "ast_hash": "c41736c978e0ae14851cce58d8dbbf4f",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-13-discovery-report.md": {
+    "mtime": 1790262911.8114817,
+    "seen": 1790613036.8908746,
+    "ast_hash": "8635e0bf3cd1b12cf4857ac6f20a8e29",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-13-findings-register.md": {
+    "mtime": 1790267087.2327347,
+    "seen": 1790613036.8908753,
+    "ast_hash": "a4b131a99dfdbbc7202ad7fc5cb93300",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-13-hardening.md": {
+    "mtime": 1790266250.1316803,
+    "seen": 1790613036.8908765,
+    "ast_hash": "e09f0eb61fe356564dc9781d2d6c6c0b",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-13-ops-evidence.md": {
+    "mtime": 1790266215.9470527,
+    "seen": 1790613036.8908772,
+    "ast_hash": "b05705b7fee85605c700eb4691285f89",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-13-resilience-load-report.md": {
+    "mtime": 1790266215.9915657,
+    "seen": 1790613036.8908782,
+    "ast_hash": "57905c4f83de20731d0b0111d457ade5",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-14-pilot-readiness.md": {
+    "mtime": 1790269202.7851238,
+    "seen": 1790613036.890879,
+    "ast_hash": "547041c02e56c052fb452964507c57bf",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/phase-closure-template.md": {
+    "mtime": 1790150871.668843,
+    "seen": 1790613036.8908796,
+    "ast_hash": "3b31f0b998d54398d04b6114d4065bf7",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/pre-p14-local-model-capability-search.md": {
+    "mtime": 1790524752.9640188,
+    "seen": 1790613036.8908808,
+    "ast_hash": "bd254ad294de4fce4a394bc6a896e740",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/pre-p14-real-llm-path-b-e2e.md": {
+    "mtime": 1790601647.9255536,
+    "seen": 1790613036.8908818,
+    "ast_hash": "657466f19182189fa0c690c1b370abd2",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/pre-p14-real-llm-zero-cost.md": {
+    "mtime": 1790530939.2214186,
+    "seen": 1790613036.8908827,
+    "ast_hash": "55c271da298f1319cda1314d10cc3f05",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/pre-p14-zero-cost-discovery.md": {
+    "mtime": 1790269195.9103491,
+    "seen": 1790613036.8908837,
+    "ast_hash": "164f98e7cb1e57ec5a9f4a17c092d013",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/pre-p14-zero-cost-live-demo.md": {
+    "mtime": 1790271695.0155058,
+    "seen": 1790613036.8908846,
+    "ast_hash": "4fc571b8e3f49b53a1b73c953af220f9",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/14-roadmap/requirements-traceability.md": {
+    "mtime": 1790150871.6708412,
+    "seen": 1790613036.8908856,
+    "ast_hash": "a8d3b90c09edc844d4d6641be31ded9b",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/README.md": {
+    "mtime": 1790152491.0356712,
+    "seen": 1790613036.8908865,
+    "ast_hash": "2bba483f12b479cd2cdedc5872984217",
+    "semantic_hash": ""
+  },
+  "docs/ai-sales-agent/planning-validation.md": {
+    "mtime": 1790152460.2510347,
+    "seen": 1790613036.8908875,
+    "ast_hash": "98ba9e86c34382c4c5c4bbc3f9d3c3bb",
+    "semantic_hash": ""
+  },
+  "docs/multi-business-platform/ARCHITECTURE.md": {
+    "mtime": 1790609919.4620996,
+    "seen": 1790613036.8908885,
+    "ast_hash": "1168efa276a4f535a062c0ccdd45f9e6",
+    "semantic_hash": ""
+  },
+  "docs/multi-business-platform/DECISIONS.md": {
+    "mtime": 1790610072.0635643,
+    "seen": 1790613036.8908894,
+    "ast_hash": "5275278df131494602efb28d4d992687",
+    "semantic_hash": ""
+  },
+  "docs/multi-business-platform/DOMAIN-MODEL.md": {
+    "mtime": 1790609976.5178807,
+    "seen": 1790613036.8908908,
+    "ast_hash": "df4a7e2baa3b4548cd9b61901b83d8e0",
+    "semantic_hash": ""
+  },
+  "docs/multi-business-platform/MB-00-BASELINE-AUDIT.md": {
+    "mtime": 1790610501.8197198,
+    "seen": 1790613036.8908918,
+    "ast_hash": "cc83a56c4f80e32b92d9e9a11fb1f382",
+    "semantic_hash": ""
+  },
+  "docs/multi-business-platform/MB-01-IMPLEMENTATION.md": {
+    "mtime": 1790611566.633012,
+    "seen": 1790613036.8908927,
+    "ast_hash": "cc50776f5e4378246745d18b6e6627ee",
+    "semantic_hash": ""
+  },
+  "docs/multi-business-platform/MB-02-IMPLEMENTATION.md": {
+    "mtime": 1790612908.9735496,
+    "seen": 1790613036.890894,
+    "ast_hash": "85aebcf3aea7cdf1acb03fefd9137e06",
+    "semantic_hash": ""
+  },
+  "docs/multi-business-platform/MIGRATION-STRATEGY.md": {
+    "mtime": 1790610235.3977127,
+    "seen": 1790613036.8908947,
+    "ast_hash": "5bf8c31c0a9888274a8e7029293bbc5b",
+    "semantic_hash": ""
+  },
+  "docs/multi-business-platform/MIND-MAP.md": {
+    "mtime": 1790609862.5524614,
+    "seen": 1790613036.8908956,
+    "ast_hash": "de890e28ee2d91f9784be1d8658e37b2",
+    "semantic_hash": ""
+  },
+  "docs/multi-business-platform/PHASES.md": {
+    "mtime": 1790612964.213354,
+    "seen": 1790613036.8908963,
+    "ast_hash": "2adb852c5682f3cac8de8a978d69dd97",
+    "semantic_hash": ""
+  },
+  "docs/multi-business-platform/README.md": {
+    "mtime": 1790612995.0907855,
+    "seen": 1790613036.8908975,
+    "ast_hash": "1c6001f2328ed5ba22da2c509c70e852",
+    "semantic_hash": ""
+  },
+  "docs/multi-business-platform/RISKS.md": {
+    "mtime": 1790610223.6569812,
+    "seen": 1790613036.8908987,
+    "ast_hash": "6573eeefc37247c4447d575566c7c532",
+    "semantic_hash": ""
+  },
+  "docs/multi-business-platform/ROADMAP.md": {
+    "mtime": 1790612919.902415,
+    "seen": 1790613036.8908994,
+    "ast_hash": "3e6b984eb3205164efdd9823723cf850",
+    "semantic_hash": ""
+  },
+  "docs/multi-business-platform/UX-PRINCIPLES.md": {
+    "mtime": 1790610019.284582,
+    "seen": 1790613036.8909004,
+    "ast_hash": "f98bac11a4bc42cba6d88b025618808b",
+    "semantic_hash": ""
+  },
+  "spikes/database-compatibility/README.md": {
+    "mtime": 1790156001.1564226,
+    "seen": 1790613036.8909016,
+    "ast_hash": "d45d27e6163b37c4b8ddac71e13d6be1",
+    "semantic_hash": ""
+  },
+  "spikes/database-compatibility/docker-compose.yml": {
+    "mtime": 1790153533.4734392,
+    "seen": 1790613036.8909025,
+    "ast_hash": "a53791deb2f47dc9605754a058a8c778",
+    "semantic_hash": ""
+  }
+}

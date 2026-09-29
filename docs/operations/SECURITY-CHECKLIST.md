@@ -1,6 +1,6 @@
 # Production Security Checklist
 
-Comprehensive audit and security verification checklist across multi-tenant isolation, role privileges, authentication, logging, and rate limiting.
+Comprehensive audit and security verification checklist across multi-tenant isolation, role privileges, authentication, logging, rate limiting, and messaging provider boundaries.
 
 ---
 
@@ -53,3 +53,18 @@ Comprehensive audit and security verification checklist across multi-tenant isol
 - [x] **Bounded LLM Costs & Context**:
   - Bounded prompt token budgets, max turns, and retrieval top-K limits.
   - Provider failure or timeout triggers safe deterministic finalization fallback for already committed mutations.
+
+---
+
+## 5. Messaging Provider Security & Webhook Safety
+
+- Secrets are environment or secret-store values and are absent from source, reports, snapshots, and structured logs.
+- Webhook POST uses exact raw bytes and constant-time HMAC comparison; missing, malformed, and invalid signatures fail closed.
+- Payload size is bounded and content remains untrusted.
+- Tenant authority comes only from the verified channel connection.
+- Provider sender IDs map through explicit customer identities and never become customer primary keys.
+- Provider payloads cannot enable capabilities, change tenant, forge confirmation, or mark business transactions complete.
+- Duplicate and concurrent events are stopped by database uniqueness/locking, not process memory.
+- Message content and full recipient identifiers are not logged by default; operational evidence uses digests and redacted IDs.
+- Access tokens can be rotated and the channel can be disabled without deleting evidence.
+- Live testing uses an allowlisted, authorized recipient and documented stop conditions.

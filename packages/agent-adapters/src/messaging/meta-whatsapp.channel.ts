@@ -6,6 +6,7 @@ import {
   resolveAppSecret,
   resolveAppVerifyToken,
   resolveMetaGraphApiVersion,
+  resolveMetaGraphBaseUrl,
   statusEventDigest,
   verifyMetaSignature256,
   type NormalizedInboundMessage,
@@ -15,6 +16,7 @@ import {
   type SendResult,
   type TransportOutcomeClass,
 } from './messaging-channel.js';
+import { isAcceptanceRecipientAllowed } from './provider-operations.js';
 
 type MetaWebhookBody = {
   object?: string;
@@ -237,10 +239,19 @@ export class MetaWhatsAppChannel {
     },
   ): Promise<SendResult> {
     const env = opts?.env ?? process.env;
+    if (!isAcceptanceRecipientAllowed(intent.toE164, env)) {
+      return {
+        ok: false,
+        class: 'PERMANENT_FAILURE',
+        safeMessage: 'acceptance_recipient_not_allowed',
+      };
+    }
     let version: string;
+    let baseUrl: string;
     let token: string;
     try {
       version = resolveMetaGraphApiVersion(env);
+      baseUrl = resolveMetaGraphBaseUrl(env);
       token = resolveAccessToken(intent.credentialRef, env);
     } catch (e) {
       const msg = String((e as Error).message);
@@ -250,7 +261,7 @@ export class MetaWhatsAppChannel {
       return { ok: false, class: 'PERMANENT_FAILURE', safeMessage: msg };
     }
 
-    const url = `https://graph.facebook.com/${version}/${encodeURIComponent(intent.phoneNumberId)}/messages`;
+    const url = `${baseUrl}/${version}/${encodeURIComponent(intent.phoneNumberId)}/messages`;
     const bodyPayload =
       intent.sendMode === 'TEMPLATE' && intent.template
         ? {

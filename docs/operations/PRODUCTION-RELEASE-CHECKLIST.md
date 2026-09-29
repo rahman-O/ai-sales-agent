@@ -64,6 +64,22 @@ Use this checklist for every staging and production deployment of the multi-busi
 
 ---
 
+## Production Provider Acceptance Checklist
+
+- Prerequisite phase evidence, migrations, backup, restore drill, and rollback owner are current.
+- `prisma validate`, `prisma generate`, unit, integration, build, and `prod:check` pass.
+- Meta Graph API version is pinned; credentials resolve without printing values.
+- The test organization, active channel, public HTTPS webhook, and authorized recipient are confirmed.
+- Challenge verification and raw-body signatures pass; invalid, missing, and modified signatures fail closed.
+- Live inbound creates one canonical message in the correct tenant; a concurrent replay creates no duplicate processing or mutation.
+- Live outbound stores the provider message ID and records accepted, delivered/read, and controlled failure evidence where Meta exposes it.
+- Timeout/unknown results are not blindly resent; auth failure marks the channel unhealthy; rate limits back off.
+- Booking, zero-slot, quote, order, offer, policy, knowledge, topic-switch, multi-intent, and handoff flows are run only when the controlled organization supports them.
+- Logs and evidence contain no credentials, full message content, or unredacted recipient identifiers.
+- Channel disable, credential rotation, incident owner, stop conditions, and rollback are rehearsed.
+
+---
+
 ## Rollback Decision Tree
 
 1. **Application Failure, Database Compatible**:
@@ -71,4 +87,4 @@ Use this checklist for every staging and production deployment of the multi-busi
 2. **Migration Failure / Incomplete**:
    - Stop rollout. Keep current application running on backward-compatible schema (Expand/Migrate/Contract pattern). Forward-fix migration script.
 3. **Data Corruption / Catastrophic Failure**:
-   - Declare incident. Initiate point-in-time restore following [BACKUP-RESTORE.md](file:///Users/rahmano/Desktop/rahmano/Al-salsas/docs/operations/BACKUP-RESTORE.md).
+   - Declare incident. Initiate point-in-time restore following [BACKUP-RESTORE.md](file:///c:/Users/rahmano/Desktop/AI%20Sales%20Agent/docs/operations/BACKUP-RESTORE.md).
