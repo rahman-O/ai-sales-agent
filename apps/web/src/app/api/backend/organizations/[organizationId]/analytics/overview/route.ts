@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSupabaseServerClient } from '@/shared/auth/supabase/server';
 export async function GET(request:NextRequest,context:{params:Promise<{organizationId:string}>}){
   const {organizationId}=await context.params; const supabase=await createSupabaseServerClient();
   const {data}=await supabase.auth.getSession(); const token=data.session?.access_token;

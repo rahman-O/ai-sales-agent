@@ -1,0 +1,5 @@
+import fs from 'node:fs';
+import {Harness,assert} from './runtime.ts';
+const h=new Harness();
+async function main(){await h.preflight();const prior=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));const boundary=prior.evidence.find((e:any)=>e.event==='crash_boundary_observed');assert(boundary,'no_crash_boundary');await h.scenario('WORKER_CRASH_OBSERVED_RECOVERY',async()=>{const m=(await h.pool.query('SELECT m.id,m.conversation_id,m.ingress_sequence,m.provider_message_id provider_inbound_id,m.created_at,ci.external_address FROM messages m JOIN conversations c ON c.id=m.conversation_id JOIN customer_identities ci ON ci.id=c.identity_id WHERE m.organization_id=$1 AND m.provider_message_id=$2',[h.org,boundary.inboundId])).rows[0];assert(m,'crash_message_missing');const t=await h.settle({...m,providerInboundId:m.provider_inbound_id,phone:m.external_address,began:new Date(m.created_at).getTime()},420000);h.success(t);return {conversationId:t.conversationId,agentRunId:t.agentRunId,recoveryMs:t.responseMs};});}
+main().catch(()=>{process.exitCode=1;}).finally(()=>h.close());

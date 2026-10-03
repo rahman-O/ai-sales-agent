@@ -1,0 +1,25 @@
+{
+  "reason": "Full read-only catalog equivalence to fresh SQL replay; reconcile stale migration checksum only",
+  "before": {
+    "id": "2fb5d7e9-27bd-48b5-a8db-5144f4ddd47c",
+    "migration_name": "202609262200_pre_p14_conversation_working_state",
+    "checksum": "4e6b54a2a11b63dd101c51829e1f964344fe3bebbcb21422778749a2a97efdf3",
+    "finished_at": "2026-09-26T21:03:02.331Z",
+    "rolled_back_at": null
+  },
+  "afterChecksum": "74182f4cd3b13fa7ed17023b47a320601b0f9f28e31570be1bafcb8257cbe748",
+  "checkedCatalogs": [
+    "tables",
+    "columns",
+    "constraints",
+    "indexes",
+    "policies",
+    "functions",
+    "triggers",
+    "grants",
+    "extensions",
+    "enums",
+    "runtimeRole"
+  ],
+  "timestamp": "2026-10-01T22:43:20.358Z"
+}

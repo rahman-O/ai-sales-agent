@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { getRecentConversationMessages } from './recent-conversation-messages.js';
 import type { Pool } from 'pg';
 import {
   FakeModelProvider,
@@ -188,21 +189,7 @@ export async function runConversationAgent(opts: {
       return { terminal: 'SKIPPED', reason: `mode_${c.mode}` };
     }
 
-    const messages = await client.query<{
-      id: string;
-      direction: string;
-      ingress_sequence: number | null;
-      timeline_sequence: number;
-      content_text: string;
-    }>(
-      `SELECT id, direction, ingress_sequence, timeline_sequence, content_text
-       FROM messages
-       WHERE organization_id=$1 AND conversation_id=$2
-         AND (ingress_sequence IS NULL OR ingress_sequence <= $3)
-       ORDER BY timeline_sequence ASC
-       LIMIT 50`,
-      [opts.organizationId, opts.conversationId, opts.targetIngressSequence],
-    );
+    const messages = await getRecentConversationMessages(client, opts.organizationId, opts.conversationId, opts.targetIngressSequence);
     const summary = await client.query<{
       summary_text: string;
       source_watermark: number;

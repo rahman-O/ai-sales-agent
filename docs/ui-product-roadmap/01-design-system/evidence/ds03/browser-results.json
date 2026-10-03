@@ -1,0 +1,16 @@
+{
+  "legacy": {
+    "login": "pixel-identical",
+    "dashboard": "pixel-identical",
+    "policies": "pixel-identical",
+    "orders": "pixel-identical",
+    "test-assistant": "pixel-identical"
+  },
+  "light": "PASS",
+  "dark": "PASS",
+  "system": "PASS",
+  "rtl": "PASS",
+  "ltr": "PASS",
+  "hydrationErrors": [],
+  "network": "external blocked; backend fixture 401; no live agent calls"
+}

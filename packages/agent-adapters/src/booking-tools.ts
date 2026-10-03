@@ -7,6 +7,7 @@ import {
   formatLocalTimeInZone,
   intervalContained,
   isExplicitBookingConfirmation,
+  confirmedCandidateIndex,
   isoDayOfWeekInZone,
   localToUtcCandidates,
   occupiedRange,
@@ -293,7 +294,7 @@ export async function toolCreateBooking(
   c: PoolClient,
   org: string,
   customerId: string,
-  args: { slotToken: string; confirmationMessageId?: string; leadId?: string },
+  args: { slotToken?: string; candidateSlotIndex?: number; confirmationMessageId?: string; leadId?: string },
   ctx: { conversationId: string; agentRunId: string; targetIngressSequence: number },
 ): Promise<ToolOk | ToolErr> {
   if (args.leadId && !isValidUuid(args.leadId)) {
@@ -306,7 +307,23 @@ export async function toolCreateBooking(
   } catch {
     return { ok: false, code: 'TOOL_UNAVAILABLE' };
   }
-  const verified = verifySlotToken(args.slotToken, secret, {
+  let slotToken=args.slotToken;
+  if (args.candidateSlotIndex !== undefined) {
+    if (args.slotToken !== undefined || !Number.isInteger(args.candidateSlotIndex) || args.candidateSlotIndex<0) return {ok:false,code:'INVALID_ARGS'};
+    const state=await c.query<{state_json:{candidateSlots?:Array<{slotToken?:string}>};content_text:string}>(
+      `SELECT ws.state_json,m.content_text FROM conversations conv
+       JOIN conversation_working_state ws ON ws.organization_id=conv.organization_id AND ws.conversation_id=conv.id
+       JOIN messages m ON m.organization_id=conv.organization_id AND m.conversation_id=conv.id
+       WHERE conv.organization_id=$1 AND conv.id=$2 AND conv.customer_id=$3
+         AND m.ingress_sequence=$4 AND m.direction='INBOUND'`,
+      [org,ctx.conversationId,customerId,ctx.targetIngressSequence],
+    );
+    const row=state.rows[0];
+    if (!row || confirmedCandidateIndex(row.content_text)!==args.candidateSlotIndex) return {ok:false,code:'CONFIRMATION_REQUIRED'};
+    slotToken=row.state_json.candidateSlots?.[args.candidateSlotIndex]?.slotToken;
+    if (!slotToken) return {ok:false,code:'SLOT_UNAVAILABLE'};
+  }
+  const verified = verifySlotToken(slotToken ?? '', secret, {
     organizationId: org,
     customerId,
   });

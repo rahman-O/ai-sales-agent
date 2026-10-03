@@ -1,0 +1,4 @@
+/* One package stylesheet; no global Preflight. */
+@import '@ai-sales-agent/design-system/styles.css';
+@import '../styles/legacy-compat.css';
+@source './internal/design-system';

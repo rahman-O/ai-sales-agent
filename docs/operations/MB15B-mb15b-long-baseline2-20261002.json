@@ -1,0 +1,38 @@
+{
+  "runId": "mb15b-long-baseline2-20261002",
+  "scenarios": {
+    "PREFLIGHT": {
+      "status": "PASS",
+      "details": {
+        "provider": "deepseek",
+        "keyConfigured": true,
+        "simulatorOnly": true,
+        "syntheticToken": true,
+        "scripted": false
+      }
+    },
+    "LONG_CONVERSATION_50": {
+      "status": "FAIL",
+      "reason": "operator does not exist: text = uuid"
+    },
+    "LONG_CONVERSATION_100": {
+      "status": "NOT_RUN",
+      "reason": "optional_100_turn_stage_not_yet_executed"
+    },
+    "MODEL_BUDGET_STABILITY": {
+      "status": "PASS",
+      "details": {
+        "averageModelCalls": 0,
+        "p95ModelCalls": 0,
+        "maxModelCalls": 0,
+        "averageToolCalls": 0,
+        "p95ToolCalls": 0,
+        "finalizationReserveUsage": 0,
+        "safeStopCount": 0,
+        "structuredRepairCount": null,
+        "providerFailureCount": 0
+      }
+    }
+  },
+  "evidence": []
+}

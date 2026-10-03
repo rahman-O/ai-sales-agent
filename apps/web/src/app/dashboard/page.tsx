@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { OperatorNav } from '@/components/OperatorNav';
-import { createRefreshController } from '@/lib/dashboard-refresh';
+import { OperatorNav } from '@/client/navigation/OperatorNav';
+import { createRefreshController } from '@/shared/utils/dashboard-refresh';
 
 type AttentionItem = {
   id: string;

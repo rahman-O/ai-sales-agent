@@ -24,7 +24,9 @@ export class SecurityHeadersAndRateLimitMiddleware implements NestMiddleware {
     res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
 
-    if (req.path.startsWith('/health/') || req.path.startsWith('/v1/webhooks/')) {
+    // Express wildcard mounts strip req.path; originalUrl preserves the route.
+    const requestPath = (req.originalUrl || req.path).split('?')[0]!;
+    if (requestPath.startsWith('/health/') || requestPath.startsWith('/v1/webhooks/')) {
       next();
       return;
     }

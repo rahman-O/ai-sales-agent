@@ -63,6 +63,14 @@ test('operationKey uses runKey not random agentRunId', () => {
   assert.equal(k1, k2);
 });
 
+test('parseAgentDecision rejects unknown fields on canonical decision variants', () => {
+  for (const decision of [
+    { type: 'final_response', text: 'hello', claims: [], extra: true },
+    { type: 'tool_request', toolName: 'searchServices', arguments: {}, extra: true },
+    { type: 'safe_stop', reason: 'stop', extra: true },
+  ]) assert.throws(() => parseAgentDecision(decision));
+});
+
 test('parseAgentDecision rejects unknown type', () => {
   assert.throws(() => parseAgentDecision({ type: 'hack', text: 'x' }));
 });
@@ -420,4 +428,72 @@ test('context builder drops stale summary watermark', async () => {
     toolAllowlist: [],
   });
   assert.ok(!msgs[0]!.content.includes('stale summary'));
+});
+
+function reserveScenario(lastDecision: unknown) {
+  const decisions = Array.from({ length: 5 }, (_, i) => ({
+    type: 'tool_request', toolName: 'searchServices', arguments: { query: `service-${i}` },
+  }));
+  const requests: Array<{ tools: unknown[]; messages: Array<{role:string;content:string}> }> = [];
+  const executions: string[] = [];
+  const underlying = sequenceProvider([...decisions, lastDecision]);
+  const provider: ModelProvider = { id: 'sequence', async generate(input) {
+    requests.push({ tools: input.tools, messages: structuredClone(input.messages) });
+    return underlying.generate(input);
+  }};
+  const tools: ToolExecutorPort = {
+    listTools: () => [{ name: 'searchServices', version: '1', description: 'search', classification: 'read', inputSchema: { type: 'object' } }],
+    async execute(_name, args) { executions.push(String(args.query)); return { ok: true, code: 'OK', data: { services: [] } }; },
+  };
+  return { requests, executions, provider, tools };
+}
+
+test('five successful operational calls leave exactly one finalization-only call', async () => {
+  const scenario = reserveScenario({ type: 'final_response', text: 'No confirmed slots are available.', claims: [] });
+  const result = await runAgentOrchestrator(bookingSnapshot(), { ...scenario, store: memoryStore() });
+  assert.equal(result.terminal, 'SUCCEEDED');
+  assert.equal(scenario.executions.length, 5);
+  assert.equal(scenario.requests.length, 6);
+  assert.deepEqual(scenario.requests[5]?.tools, []);
+});
+
+test('reserve rejects another tool request without executing it', async () => {
+  const scenario = reserveScenario({ type: 'tool_request', toolName: 'searchServices', arguments: { query: 'sixth' } });
+  const result = await runAgentOrchestrator(bookingSnapshot(), { ...scenario, store: memoryStore() });
+  assert.equal(result.terminal, 'BUDGET_EXCEEDED');
+  assert.equal(result.reason, 'finalization_reserve_tool_request');
+  assert.equal(scenario.executions.length, 5);
+  assert.equal(scenario.requests.length, 6);
+});
+
+test('invalid reserve output cannot obtain an additional schema-repair call', async () => {
+  const scenario = reserveScenario({ type: 'final_response', text: 'bad', claims: [], extra: true });
+  const result = await runAgentOrchestrator(bookingSnapshot(), { ...scenario, store: memoryStore() });
+  assert.equal(result.terminal, 'BUDGET_EXCEEDED');
+  assert.equal(scenario.requests.length, 6);
+});
+
+test('identical tool-loop guard still stops before finalization reserve', async () => {
+  const scenario = reserveScenario({ type: 'final_response', text: 'done', claims: [] });
+  const provider = sequenceProvider([{ type: 'tool_request', toolName: 'searchServices', arguments: { query: 'same' } }]);
+  const result = await runAgentOrchestrator(bookingSnapshot(), { ...scenario, provider, store: memoryStore() });
+  assert.equal(result.reason, 'repeated_identical_tool');
+  assert.equal(scenario.executions.length, 2);
+});
+
+
+test('successful tool history preserves executed arguments for subsequent model decisions', async () => {
+  const scenario = reserveScenario({ type: 'final_response', text: 'done', claims: [] });
+  await runAgentOrchestrator(bookingSnapshot(), { ...scenario, store: memoryStore() });
+  const prior = scenario.requests[1]?.messages.find(message => message.role === 'assistant');
+  assert.ok(prior);
+  assert.deepEqual(JSON.parse(prior.content), { type: 'tool_request', toolName: 'searchServices', arguments: { query: 'service-0' } });
+  assert.ok(scenario.requests[1]?.messages.some(message => message.role === 'system' && message.content.includes('Consume it; do not repeat')));
+});
+
+
+test('canonical parser rejects prose, missing type, and missing tool arguments', () => {
+  for (const value of ['plain prose', { text: 'untyped reply', claims: [] }, { response: 'wrapped reply' }, { type: 'final_response', text: 'missing claims' }, { type: 'tool_request', toolName: 'createBooking' }]) {
+    assert.throws(() => parseAgentDecision(value));
+  }
 });

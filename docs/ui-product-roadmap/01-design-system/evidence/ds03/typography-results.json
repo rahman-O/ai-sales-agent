@@ -1,0 +1,2737 @@
+{
+  "matrix": [
+    {
+      "width": 1440,
+      "theme": "light",
+      "dir": "ltr",
+      "measurements": {
+        "width": 1440,
+        "pageWidth": 1392,
+        "maxWidth": 1440,
+        "icon": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 500,
+          "gap": null,
+          "padding": 0,
+          "height": 20,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "gutter": 32,
+        "gutterEnd": 32,
+        "overflow": false,
+        "fontFamily": "\"arabicFont\",Tahoma,Arial,sans-serif",
+        "faces": [
+          {
+            "family": "arabicFont",
+            "status": "loaded"
+          }
+        ],
+        "body": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 30,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 95.0625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "helper": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 30.5625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "caption": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 12,
+          "line": 19.2,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 25.25,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "title": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 32,
+          "line": 51.2,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 51.1875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "metric": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 32,
+          "line": 48,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 48,
+          "tracking": "normal",
+          "numeric": "tabular-nums"
+        },
+        "standard": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 24,
+          "height": 363.796875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compact": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 363.796875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "standardForm": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 24,
+          "padding": 24,
+          "height": 354.265625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compactForm": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 354.265625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "control": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 44,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "smallControl": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 45.84375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "sections": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 32,
+          "padding": 0,
+          "height": 1097.4375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "bridge": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 500,
+          "gap": null,
+          "padding": 16,
+          "height": 25.5,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "arabic": [
+          {
+            "text": "نَظْرَةٌ عَامَّةٌ عَلَى مَسَاحَةِ العَمَلِ",
+            "size": 32,
+            "line": 51.2,
+            "ink": 51.03245162963867,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "عُنْوَانُ القِسْمِ",
+            "size": 20,
+            "line": 32,
+            "ink": 26.282068252563477,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "تُسَاعِدُ المَسَافَاتُ المُنْتَظِمَةُ وَوُضُوحُ الخَطِّ عَلَى قِرَاءَةِ التَّعْلِيمَاتِ وَالأَسْمَاءِ الطَّوِيلَةِ بِهُدُوءٍ. تَظَلُّ الحَرَكَاتُ وَالحُرُوفُ وَاضِحَةً فِي الفِقْرَاتِ وَحُقُولِ النَّمَاذِجِ.",
+            "size": 16,
+            "line": 30,
+            "ink": 29.51999855041504,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "نَصٌّ مُسَاعِدٌ لِتَوْضِيحِ المَعْلُومَاتِ",
+            "size": 14,
+            "line": 24.5,
+            "ink": 23.08600616455078,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "مُلَاحَظَةٌ قَصِيرَةٌ",
+            "size": 12,
+            "line": 19.2,
+            "ink": 16.103992462158203,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "١٢٤",
+            "size": 24,
+            "line": 36,
+            "ink": 16.608001708984375,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          }
+        ]
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "dir": "rtl",
+      "measurements": {
+        "width": 1440,
+        "pageWidth": 1392,
+        "maxWidth": 1440,
+        "icon": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 500,
+          "gap": null,
+          "padding": 0,
+          "height": 20,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "gutter": 32,
+        "gutterEnd": 32,
+        "overflow": false,
+        "fontFamily": "\"arabicFont\",Tahoma,Arial,sans-serif",
+        "faces": [
+          {
+            "family": "arabicFont",
+            "status": "loaded"
+          }
+        ],
+        "body": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 30,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 96.65625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "helper": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 31.171875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "caption": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 12,
+          "line": 19.2,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 25.859375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "title": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 32,
+          "line": 51.2,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 51.1875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "metric": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 32,
+          "line": 48,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 50,
+          "tracking": "normal",
+          "numeric": "tabular-nums"
+        },
+        "standard": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 24,
+          "height": 369.796875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compact": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 369.796875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "standardForm": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 24,
+          "padding": 24,
+          "height": 351.265625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compactForm": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 351.265625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "control": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 44,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "smallControl": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 45.84375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "sections": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 32,
+          "padding": 0,
+          "height": 1096.4375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "bridge": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 500,
+          "gap": null,
+          "padding": 16,
+          "height": 24.5,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "arabic": [
+          {
+            "text": "نَظْرَةٌ عَامَّةٌ عَلَى مَسَاحَةِ العَمَلِ",
+            "size": 32,
+            "line": 51.2,
+            "ink": 51.03245162963867,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "عُنْوَانُ القِسْمِ",
+            "size": 20,
+            "line": 32,
+            "ink": 26.282068252563477,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "تُسَاعِدُ المَسَافَاتُ المُنْتَظِمَةُ وَوُضُوحُ الخَطِّ عَلَى قِرَاءَةِ التَّعْلِيمَاتِ وَالأَسْمَاءِ الطَّوِيلَةِ بِهُدُوءٍ. تَظَلُّ الحَرَكَاتُ وَالحُرُوفُ وَاضِحَةً فِي الفِقْرَاتِ وَحُقُولِ النَّمَاذِجِ.",
+            "size": 16,
+            "line": 30,
+            "ink": 29.51999855041504,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "نَصٌّ مُسَاعِدٌ لِتَوْضِيحِ المَعْلُومَاتِ",
+            "size": 14,
+            "line": 24.5,
+            "ink": 23.08600616455078,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "مُلَاحَظَةٌ قَصِيرَةٌ",
+            "size": 12,
+            "line": 19.2,
+            "ink": 16.103992462158203,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "١٢٤",
+            "size": 24,
+            "line": 36,
+            "ink": 16.608001708984375,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          }
+        ]
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "dir": "ltr",
+      "measurements": {
+        "width": 1440,
+        "pageWidth": 1392,
+        "maxWidth": 1440,
+        "icon": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 500,
+          "gap": null,
+          "padding": 0,
+          "height": 20,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "gutter": 32,
+        "gutterEnd": 32,
+        "overflow": false,
+        "fontFamily": "\"arabicFont\",Tahoma,Arial,sans-serif",
+        "faces": [
+          {
+            "family": "arabicFont",
+            "status": "loaded"
+          }
+        ],
+        "body": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 30,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 95.0625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "helper": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 30.5625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "caption": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 12,
+          "line": 19.2,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 25.25,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "title": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 32,
+          "line": 51.2,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 51.1875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "metric": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 32,
+          "line": 48,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 48,
+          "tracking": "normal",
+          "numeric": "tabular-nums"
+        },
+        "standard": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 24,
+          "height": 363.796875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compact": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 363.796875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "standardForm": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 24,
+          "padding": 24,
+          "height": 354.265625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compactForm": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 354.265625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "control": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 44,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "smallControl": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 45.84375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "sections": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 32,
+          "padding": 0,
+          "height": 1097.4375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "bridge": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 500,
+          "gap": null,
+          "padding": 16,
+          "height": 25.5,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "arabic": [
+          {
+            "text": "نَظْرَةٌ عَامَّةٌ عَلَى مَسَاحَةِ العَمَلِ",
+            "size": 32,
+            "line": 51.2,
+            "ink": 51.03245162963867,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "عُنْوَانُ القِسْمِ",
+            "size": 20,
+            "line": 32,
+            "ink": 26.282068252563477,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "تُسَاعِدُ المَسَافَاتُ المُنْتَظِمَةُ وَوُضُوحُ الخَطِّ عَلَى قِرَاءَةِ التَّعْلِيمَاتِ وَالأَسْمَاءِ الطَّوِيلَةِ بِهُدُوءٍ. تَظَلُّ الحَرَكَاتُ وَالحُرُوفُ وَاضِحَةً فِي الفِقْرَاتِ وَحُقُولِ النَّمَاذِجِ.",
+            "size": 16,
+            "line": 30,
+            "ink": 29.51999855041504,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "نَصٌّ مُسَاعِدٌ لِتَوْضِيحِ المَعْلُومَاتِ",
+            "size": 14,
+            "line": 24.5,
+            "ink": 23.08600616455078,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "مُلَاحَظَةٌ قَصِيرَةٌ",
+            "size": 12,
+            "line": 19.2,
+            "ink": 16.103992462158203,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "١٢٤",
+            "size": 24,
+            "line": 36,
+            "ink": 16.608001708984375,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          }
+        ]
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "dir": "rtl",
+      "measurements": {
+        "width": 1440,
+        "pageWidth": 1392,
+        "maxWidth": 1440,
+        "icon": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 500,
+          "gap": null,
+          "padding": 0,
+          "height": 20,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "gutter": 32,
+        "gutterEnd": 32,
+        "overflow": false,
+        "fontFamily": "\"arabicFont\",Tahoma,Arial,sans-serif",
+        "faces": [
+          {
+            "family": "arabicFont",
+            "status": "loaded"
+          }
+        ],
+        "body": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 30,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 96.65625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "helper": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 31.171875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "caption": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 12,
+          "line": 19.2,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 25.859375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "title": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 32,
+          "line": 51.2,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 51.1875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "metric": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 32,
+          "line": 48,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 50,
+          "tracking": "normal",
+          "numeric": "tabular-nums"
+        },
+        "standard": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 24,
+          "height": 369.796875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compact": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 369.796875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "standardForm": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 24,
+          "padding": 24,
+          "height": 351.265625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compactForm": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 351.265625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "control": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 44,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "smallControl": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 45.84375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "sections": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 32,
+          "padding": 0,
+          "height": 1096.4375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "bridge": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 500,
+          "gap": null,
+          "padding": 16,
+          "height": 24.5,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "arabic": [
+          {
+            "text": "نَظْرَةٌ عَامَّةٌ عَلَى مَسَاحَةِ العَمَلِ",
+            "size": 32,
+            "line": 51.2,
+            "ink": 51.03245162963867,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "عُنْوَانُ القِسْمِ",
+            "size": 20,
+            "line": 32,
+            "ink": 26.282068252563477,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "تُسَاعِدُ المَسَافَاتُ المُنْتَظِمَةُ وَوُضُوحُ الخَطِّ عَلَى قِرَاءَةِ التَّعْلِيمَاتِ وَالأَسْمَاءِ الطَّوِيلَةِ بِهُدُوءٍ. تَظَلُّ الحَرَكَاتُ وَالحُرُوفُ وَاضِحَةً فِي الفِقْرَاتِ وَحُقُولِ النَّمَاذِجِ.",
+            "size": 16,
+            "line": 30,
+            "ink": 29.51999855041504,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "نَصٌّ مُسَاعِدٌ لِتَوْضِيحِ المَعْلُومَاتِ",
+            "size": 14,
+            "line": 24.5,
+            "ink": 23.08600616455078,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "مُلَاحَظَةٌ قَصِيرَةٌ",
+            "size": 12,
+            "line": 19.2,
+            "ink": 16.103992462158203,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "١٢٤",
+            "size": 24,
+            "line": 36,
+            "ink": 16.608001708984375,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          }
+        ]
+      }
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "dir": "ltr",
+      "measurements": {
+        "width": 375,
+        "pageWidth": 327,
+        "maxWidth": 1440,
+        "icon": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 500,
+          "gap": null,
+          "padding": 0,
+          "height": 20,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "gutter": 16,
+        "gutterEnd": 16,
+        "overflow": false,
+        "fontFamily": "\"arabicFont\",Tahoma,Arial,sans-serif",
+        "faces": [
+          {
+            "family": "arabicFont",
+            "status": "loaded"
+          }
+        ],
+        "body": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 30,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 180,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "helper": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 51,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "caption": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 12,
+          "line": 19.2,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 20.1875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "title": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 24,
+          "line": 38.4,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 38.390625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "metric": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 32,
+          "line": 48,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 48,
+          "tracking": "normal",
+          "numeric": "tabular-nums"
+        },
+        "standard": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 24,
+          "height": 513.984375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compact": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 388.296875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "standardForm": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 24,
+          "padding": 24,
+          "height": 379.765625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compactForm": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 310.65625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "control": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 44,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "smallControl": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 40.390625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "sections": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 32,
+          "padding": 0,
+          "height": 2019.984375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "bridge": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 500,
+          "gap": null,
+          "padding": 16,
+          "height": 25.5,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "arabic": [
+          {
+            "text": "نَظْرَةٌ عَامَّةٌ عَلَى مَسَاحَةِ العَمَلِ",
+            "size": 24,
+            "line": 38.4,
+            "ink": 38.274314880371094,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "عُنْوَانُ القِسْمِ",
+            "size": 20,
+            "line": 32,
+            "ink": 26.282068252563477,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "تُسَاعِدُ المَسَافَاتُ المُنْتَظِمَةُ وَوُضُوحُ الخَطِّ عَلَى قِرَاءَةِ التَّعْلِيمَاتِ وَالأَسْمَاءِ الطَّوِيلَةِ بِهُدُوءٍ. تَظَلُّ الحَرَكَاتُ وَالحُرُوفُ وَاضِحَةً فِي الفِقْرَاتِ وَحُقُولِ النَّمَاذِجِ.",
+            "size": 16,
+            "line": 30,
+            "ink": 29.51999855041504,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "نَصٌّ مُسَاعِدٌ لِتَوْضِيحِ المَعْلُومَاتِ",
+            "size": 14,
+            "line": 24.5,
+            "ink": 23.08600616455078,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "مُلَاحَظَةٌ قَصِيرَةٌ",
+            "size": 12,
+            "line": 19.2,
+            "ink": 16.103992462158203,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "١٢٤",
+            "size": 24,
+            "line": 36,
+            "ink": 16.608001708984375,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          }
+        ]
+      }
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "dir": "rtl",
+      "measurements": {
+        "width": 375,
+        "pageWidth": 327,
+        "maxWidth": 1440,
+        "icon": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 500,
+          "gap": null,
+          "padding": 0,
+          "height": 20,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "gutter": 16,
+        "gutterEnd": 16,
+        "overflow": false,
+        "fontFamily": "\"arabicFont\",Tahoma,Arial,sans-serif",
+        "faces": [
+          {
+            "family": "arabicFont",
+            "status": "loaded"
+          }
+        ],
+        "body": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 30,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 180,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "helper": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 49,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "caption": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 12,
+          "line": 19.2,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 19.1875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "title": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 24,
+          "line": 38.4,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 38.390625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "metric": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 32,
+          "line": 48,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 50,
+          "tracking": "normal",
+          "numeric": "tabular-nums"
+        },
+        "standard": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 24,
+          "height": 510.984375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compact": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 394.296875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "standardForm": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 24,
+          "padding": 24,
+          "height": 375.765625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compactForm": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 332.15625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "control": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 44,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "smallControl": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 40.390625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "sections": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 32,
+          "padding": 0,
+          "height": 2035.484375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "bridge": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 500,
+          "gap": null,
+          "padding": 16,
+          "height": 24.5,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "arabic": [
+          {
+            "text": "نَظْرَةٌ عَامَّةٌ عَلَى مَسَاحَةِ العَمَلِ",
+            "size": 24,
+            "line": 38.4,
+            "ink": 38.274314880371094,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "عُنْوَانُ القِسْمِ",
+            "size": 20,
+            "line": 32,
+            "ink": 26.282068252563477,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "تُسَاعِدُ المَسَافَاتُ المُنْتَظِمَةُ وَوُضُوحُ الخَطِّ عَلَى قِرَاءَةِ التَّعْلِيمَاتِ وَالأَسْمَاءِ الطَّوِيلَةِ بِهُدُوءٍ. تَظَلُّ الحَرَكَاتُ وَالحُرُوفُ وَاضِحَةً فِي الفِقْرَاتِ وَحُقُولِ النَّمَاذِجِ.",
+            "size": 16,
+            "line": 30,
+            "ink": 29.51999855041504,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "نَصٌّ مُسَاعِدٌ لِتَوْضِيحِ المَعْلُومَاتِ",
+            "size": 14,
+            "line": 24.5,
+            "ink": 23.08600616455078,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "مُلَاحَظَةٌ قَصِيرَةٌ",
+            "size": 12,
+            "line": 19.2,
+            "ink": 16.103992462158203,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "١٢٤",
+            "size": 24,
+            "line": 36,
+            "ink": 16.608001708984375,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          }
+        ]
+      }
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "dir": "ltr",
+      "measurements": {
+        "width": 375,
+        "pageWidth": 327,
+        "maxWidth": 1440,
+        "icon": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 500,
+          "gap": null,
+          "padding": 0,
+          "height": 20,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "gutter": 16,
+        "gutterEnd": 16,
+        "overflow": false,
+        "fontFamily": "\"arabicFont\",Tahoma,Arial,sans-serif",
+        "faces": [
+          {
+            "family": "arabicFont",
+            "status": "loaded"
+          }
+        ],
+        "body": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 30,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 180,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "helper": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 51,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "caption": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 12,
+          "line": 19.2,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 20.1875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "title": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 24,
+          "line": 38.4,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 38.390625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "metric": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 32,
+          "line": 48,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 48,
+          "tracking": "normal",
+          "numeric": "tabular-nums"
+        },
+        "standard": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 24,
+          "height": 513.984375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compact": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 388.296875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "standardForm": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 24,
+          "padding": 24,
+          "height": 379.765625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compactForm": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 310.65625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "control": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 44,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "smallControl": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 40.390625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "sections": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 32,
+          "padding": 0,
+          "height": 2019.984375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "bridge": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 500,
+          "gap": null,
+          "padding": 16,
+          "height": 25.5,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "arabic": [
+          {
+            "text": "نَظْرَةٌ عَامَّةٌ عَلَى مَسَاحَةِ العَمَلِ",
+            "size": 24,
+            "line": 38.4,
+            "ink": 38.274314880371094,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "عُنْوَانُ القِسْمِ",
+            "size": 20,
+            "line": 32,
+            "ink": 26.282068252563477,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "تُسَاعِدُ المَسَافَاتُ المُنْتَظِمَةُ وَوُضُوحُ الخَطِّ عَلَى قِرَاءَةِ التَّعْلِيمَاتِ وَالأَسْمَاءِ الطَّوِيلَةِ بِهُدُوءٍ. تَظَلُّ الحَرَكَاتُ وَالحُرُوفُ وَاضِحَةً فِي الفِقْرَاتِ وَحُقُولِ النَّمَاذِجِ.",
+            "size": 16,
+            "line": 30,
+            "ink": 29.51999855041504,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "نَصٌّ مُسَاعِدٌ لِتَوْضِيحِ المَعْلُومَاتِ",
+            "size": 14,
+            "line": 24.5,
+            "ink": 23.08600616455078,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "مُلَاحَظَةٌ قَصِيرَةٌ",
+            "size": 12,
+            "line": 19.2,
+            "ink": 16.103992462158203,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "١٢٤",
+            "size": 24,
+            "line": 36,
+            "ink": 16.608001708984375,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          }
+        ]
+      }
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "dir": "rtl",
+      "measurements": {
+        "width": 375,
+        "pageWidth": 327,
+        "maxWidth": 1440,
+        "icon": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 500,
+          "gap": null,
+          "padding": 0,
+          "height": 20,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "gutter": 16,
+        "gutterEnd": 16,
+        "overflow": false,
+        "fontFamily": "\"arabicFont\",Tahoma,Arial,sans-serif",
+        "faces": [
+          {
+            "family": "arabicFont",
+            "status": "loaded"
+          }
+        ],
+        "body": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 16,
+          "line": 30,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 180,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "helper": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 49,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "caption": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 12,
+          "line": 19.2,
+          "weight": 400,
+          "gap": null,
+          "padding": 0,
+          "height": 19.1875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "title": {
+          "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+          "size": 24,
+          "line": 38.4,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 38.390625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "metric": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 32,
+          "line": 48,
+          "weight": 600,
+          "gap": null,
+          "padding": 0,
+          "height": 50,
+          "tracking": "normal",
+          "numeric": "tabular-nums"
+        },
+        "standard": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 24,
+          "height": 510.984375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compact": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 394.296875,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "standardForm": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 24,
+          "padding": 24,
+          "height": 375.765625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "compactForm": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 16,
+          "padding": 16,
+          "height": 332.15625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "control": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 44,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "smallControl": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 22.4,
+          "weight": 400,
+          "gap": null,
+          "padding": 12,
+          "height": 40.390625,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "sections": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 16,
+          "line": 28,
+          "weight": 400,
+          "gap": 32,
+          "padding": 0,
+          "height": 2035.484375,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "bridge": {
+          "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+          "size": 14,
+          "line": 24.5,
+          "weight": 500,
+          "gap": null,
+          "padding": 16,
+          "height": 24.5,
+          "tracking": "normal",
+          "numeric": "normal"
+        },
+        "arabic": [
+          {
+            "text": "نَظْرَةٌ عَامَّةٌ عَلَى مَسَاحَةِ العَمَلِ",
+            "size": 24,
+            "line": 38.4,
+            "ink": 38.274314880371094,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "عُنْوَانُ القِسْمِ",
+            "size": 20,
+            "line": 32,
+            "ink": 26.282068252563477,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "تُسَاعِدُ المَسَافَاتُ المُنْتَظِمَةُ وَوُضُوحُ الخَطِّ عَلَى قِرَاءَةِ التَّعْلِيمَاتِ وَالأَسْمَاءِ الطَّوِيلَةِ بِهُدُوءٍ. تَظَلُّ الحَرَكَاتُ وَالحُرُوفُ وَاضِحَةً فِي الفِقْرَاتِ وَحُقُولِ النَّمَاذِجِ.",
+            "size": 16,
+            "line": 30,
+            "ink": 29.51999855041504,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "نَصٌّ مُسَاعِدٌ لِتَوْضِيحِ المَعْلُومَاتِ",
+            "size": 14,
+            "line": 24.5,
+            "ink": 23.08600616455078,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "مُلَاحَظَةٌ قَصِيرَةٌ",
+            "size": 12,
+            "line": 19.2,
+            "ink": 16.103992462158203,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "١٢٤",
+            "size": 24,
+            "line": 36,
+            "ink": 16.608001708984375,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          },
+          {
+            "text": "الاِسْمُ",
+            "size": 14,
+            "line": 22.4,
+            "ink": 16.072246551513672,
+            "tracking": "normal",
+            "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+            "overflow": false
+          }
+        ]
+      }
+    }
+  ],
+  "responsiveMeasurements": [
+    {
+      "width": 768,
+      "gutter": 24
+    },
+    {
+      "width": 1280,
+      "gutter": 32
+    },
+    {
+      "width": 1920,
+      "gutter": 32
+    }
+  ],
+  "zoomMeasurements": {
+    "width": 375,
+    "pageWidth": 327,
+    "maxWidth": 2880,
+    "icon": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 28,
+      "line": 44.8,
+      "weight": 500,
+      "gap": null,
+      "padding": 0,
+      "height": 40,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "gutter": 32,
+    "gutterEnd": 32,
+    "overflow": false,
+    "fontFamily": "\"arabicFont\",Tahoma,Arial,sans-serif",
+    "faces": [
+      {
+        "family": "arabicFont",
+        "status": "loaded"
+      }
+    ],
+    "body": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 32,
+      "line": 60,
+      "weight": 400,
+      "gap": null,
+      "padding": 0,
+      "height": 1200,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "helper": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 28,
+      "line": 49,
+      "weight": 400,
+      "gap": null,
+      "padding": 0,
+      "height": 196,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "caption": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 24,
+      "line": 38.4,
+      "weight": 400,
+      "gap": null,
+      "padding": 0,
+      "height": 76.78125,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "title": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 48,
+      "line": 76.8,
+      "weight": 600,
+      "gap": null,
+      "padding": 0,
+      "height": 153.59375,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "metric": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 64,
+      "line": 96,
+      "weight": 600,
+      "gap": null,
+      "padding": 0,
+      "height": 100,
+      "tracking": "normal",
+      "numeric": "tabular-nums"
+    },
+    "standard": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 32,
+      "line": 56,
+      "weight": 400,
+      "gap": 32,
+      "padding": 48,
+      "height": 2829.15625,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "compact": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 32,
+      "line": 56,
+      "weight": 400,
+      "gap": 32,
+      "padding": 32,
+      "height": 1170.78125,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "standardForm": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 32,
+      "line": 56,
+      "weight": 400,
+      "gap": 48,
+      "padding": 48,
+      "height": 1158.9375,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "compactForm": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 32,
+      "line": 56,
+      "weight": 400,
+      "gap": 32,
+      "padding": 32,
+      "height": 882.140625,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "control": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 28,
+      "line": 44.8,
+      "weight": 400,
+      "gap": null,
+      "padding": 24,
+      "height": 88,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "smallControl": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 28,
+      "line": 44.8,
+      "weight": 400,
+      "gap": null,
+      "padding": 24,
+      "height": 78.796875,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "sections": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 32,
+      "line": 56,
+      "weight": 400,
+      "gap": 64,
+      "padding": 0,
+      "height": 7391,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "bridge": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 28,
+      "line": 49,
+      "weight": 500,
+      "gap": null,
+      "padding": 32,
+      "height": 98,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "arabic": [
+      {
+        "text": "نَظْرَةٌ عَامَّةٌ عَلَى مَسَاحَةِ العَمَلِ",
+        "size": 48,
+        "line": 76.8,
+        "ink": 76.54867553710938,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "عُنْوَانُ القِسْمِ",
+        "size": 40,
+        "line": 64,
+        "ink": 52.56412124633789,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "تُسَاعِدُ المَسَافَاتُ المُنْتَظِمَةُ وَوُضُوحُ الخَطِّ عَلَى قِرَاءَةِ التَّعْلِيمَاتِ وَالأَسْمَاءِ الطَّوِيلَةِ بِهُدُوءٍ. تَظَلُّ الحَرَكَاتُ وَالحُرُوفُ وَاضِحَةً فِي الفِقْرَاتِ وَحُقُولِ النَّمَاذِجِ.",
+        "size": 32,
+        "line": 60,
+        "ink": 59.03999710083008,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "نَصٌّ مُسَاعِدٌ لِتَوْضِيحِ المَعْلُومَاتِ",
+        "size": 28,
+        "line": 49,
+        "ink": 46.1719970703125,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "مُلَاحَظَةٌ قَصِيرَةٌ",
+        "size": 24,
+        "line": 38.4,
+        "ink": 32.20800018310547,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "١٢٤",
+        "size": 48,
+        "line": 72,
+        "ink": 33.21600341796875,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "الاِسْمُ",
+        "size": 28,
+        "line": 44.8,
+        "ink": 32.14447784423828,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "الاِسْمُ",
+        "size": 28,
+        "line": 44.8,
+        "ink": 32.14447784423828,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      }
+    ]
+  },
+  "touchMeasurements": {
+    "width": 375,
+    "pageWidth": 327,
+    "maxWidth": 1440,
+    "icon": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 14,
+      "line": 22.4,
+      "weight": 500,
+      "gap": null,
+      "padding": 0,
+      "height": 20,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "gutter": 16,
+    "gutterEnd": 16,
+    "overflow": false,
+    "fontFamily": "\"arabicFont\",Tahoma,Arial,sans-serif",
+    "faces": [
+      {
+        "family": "arabicFont",
+        "status": "loaded"
+      }
+    ],
+    "body": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 16,
+      "line": 30,
+      "weight": 400,
+      "gap": null,
+      "padding": 0,
+      "height": 180,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "helper": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 14,
+      "line": 24.5,
+      "weight": 400,
+      "gap": null,
+      "padding": 0,
+      "height": 51,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "caption": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 12,
+      "line": 19.2,
+      "weight": 400,
+      "gap": null,
+      "padding": 0,
+      "height": 20.1875,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "title": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 24,
+      "line": 38.4,
+      "weight": 600,
+      "gap": null,
+      "padding": 0,
+      "height": 38.390625,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "metric": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 32,
+      "line": 48,
+      "weight": 600,
+      "gap": null,
+      "padding": 0,
+      "height": 48,
+      "tracking": "normal",
+      "numeric": "tabular-nums"
+    },
+    "standard": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 16,
+      "line": 28,
+      "weight": 400,
+      "gap": 16,
+      "padding": 24,
+      "height": 513.984375,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "compact": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 16,
+      "line": 28,
+      "weight": 400,
+      "gap": 16,
+      "padding": 16,
+      "height": 388.296875,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "standardForm": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 16,
+      "line": 28,
+      "weight": 400,
+      "gap": 24,
+      "padding": 24,
+      "height": 379.765625,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "compactForm": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 16,
+      "line": 28,
+      "weight": 400,
+      "gap": 16,
+      "padding": 16,
+      "height": 314.265625,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "control": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 14,
+      "line": 22.4,
+      "weight": 400,
+      "gap": null,
+      "padding": 12,
+      "height": 44,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "smallControl": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 14,
+      "line": 22.4,
+      "weight": 400,
+      "gap": null,
+      "padding": 12,
+      "height": 44,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "sections": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 16,
+      "line": 28,
+      "weight": 400,
+      "gap": 32,
+      "padding": 0,
+      "height": 2023.59375,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "bridge": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 14,
+      "line": 24.5,
+      "weight": 500,
+      "gap": null,
+      "padding": 16,
+      "height": 25.5,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "arabic": [
+      {
+        "text": "نَظْرَةٌ عَامَّةٌ عَلَى مَسَاحَةِ العَمَلِ",
+        "size": 24,
+        "line": 38.4,
+        "ink": 38.274314880371094,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "عُنْوَانُ القِسْمِ",
+        "size": 20,
+        "line": 32,
+        "ink": 26.282068252563477,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "تُسَاعِدُ المَسَافَاتُ المُنْتَظِمَةُ وَوُضُوحُ الخَطِّ عَلَى قِرَاءَةِ التَّعْلِيمَاتِ وَالأَسْمَاءِ الطَّوِيلَةِ بِهُدُوءٍ. تَظَلُّ الحَرَكَاتُ وَالحُرُوفُ وَاضِحَةً فِي الفِقْرَاتِ وَحُقُولِ النَّمَاذِجِ.",
+        "size": 16,
+        "line": 30,
+        "ink": 29.51999855041504,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "نَصٌّ مُسَاعِدٌ لِتَوْضِيحِ المَعْلُومَاتِ",
+        "size": 14,
+        "line": 24.5,
+        "ink": 23.08600616455078,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "مُلَاحَظَةٌ قَصِيرَةٌ",
+        "size": 12,
+        "line": 19.2,
+        "ink": 16.103992462158203,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "١٢٤",
+        "size": 24,
+        "line": 36,
+        "ink": 16.608001708984375,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "الاِسْمُ",
+        "size": 14,
+        "line": 22.4,
+        "ink": 16.072246551513672,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "الاِسْمُ",
+        "size": 14,
+        "line": 22.4,
+        "ink": 16.072246551513672,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      }
+    ]
+  },
+  "fallbackMeasurements": {
+    "width": 375,
+    "pageWidth": 327,
+    "maxWidth": 1440,
+    "icon": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 14,
+      "line": 22.4,
+      "weight": 500,
+      "gap": null,
+      "padding": 0,
+      "height": 20,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "gutter": 16,
+    "gutterEnd": 16,
+    "overflow": false,
+    "fontFamily": "\"arabicFont\",Tahoma,Arial,sans-serif",
+    "faces": [
+      {
+        "family": "arabicFont",
+        "status": "error"
+      }
+    ],
+    "body": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 16,
+      "line": 30,
+      "weight": 400,
+      "gap": null,
+      "padding": 0,
+      "height": 180,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "helper": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 14,
+      "line": 24.5,
+      "weight": 400,
+      "gap": null,
+      "padding": 0,
+      "height": 49,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "caption": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 12,
+      "line": 19.2,
+      "weight": 400,
+      "gap": null,
+      "padding": 0,
+      "height": 19.1875,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "title": {
+      "font": "system-ui, -apple-system, \"system-ui\", \"Segoe UI\", Arial, sans-serif",
+      "size": 24,
+      "line": 38.4,
+      "weight": 600,
+      "gap": null,
+      "padding": 0,
+      "height": 38.390625,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "metric": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 32,
+      "line": 48,
+      "weight": 600,
+      "gap": null,
+      "padding": 0,
+      "height": 48,
+      "tracking": "normal",
+      "numeric": "tabular-nums"
+    },
+    "standard": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 16,
+      "line": 28,
+      "weight": 400,
+      "gap": 16,
+      "padding": 24,
+      "height": 539.78125,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "compact": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 16,
+      "line": 28,
+      "weight": 400,
+      "gap": 16,
+      "padding": 16,
+      "height": 388.296875,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "standardForm": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 16,
+      "line": 28,
+      "weight": 400,
+      "gap": 24,
+      "padding": 24,
+      "height": 375.765625,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "compactForm": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 16,
+      "line": 28,
+      "weight": 400,
+      "gap": 16,
+      "padding": 16,
+      "height": 332.15625,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "control": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 14,
+      "line": 22.4,
+      "weight": 400,
+      "gap": null,
+      "padding": 12,
+      "height": 44,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "smallControl": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 14,
+      "line": 22.4,
+      "weight": 400,
+      "gap": null,
+      "padding": 12,
+      "height": 40.390625,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "sections": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 16,
+      "line": 28,
+      "weight": 400,
+      "gap": 32,
+      "padding": 0,
+      "height": 2096.671875,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "bridge": {
+      "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+      "size": 14,
+      "line": 24.5,
+      "weight": 500,
+      "gap": null,
+      "padding": 16,
+      "height": 24.5,
+      "tracking": "normal",
+      "numeric": "normal"
+    },
+    "arabic": [
+      {
+        "text": "نَظْرَةٌ عَامَّةٌ عَلَى مَسَاحَةِ العَمَلِ",
+        "size": 24,
+        "line": 38.4,
+        "ink": 34.34765625,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "عُنْوَانُ القِسْمِ",
+        "size": 20,
+        "line": 32,
+        "ink": 25.7421875,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "تُسَاعِدُ المَسَافَاتُ المُنْتَظِمَةُ وَوُضُوحُ الخَطِّ عَلَى قِرَاءَةِ التَّعْلِيمَاتِ وَالأَسْمَاءِ الطَّوِيلَةِ بِهُدُوءٍ. تَظَلُّ الحَرَكَاتُ وَالحُرُوفُ وَاضِحَةً فِي الفِقْرَاتِ وَحُقُولِ النَّمَاذِجِ.",
+        "size": 16,
+        "line": 30,
+        "ink": 20.421875,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "نَصٌّ مُسَاعِدٌ لِتَوْضِيحِ المَعْلُومَاتِ",
+        "size": 14,
+        "line": 24.5,
+        "ink": 17.376953125,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "مُلَاحَظَةٌ قَصِيرَةٌ",
+        "size": 12,
+        "line": 19.2,
+        "ink": 14.89453125,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "١٢٤",
+        "size": 24,
+        "line": 36,
+        "ink": 18.64453125,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "الاِسْمُ",
+        "size": 14,
+        "line": 22.4,
+        "ink": 17.71875,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      },
+      {
+        "text": "الاِسْمُ",
+        "size": 14,
+        "line": 22.4,
+        "ink": 17.71875,
+        "tracking": "normal",
+        "font": "arabicFont, Tahoma, Arial, sans-serif, Tahoma, Arial, sans-serif",
+        "overflow": false
+      }
+    ]
+  },
+  "responsiveGutters": "PASS",
+  "textZoom200": "PASS",
+  "touchTargets": "PASS",
+  "fontFallback": "PASS",
+  "arabicInk": "PASS",
+  "errors": []
+}

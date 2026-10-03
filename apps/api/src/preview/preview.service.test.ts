@@ -38,7 +38,8 @@ test('MB-09: PreviewService creates, queries, messages, and resets preview sessi
     }),
   };
 
-  const service = new PreviewService(fakeTenants, fakePool);
+  const service = new PreviewService(fakeTenants);
+  service.setPoolOverride(fakePool);
   const actor = { userId: 'user-1', roles: ['ADMIN'] } as any;
 
   const orgId = 'org-tenant-a';
@@ -104,7 +105,8 @@ test('MB-09: No production side effects guarantee', async () => {
     }),
   };
 
-  const service = new PreviewService(fakeTenants, fakePool);
+  const service = new PreviewService(fakeTenants);
+  service.setPoolOverride(fakePool);
   const actor = { userId: 'user-1', roles: ['ADMIN'] } as any;
   const session = await service.createSession(actor, 'org-test', {});
   assert.equal(productionTableInserted, false);

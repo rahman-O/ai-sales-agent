@@ -38,11 +38,10 @@ export class PreviewService {
 
   constructor(
     private readonly tenants: TenantContextService,
-    poolOverride?: Pool,
-  ) {
-    if (poolOverride) {
-      this.poolInstance = poolOverride;
-    }
+  ) {}
+
+  public setPoolOverride(pool: Pool) {
+    this.poolInstance = pool;
   }
 
   private get pool(): Pool {

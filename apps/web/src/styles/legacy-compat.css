@@ -1,0 +1,2 @@
+/* Web legacy controls retain their existing native light appearance. */
+@layer base { :root { color-scheme: light; } }

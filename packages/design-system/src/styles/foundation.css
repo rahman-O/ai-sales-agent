@@ -1,0 +1,17 @@
+/* Scoped normalization only. Native legacy headings/lists/controls are untouched. */
+@layer base {
+  [data-ui='ds'], [data-ui='ds'] *, [data-ui='ds'] *::before, [data-ui='ds'] *::after { box-sizing: border-box; }
+  [data-ui='ds'] { background: var(--background); color: var(--foreground); }
+  [data-ui='ds'] :where(button, input, select, textarea) { font: inherit; }
+  [data-ui='ds'] :where(button, input, select, textarea, a):focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
+}
+@layer components {
+  .ds-button { border: 1px solid transparent; cursor: pointer; transition: background-color var(--motion-fast) var(--motion-ease); }
+  .ds-button:disabled { cursor: not-allowed; }
+  .ds-sample { border: 1px solid var(--border); padding: var(--ds-card-padding-compact); border-radius: var(--ds-radius-md); }
+  .ds-state { color: var(--state-foreground); background: var(--state-background); border-color: var(--state-border); }
+  .ds-state[data-state='success'] { --state-foreground: var(--success); --state-background: var(--success-background); --state-border: var(--success-border); }
+  .ds-state[data-state='warning'] { --state-foreground: var(--warning); --state-background: var(--warning-background); --state-border: var(--warning-border); }
+  .ds-state[data-state='danger'] { --state-foreground: var(--danger); --state-background: var(--danger-background); --state-border: var(--danger-border); }
+  .ds-state[data-state='info'] { --state-foreground: var(--info); --state-background: var(--info-background); --state-border: var(--info-border); }
+}

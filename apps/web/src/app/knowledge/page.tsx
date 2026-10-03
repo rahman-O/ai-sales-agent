@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { OperatorNav } from '@/components/OperatorNav';
+import { OperatorNav } from '@/client/navigation/OperatorNav';
 
 type DocVersion = {
   id: string;

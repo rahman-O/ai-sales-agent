@@ -1,0 +1,42 @@
+{
+  "runId": "mb15b-chaos-baseline-20261002",
+  "scenarios": {
+    "PREFLIGHT": {
+      "status": "PASS",
+      "details": {
+        "provider": "deepseek",
+        "keyConfigured": true,
+        "simulatorOnly": true,
+        "syntheticToken": true,
+        "scripted": false
+      }
+    },
+    "CHAOTIC_TOPIC_SWITCH": {
+      "status": "FAIL",
+      "reason": "operator does not exist: text = uuid"
+    },
+    "RAPID_FIRE_FIFO": {
+      "status": "FAIL",
+      "reason": "operator does not exist: text = uuid"
+    },
+    "COMPLEX_MULTI_INTENT": {
+      "status": "FAIL",
+      "reason": "operator does not exist: text = uuid"
+    },
+    "MODEL_BUDGET_STABILITY": {
+      "status": "PASS",
+      "details": {
+        "averageModelCalls": 0,
+        "p95ModelCalls": 0,
+        "maxModelCalls": 0,
+        "averageToolCalls": 0,
+        "p95ToolCalls": 0,
+        "finalizationReserveUsage": 0,
+        "safeStopCount": 0,
+        "structuredRepairCount": null,
+        "providerFailureCount": 0
+      }
+    }
+  },
+  "evidence": []
+}

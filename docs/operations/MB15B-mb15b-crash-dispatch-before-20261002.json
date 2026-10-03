@@ -1,0 +1,38 @@
+{
+  "runId": "mb15b-crash-dispatch-before-20261002",
+  "scenarios": {
+    "PREFLIGHT": {
+      "status": "PASS",
+      "details": {
+        "provider": "deepseek",
+        "keyConfigured": true,
+        "simulatorOnly": true,
+        "syntheticToken": true,
+        "scripted": false
+      }
+    },
+    "WORKER_CRASH_dispatch": {
+      "status": "FAIL",
+      "reason": "ambiguous_dispatch_retried"
+    },
+    "WORKER_CRASH_RECOVERY": {
+      "status": "FAIL",
+      "variantsPassed": 0
+    }
+  },
+  "evidence": [
+    {
+      "event": "crash_boundary_observed",
+      "kind": "dispatch",
+      "runId": "mb15b-crash-dispatch-before-20261002",
+      "inboundId": "wamid.MB15B_mb15b-crash-dispatch-before-20261002_9872c0d7-4f51-4cfb-ad88-110236b892af",
+      "conversationId": "b7603012-a78d-4203-b32c-e0fe6a07cd3e",
+      "id": "00e7e185-e59e-44f9-b588-fd362eee994b",
+      "status": "SUCCEEDED",
+      "tool_count": 2,
+      "booking_count": 0,
+      "attempts": 0,
+      "simulatorAcceptedBeforeKill": true
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+Project
+  framework         Next.js (next-app)
+  frameworkVersion  16.3.6
+  srcDirectory      Yes
+  rsc               Yes
+  typescript        Yes
+  tailwindVersion   v4
+  tailwindConfig    -
+  tailwindCss       -
+  importAlias       @
+
+Configuration
+  style        new-york
+  base         radix
+  rsc          Yes
+  typescript   Yes
+  iconLibrary  lucide
+  rtl          No
+  menuColor    -
+  menuAccent   -
+
+Preset
+  code  -
+
+Aliases
+  components  @/client/components
+  utils       @ai-sales-agent/design-system/utils
+  ui          @ai-sales-agent/design-system/components/ui
+  lib         @/shared
+  hooks       -
+
+Resolved Paths
+  cwd             <repository>/apps/web
+  tailwindConfig  -
+  tailwindCss     <repository>/apps/web/src/app/globals.css
+  utils           <repository>/packages/design-system/src/lib/utils.ts
+  components      <repository>/apps/web/src/client/components
+  lib             <repository>/apps/web/src/shared
+  hooks           <repository>/apps/web/src/client/hooks
+  ui              <repository>/packages/design-system/src/components/ui
+
+registries:
+  @shadcn  https://ui.shadcn.com/r/styles/{style}/{name}.json
+
+Installed Components
+  button
+
+Links
+  docs        https://ui.shadcn.com/docs
+  components  https://ui.shadcn.com/docs/components/radix/[component].md
+  ui          https://ui.shadcn.com/code/apps/v4/registry/bases/radix/ui/[component].tsx
+  examples    https://ui.shadcn.com/code/apps/v4/registry/bases/radix/examples/[component]-example.tsx
+  schema      https://ui.shadcn.com/schema.json
+

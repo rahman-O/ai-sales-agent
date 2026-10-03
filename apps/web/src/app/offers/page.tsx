@@ -1,8 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { OperatorNav } from '@/components/OperatorNav';
-import { CapabilityGuard } from '@/components/CapabilityGuard';
+import { OperatorNav } from '@/client/navigation/OperatorNav';
+import { CapabilityGuard } from '@/shared/capabilities/CapabilityGuard';
 import type {
   CatalogItemDto,
   OfferDto,

@@ -31,6 +31,11 @@ test('confirmation policy rejects availability inquiry', () => {
   assert.equal(isExplicitBookingConfirmation('احجز هذا الموعد'), true);
 });
 
+test('explicit Arabic ordinal selection confirms without accepting questions or negation', () => {
+  for (const text of ['اختار الثاني', 'أختار الأول', 'اختار الموعد الثالث']) assert.equal(isExplicitBookingConfirmation(text), true);
+  for (const text of ['هل اختار الثاني؟', 'لا اختار الثاني', 'اختار الثاني؟', 'اختار شي مناسب', 'الثاني']) assert.equal(isExplicitBookingConfirmation(text), false);
+});
+
 test('slot token roundtrip and fail-closed', () => {
   const secret = 'unit-test-secret';
   const token = signSlotToken(
@@ -79,3 +84,5 @@ test('UNAVAILABLE exception removes capacity', () => {
     { startLocal: '13:00:00', endLocal: '17:00:00' },
   ]);
 });
+
+test('server candidate index rejects ambiguous, negative and conflicting selections',async()=>{const {confirmedCandidateIndex}=await import('./booking-time.js');assert.equal(confirmedCandidateIndex('تمام احجزلي أول موعد'),0);assert.equal(confirmedCandidateIndex('اختار الثاني'),1);assert.equal(confirmedCandidateIndex('أختار الثالث'),2);for(const t of ['لا احجز الأول','هل احجز الأول؟','اختار الثاني؟','تمام','الأول أو الثاني'])assert.equal(confirmedCandidateIndex(t),null);});

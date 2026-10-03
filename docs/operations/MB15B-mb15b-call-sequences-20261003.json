@@ -1,0 +1,289 @@
+{
+  "runId": "mb15b-call-sequences-20261003",
+  "scenarios": {
+    "PREFLIGHT": {
+      "status": "PASS",
+      "details": {
+        "provider": "deepseek",
+        "keyConfigured": true,
+        "simulatorOnly": true,
+        "syntheticToken": true,
+        "scripted": false
+      }
+    },
+    "COMPLEX_MULTI_INTENT_CALL_SEQUENCE": {
+      "status": "PASS",
+      "details": {
+        "cases": 3
+      }
+    }
+  },
+  "evidence": [
+    {
+      "agentRunId": "435a7b92-d0ad-450a-b4cf-24c83caa9ee3",
+      "modelCalls": 5,
+      "sequence": [
+        {
+          "kind": "MODEL",
+          "modelCall": 1,
+          "created_at": "2026-10-02T21:15:23.461Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5248,
+          "output_tokens": 87
+        },
+        {
+          "kind": "TOOL",
+          "created_at": "2026-10-02T21:15:23.471Z",
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "result_code": "OK",
+          "args_hash": "5576efe9788b465220c1565cfa48e8da72fdfcdf736c3da258f9638bf038e604"
+        },
+        {
+          "kind": "MODEL",
+          "modelCall": 2,
+          "created_at": "2026-10-02T21:15:24.689Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5438,
+          "output_tokens": 199
+        },
+        {
+          "kind": "TOOL",
+          "created_at": "2026-10-02T21:15:24.697Z",
+          "ordinal": 2,
+          "tool_name": "getServicePrice",
+          "result_code": "OK",
+          "args_hash": "7c00e0781306259b3d3615bc0d32997de9ca2232b6b2b73cdf246d7bf0fff4ef"
+        },
+        {
+          "kind": "MODEL",
+          "modelCall": 3,
+          "created_at": "2026-10-02T21:15:25.936Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5649,
+          "output_tokens": 208
+        },
+        {
+          "kind": "TOOL",
+          "created_at": "2026-10-02T21:15:25.946Z",
+          "ordinal": 3,
+          "tool_name": "getActiveOffers",
+          "result_code": "OK",
+          "args_hash": "12e047a5d667a265fdc3b23827ab61b115bfd75219962ab3e2cc41efc8a5fb90"
+        },
+        {
+          "kind": "MODEL",
+          "modelCall": 4,
+          "created_at": "2026-10-02T21:15:26.910Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5921,
+          "output_tokens": 101
+        },
+        {
+          "kind": "TOOL",
+          "created_at": "2026-10-02T21:15:27.305Z",
+          "ordinal": 4,
+          "tool_name": "getAvailableSlots",
+          "result_code": "OK",
+          "args_hash": "43afcb3738a3ab2ad06ad9ec729ecb4f12269a3cf77fc442ddc6b58c59b516fd"
+        },
+        {
+          "kind": "MODEL",
+          "modelCall": 5,
+          "created_at": "2026-10-02T21:15:29.095Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 17373,
+          "output_tokens": 268
+        }
+      ]
+    },
+    {
+      "agentRunId": "6077c25d-069e-4dfb-8b3b-86405665f2f9",
+      "modelCalls": 5,
+      "sequence": [
+        {
+          "kind": "MODEL",
+          "modelCall": 1,
+          "created_at": "2026-10-02T21:15:42.872Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5256,
+          "output_tokens": 27
+        },
+        {
+          "kind": "TOOL",
+          "created_at": "2026-10-02T21:15:42.881Z",
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "result_code": "OK",
+          "args_hash": "5576efe9788b465220c1565cfa48e8da72fdfcdf736c3da258f9638bf038e604"
+        },
+        {
+          "kind": "MODEL",
+          "modelCall": 2,
+          "created_at": "2026-10-02T21:15:44.445Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5446,
+          "output_tokens": 169
+        },
+        {
+          "kind": "TOOL",
+          "created_at": "2026-10-02T21:15:44.451Z",
+          "ordinal": 2,
+          "tool_name": "getServicePrice",
+          "result_code": "OK",
+          "args_hash": "7c00e0781306259b3d3615bc0d32997de9ca2232b6b2b73cdf246d7bf0fff4ef"
+        },
+        {
+          "kind": "MODEL",
+          "modelCall": 3,
+          "created_at": "2026-10-02T21:15:45.430Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5657,
+          "output_tokens": 152
+        },
+        {
+          "kind": "TOOL",
+          "created_at": "2026-10-02T21:15:45.443Z",
+          "ordinal": 3,
+          "tool_name": "getActiveOffers",
+          "result_code": "OK",
+          "args_hash": "12e047a5d667a265fdc3b23827ab61b115bfd75219962ab3e2cc41efc8a5fb90"
+        },
+        {
+          "kind": "MODEL",
+          "modelCall": 4,
+          "created_at": "2026-10-02T21:15:46.367Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5929,
+          "output_tokens": 117
+        },
+        {
+          "kind": "TOOL",
+          "created_at": "2026-10-02T21:15:48.060Z",
+          "ordinal": 4,
+          "tool_name": "getAvailableSlots",
+          "result_code": "OK",
+          "args_hash": "a7a415fd0872531434e7cf60baba2e9835daf01b605fec6f2be0a2e5f993761e"
+        },
+        {
+          "kind": "MODEL",
+          "modelCall": 5,
+          "created_at": "2026-10-02T21:15:50.474Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 17368,
+          "output_tokens": 345
+        }
+      ]
+    },
+    {
+      "agentRunId": "3dff8fcd-d352-4cd2-8b73-bf9c605fd6f4",
+      "modelCalls": 6,
+      "sequence": [
+        {
+          "kind": "MODEL",
+          "modelCall": 1,
+          "created_at": "2026-10-02T21:16:00.246Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5269,
+          "output_tokens": 97
+        },
+        {
+          "kind": "TOOL",
+          "created_at": "2026-10-02T21:16:00.261Z",
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "result_code": "OK",
+          "args_hash": "5576efe9788b465220c1565cfa48e8da72fdfcdf736c3da258f9638bf038e604"
+        },
+        {
+          "kind": "MODEL",
+          "modelCall": 2,
+          "created_at": "2026-10-02T21:16:01.532Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5459,
+          "output_tokens": 202
+        },
+        {
+          "kind": "TOOL",
+          "created_at": "2026-10-02T21:16:01.540Z",
+          "ordinal": 2,
+          "tool_name": "getServicePrice",
+          "result_code": "OK",
+          "args_hash": "7c00e0781306259b3d3615bc0d32997de9ca2232b6b2b73cdf246d7bf0fff4ef"
+        },
+        {
+          "kind": "MODEL",
+          "modelCall": 3,
+          "created_at": "2026-10-02T21:16:02.611Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5670,
+          "output_tokens": 93
+        },
+        {
+          "kind": "TOOL",
+          "created_at": "2026-10-02T21:16:02.618Z",
+          "ordinal": 3,
+          "tool_name": "getActiveOffers",
+          "result_code": "OK",
+          "args_hash": "12e047a5d667a265fdc3b23827ab61b115bfd75219962ab3e2cc41efc8a5fb90"
+        },
+        {
+          "kind": "MODEL",
+          "modelCall": 4,
+          "created_at": "2026-10-02T21:16:04.139Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5942,
+          "output_tokens": 134
+        },
+        {
+          "kind": "TOOL",
+          "created_at": "2026-10-02T21:16:06.625Z",
+          "ordinal": 4,
+          "tool_name": "getAvailableSlots",
+          "result_code": "OK",
+          "args_hash": "1354d0384bfff1f487349b57daf568cc281759565baaaeacf37f1a518e065b22"
+        },
+        {
+          "kind": "MODEL",
+          "modelCall": 5,
+          "created_at": "2026-10-02T21:16:08.454Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 17422,
+          "output_tokens": 42
+        },
+        {
+          "kind": "TOOL",
+          "created_at": "2026-10-02T21:16:08.460Z",
+          "ordinal": 5,
+          "tool_name": "getEffectivePolicy",
+          "result_code": "OK",
+          "args_hash": "11e9748d799ce31eb061cf170b072722c8931e40a1f57da481f646e04b5f8aae"
+        },
+        {
+          "kind": "MODEL",
+          "modelCall": 6,
+          "created_at": "2026-10-02T21:16:11.092Z",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 15839,
+          "output_tokens": 355
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "target_inbound_id": "wamid.SIM_MULTI_RECOVERY_838dc8ed-5fba-4cdb-a034-4e71926b11c4",
+  "conversation_id": "145150ca-a9eb-4137-8798-a0a63ee30674",
+  "agent_run_id": "d6c2bfb8-19f1-4d66-8a48-ddb34a100a38",
+  "status": "BUDGET_EXCEEDED",
+  "terminal_reason": "max_model_calls",
+  "model_calls": 0,
+  "final_outbound_message_id": null,
+  "ingress_sequence": 1,
+  "audited_model_calls": 5,
+  "usage": [
+    {
+      "provider": "deepseek",
+      "model": "deepseek-chat"
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-chat"
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-chat"
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-chat"
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-chat"
+    }
+  ],
+  "tools": [
+    {
+      "ordinal": 1,
+      "tool_name": "searchServices",
+      "result_code": "OK",
+      "authz_result": "ALLOWED",
+      "args_hash": "3ca77a213f9490f965d83d5145bf2ff9a3cec838172165924aea9ddebdb675df"
+    },
+    {
+      "ordinal": 2,
+      "tool_name": "getServicePrice",
+      "result_code": "OK",
+      "authz_result": "ALLOWED",
+      "args_hash": "7c00e0781306259b3d3615bc0d32997de9ca2232b6b2b73cdf246d7bf0fff4ef"
+    },
+    {
+      "ordinal": 3,
+      "tool_name": "getActiveOffers",
+      "result_code": "OK",
+      "authz_result": "ALLOWED",
+      "args_hash": "a5bfbad1653a00864fd01db25a9494c510a706ad37033bee7e917875f2b6aead"
+    },
+    {
+      "ordinal": 4,
+      "tool_name": "getCustomer",
+      "result_code": "OK",
+      "authz_result": "ALLOWED",
+      "args_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "ordinal": 5,
+      "tool_name": "ensureLead",
+      "result_code": "OK",
+      "authz_result": "ALLOWED",
+      "args_hash": "176a1b69515a379bf0fcfd29afa4c11794082ee8b39768c5dede105b1a28fa80"
+    }
+  ],
+  "transitions": [
+    {
+      "version": 1,
+      "customer_id": "53f5914f-0526-4306-8a5f-dbbbfaf6a1d3",
+      "lead_id": null,
+      "active_workflow": "{\"id\": \"DISCOVERY\", \"stage\": \"IN_PROGRESS\", \"startedAt\": \"2026-10-02T00:00:13.604Z\", \"updatedAt\": \"2026-10-02T00:00:13.604Z\"}",
+      "active_intent": null,
+      "service_id": "a0500001-0001-4001-8001-000000000001",
+      "candidate_slot_count": 0
+    },
+    {
+      "version": 2,
+      "customer_id": "53f5914f-0526-4306-8a5f-dbbbfaf6a1d3",
+      "lead_id": null,
+      "active_workflow": "{\"id\": \"LEAD_CAPTURE\", \"stage\": \"IN_PROGRESS\", \"startedAt\": \"2026-10-02T00:00:13.604Z\", \"updatedAt\": \"2026-10-02T00:00:18.772Z\"}",
+      "active_intent": null,
+      "service_id": "a0500001-0001-4001-8001-000000000001",
+      "candidate_slot_count": 0
+    }
+  ],
+  "simulator_received": false,
+  "duplicate_tools": false,
+  "bookings_unchanged": true,
+  "MULTI_INTENT_FLOW": "FAIL"
+}

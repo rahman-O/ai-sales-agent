@@ -88,6 +88,9 @@ services:
       - "4"
     environment:
       HF_HUB_ENABLE_HF_TRANSFER: "0"
+      # Bound nested BLAS/OpenMP parallelism during CPU model warm-up.
+      OMP_NUM_THREADS: ${TEI_CPU_THREADS:-1}
+      MKL_NUM_THREADS: ${TEI_CPU_THREADS:-1}
     mem_limit: 12g
     healthcheck:
       test:
@@ -252,6 +255,9 @@ services:
       DEEPSEEK_RUN_DEADLINE_MS: ${DEEPSEEK_RUN_DEADLINE_MS:-300000}
       WORKER_LEASE_TTL_SECONDS: ${WORKER_LEASE_TTL_SECONDS:-300}
       DEMO_DOCKER_LOCAL_LLM: "1"
+      ZERO_COST_DEMO: ${ZERO_COST_DEMO:-0}
+      AI_ALLOW_FAKE: ${AI_ALLOW_FAKE:-false}
+      DEMO_SERVICE_ID: ${DEMO_SERVICE_ID}
       APP_URL: http://localhost:3000
       API_URL: http://localhost:3001
       DATABASE_URL: postgresql://app_runtime:${APP_RUNTIME_DB_PASSWORD}@postgres:5432/${POSTGRES_DB:-ai_sales_agent}

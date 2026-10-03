@@ -1,0 +1,78 @@
+{
+  "name": "@ai-sales-agent/design-system",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./src/styles/index.css",
+    "./utils": {
+      "types": "./src/lib/utils.ts",
+      "import": "./dist/lib/utils.js"
+    },
+    "./components/ui/button": {
+      "types": "./dist/components/ui/button.d.ts",
+      "import": "./dist/components/ui/button.js"
+    },
+    "./components/ui": {
+      "types": "./src/components/ui/index.ts",
+      "import": "./dist/components/ui/index.js"
+    },
+    "./components/patterns": {
+      "types": "./src/components/patterns/index.ts",
+      "import": "./dist/components/patterns/index.js"
+    },
+    "./components/shell": {
+      "types": "./src/components/shell/index.ts",
+      "import": "./dist/components/shell/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "test": "node --import tsx --test src/lib/*.test.ts test/*.test.mjs"
+  },
+  "peerDependencies": {
+    "react": "^19.1.1"
+  },
+  "dependencies": {
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "lucide-react": "1.50.0",
+    "tailwind-merge": "3.7.0",
+    "tailwindcss": "4.3.3"
+  },
+  "devDependencies": {
+    "typescript": "5.9.2",
+    "@types/react": "19.1.13",
+    "react": "19.1.1"
+  },
+  "imports": {
+    "#components/ui/*": {
+      "types": "./src/components/ui/*.tsx",
+      "default": "./dist/components/ui/*.js"
+    },
+    "#components/patterns/*": {
+      "types": "./src/components/patterns/*.tsx",
+      "default": "./dist/components/patterns/*.js"
+    },
+    "#components/shell/*": {
+      "types": "./src/components/shell/*.tsx",
+      "default": "./dist/components/shell/*.js"
+    },
+    "#lib/*": {
+      "types": "./src/lib/*.ts",
+      "default": "./dist/lib/*.js"
+    },
+    "#components/*": {
+      "types": "./src/components/*.tsx",
+      "default": "./dist/components/*.js"
+    }
+  }
+}

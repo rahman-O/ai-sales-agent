@@ -262,16 +262,20 @@ export class OpenAiCompatibleModelProvider implements ModelProvider {
         }
       }
 
+      let repairHttpStatus: number | null = null;
+      let repairAttempted = false;
+      let repairContentLength = 0;
       let inputTokens = body.usage?.prompt_tokens;
       let outputTokens = body.usage?.completion_tokens;
 
-      if (!decision && message?.content) {
-        decision = extractJson(message.content);
-        if (!decision && message.content.trim().length > 0) {
+      if (!decision) {
+        decision = typeof message?.content === 'string' ? extractJson(message.content) : null;
+        if (!decision) {
+          repairAttempted = true;
           // Exactly ONE bounded structured-output recovery attempt
           const retryMessages: Array<{ role: 'system' | 'user' | 'assistant' | 'tool'; content: string }> = [
             ...input.messages,
-            { role: 'assistant', content: message.content },
+            { role: 'assistant', content: message?.content?.trim() ? message.content : '[Empty provider output: no valid AgentDecision returned.]' },
             {
               role: 'user',
               content:
@@ -296,6 +300,7 @@ export class OpenAiCompatibleModelProvider implements ModelProvider {
               }),
               signal: controller.signal,
             });
+            repairHttpStatus = retryRes.status;
             if (retryRes.ok) {
               const retryBody = (await retryRes.json()) as {
                 id?: string;
@@ -315,6 +320,7 @@ export class OpenAiCompatibleModelProvider implements ModelProvider {
                 usage?: { prompt_tokens?: number; completion_tokens?: number };
               };
               const retryMsg = retryBody.choices?.[0]?.message;
+              repairContentLength = retryMsg?.content?.length ?? 0;
               const retryNativeToolCalls = retryMsg?.tool_calls;
               if (Array.isArray(retryNativeToolCalls) && retryNativeToolCalls.length > 0) {
                 const firstCall = retryNativeToolCalls[0];
@@ -349,16 +355,10 @@ export class OpenAiCompatibleModelProvider implements ModelProvider {
           }
         }
       }
-
-      if (!decision && message?.content && message.content.trim().length > 0) {
-        decision = {
-          type: 'final_response',
-          text: message.content.trim(),
-          claims: [],
-        };
-      }
+      if (repairAttempted) console.info(JSON.stringify({ event: 'provider_structured_repair', agentRunId: input.traceContext.agentRunId, repairHttpStatus, recovered: Boolean(decision) }));
 
       if (!decision) {
+        console.warn(JSON.stringify({ event: 'provider_decision_unparseable', agentRunId: input.traceContext.agentRunId, initialContentLength: message?.content?.length ?? 0, nativeToolCalls: nativeToolCalls?.length ?? 0, repairAttempted, repairHttpStatus, repairContentLength }));
         decision = { type: 'safe_stop', reason: 'unparseable_provider_json' };
       }
       return {

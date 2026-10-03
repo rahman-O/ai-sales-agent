@@ -1,0 +1,86 @@
+[
+  {
+    "background": "background",
+    "foreground": "foreground",
+    "ratio": 16.218572897093267,
+    "minimum": 4.5
+  },
+  {
+    "background": "card",
+    "foreground": "card-foreground",
+    "ratio": 16.93321782317544,
+    "minimum": 4.5
+  },
+  {
+    "background": "popover",
+    "foreground": "popover-foreground",
+    "ratio": 16.93321782317544,
+    "minimum": 4.5
+  },
+  {
+    "background": "primary",
+    "foreground": "primary-foreground",
+    "ratio": 6.842022201875667,
+    "minimum": 4.5
+  },
+  {
+    "background": "secondary",
+    "foreground": "secondary-foreground",
+    "ratio": 13.546931509481066,
+    "minimum": 4.5
+  },
+  {
+    "background": "muted",
+    "foreground": "muted-foreground",
+    "ratio": 6.734767989994285,
+    "minimum": 4.5
+  },
+  {
+    "background": "destructive",
+    "foreground": "destructive-foreground",
+    "ratio": 7.9341955691419175,
+    "minimum": 4.5
+  },
+  {
+    "background": "success-background",
+    "foreground": "success",
+    "ratio": 7.314719435486343,
+    "minimum": 4.5
+  },
+  {
+    "background": "warning-background",
+    "foreground": "warning",
+    "ratio": 7.6441552410412035,
+    "minimum": 4.5
+  },
+  {
+    "background": "danger-background",
+    "foreground": "danger",
+    "ratio": 7.196318806917844,
+    "minimum": 4.5
+  },
+  {
+    "background": "info-background",
+    "foreground": "info",
+    "ratio": 7.357662042643431,
+    "minimum": 4.5
+  },
+  {
+    "background": "background",
+    "foreground": "ring",
+    "ratio": 6.896329452873782,
+    "minimum": 3
+  },
+  {
+    "background": "card",
+    "foreground": "ring",
+    "ratio": 7.200204946935938,
+    "minimum": 3
+  },
+  {
+    "background": "card",
+    "foreground": "input",
+    "ratio": 4.798215128722241,
+    "minimum": 3
+  }
+]

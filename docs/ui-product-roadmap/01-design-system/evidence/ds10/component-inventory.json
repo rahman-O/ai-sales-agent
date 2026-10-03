@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "generatedAt": "2026-10-03T02:10:00Z",
+  "package": "@ai-sales-agent/design-system",
+  "summary": {
+    "totalPrimitives": 30,
+    "totalPatterns": 15,
+    "totalShellComponents": 7,
+    "totalExports": 52
+  },
+  "primitives": {
+    "waveA_inputs": [
+      { "name": "Button", "file": "src/components/ui/button.tsx", "status": "verified" },
+      { "name": "Input", "file": "src/components/ui/input.tsx", "status": "verified" },
+      { "name": "Textarea", "file": "src/components/ui/textarea.tsx", "status": "verified" },
+      { "name": "Label", "file": "src/components/ui/label.tsx", "status": "verified" },
+      { "name": "Checkbox", "file": "src/components/ui/checkbox.tsx", "status": "verified" },
+      { "name": "RadioGroup", "file": "src/components/ui/radio-group.tsx", "status": "verified" },
+      { "name": "Switch", "file": "src/components/ui/switch.tsx", "status": "verified" }
+    ],
+    "waveB_selection": [
+      { "name": "Select", "file": "src/components/ui/select.tsx", "status": "verified" },
+      { "name": "Combobox", "file": "src/components/ui/combobox.tsx", "status": "verified" },
+      { "name": "Command", "file": "src/components/ui/command.tsx", "status": "verified" }
+    ],
+    "waveC_surfaces": [
+      { "name": "Card", "file": "src/components/ui/card.tsx", "status": "verified" },
+      { "name": "Separator", "file": "src/components/ui/separator.tsx", "status": "verified" },
+      { "name": "Badge", "file": "src/components/ui/badge.tsx", "status": "verified" },
+      { "name": "Avatar", "file": "src/components/ui/avatar.tsx", "status": "verified" }
+    ],
+    "waveD_overlays": [
+      { "name": "Dialog", "file": "src/components/ui/dialog.tsx", "status": "verified" },
+      { "name": "AlertDialog", "file": "src/components/ui/alert-dialog.tsx", "status": "verified" },
+      { "name": "Sheet", "file": "src/components/ui/sheet.tsx", "status": "verified" },
+      { "name": "Popover", "file": "src/components/ui/popover.tsx", "status": "verified" },
+      { "name": "Tooltip", "file": "src/components/ui/tooltip.tsx", "status": "verified" },
+      { "name": "DropdownMenu", "file": "src/components/ui/dropdown-menu.tsx", "status": "verified" }
+    ],
+    "waveE_navigation": [
+      { "name": "Tabs", "file": "src/components/ui/tabs.tsx", "status": "verified" },
+      { "name": "Breadcrumb", "file": "src/components/ui/breadcrumb.tsx", "status": "verified" },
+      { "name": "Pagination", "file": "src/components/ui/pagination.tsx", "status": "verified" }
+    ],
+    "waveF_feedback": [
+      { "name": "Skeleton", "file": "src/components/ui/skeleton.tsx", "status": "verified" },
+      { "name": "Spinner", "file": "src/components/ui/spinner.tsx", "status": "verified" },
+      { "name": "Progress", "file": "src/components/ui/progress.tsx", "status": "verified" },
+      { "name": "Alert", "file": "src/components/ui/alert.tsx", "status": "verified" },
+      { "name": "Toaster", "file": "src/components/ui/toast.tsx", "status": "verified" }
+    ],
+    "waveG_dateTime": [
+      { "name": "Calendar", "file": "src/components/ui/calendar.tsx", "status": "verified" },
+      { "name": "DatePicker", "file": "src/components/ui/date-picker.tsx", "status": "verified" }
+    ]
+  },
+  "patterns": [
+    { "name": "PageHeader", "file": "src/components/patterns/page-header.tsx", "status": "verified" },
+    { "name": "SectionHeader", "file": "src/components/patterns/section-header.tsx", "status": "verified" },
+    { "name": "StatCard", "file": "src/components/patterns/stat-card.tsx", "status": "verified" },
+    { "name": "Metric", "file": "src/components/patterns/metric.tsx", "status": "verified" },
+    { "name": "StatusBadge", "file": "src/components/patterns/status-badge.tsx", "status": "verified" },
+    { "name": "EmptyState", "file": "src/components/patterns/empty-state.tsx", "status": "verified" },
+    { "name": "ErrorState", "file": "src/components/patterns/error-state.tsx", "status": "verified" },
+    { "name": "PermissionDeniedState", "file": "src/components/patterns/permission-denied-state.tsx", "status": "verified" },
+    { "name": "SettingsSection", "file": "src/components/patterns/settings-section.tsx", "status": "verified" },
+    { "name": "DataList", "file": "src/components/patterns/data-list.tsx", "status": "verified" },
+    { "name": "AuditEventRow", "file": "src/components/patterns/audit-event-row.tsx", "status": "verified" },
+    { "name": "SearchField", "file": "src/components/patterns/search-field.tsx", "status": "verified" },
+    { "name": "FilterBar", "file": "src/components/patterns/filter-bar.tsx", "status": "verified" },
+    { "name": "DataTable", "file": "src/components/patterns/data-table.tsx", "status": "verified" },
+    { "name": "BidiText", "file": "src/components/patterns/bidi-text.tsx", "status": "verified" },
+    { "name": "LiveRegion", "file": "src/components/patterns/live-region.tsx", "status": "verified" }
+  ],
+  "shell": [
+    { "name": "SkipToContent", "file": "src/components/shell/skip-to-content.tsx", "status": "verified" },
+    { "name": "Sidebar", "file": "src/components/shell/sidebar.tsx", "status": "verified" },
+    { "name": "Topbar", "file": "src/components/shell/topbar.tsx", "status": "verified" },
+    { "name": "PageContainer", "file": "src/components/shell/page-container.tsx", "status": "verified" },
+    { "name": "OrgSwitcher", "file": "src/components/shell/org-switcher.tsx", "status": "verified" },
+    { "name": "AccountMenu", "file": "src/components/shell/account-menu.tsx", "status": "verified" },
+    { "name": "AppShell", "file": "src/components/shell/app-shell.tsx", "status": "verified" }
+  ]
+}

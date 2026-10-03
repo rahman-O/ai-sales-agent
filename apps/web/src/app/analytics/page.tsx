@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { OperatorNav } from '@/components/OperatorNav';
+import { OperatorNav } from '@/client/navigation/OperatorNav';
 import type { AnalyticsOverviewDto, WorkflowFunnelDto } from '@ai-sales-agent/contracts';
 
 const isoDate = (d: Date) => d.toISOString().slice(0, 10);

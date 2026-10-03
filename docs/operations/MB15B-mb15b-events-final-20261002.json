@@ -1,0 +1,143 @@
+{
+  "runId": "mb15b-events-final-20261002",
+  "scenarios": {
+    "PREFLIGHT": {
+      "status": "PASS",
+      "details": {
+        "provider": "deepseek",
+        "keyConfigured": true,
+        "simulatorOnly": true,
+        "syntheticToken": true,
+        "scripted": false
+      }
+    },
+    "DELAYED_DUPLICATE_PROVIDER_EVENTS": {
+      "status": "PASS",
+      "details": {
+        "conversationId": "2a1f8aa5-18a0-492f-b284-eeefca84b4da",
+        "delayMs": 61000
+      }
+    },
+    "MODEL_BUDGET_STABILITY": {
+      "status": "PASS",
+      "details": {
+        "averageModelCalls": 1.5,
+        "p95ModelCalls": 2,
+        "maxModelCalls": 2,
+        "averageToolCalls": 0.5,
+        "p95ToolCalls": 1,
+        "finalizationReserveUsage": 0,
+        "safeStopCount": 0,
+        "structuredRepairCount": 0,
+        "providerFailureCount": 0
+      }
+    }
+  },
+  "evidence": [
+    {
+      "runId": "mb15b-events-final-20261002",
+      "inboundId": "wamid.MB15B_mb15b-events-final-20261002_be3fba88-693e-4172-8a0c-6a19a2697291",
+      "conversationId": "2a1f8aa5-18a0-492f-b284-eeefca84b4da",
+      "ingressSequence": 1,
+      "agentRunId": "c1fa1ec4-776c-4f1f-af12-cd719f14609c",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 1,
+      "structuredRepairCount": 0,
+      "tools": [],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5173,
+          "output_tokens": 32
+        }
+      ],
+      "transitions": [
+        null
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_1cad53e5-f842-4de2-a393-795cf55855c9",
+      "simulatorReceived": true,
+      "responseMs": 10812,
+      "queueLatencyMs": 3442,
+      "workerLatencyMs": 1023,
+      "targetInContext": true,
+      "contextSourceChars": 37,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-events-final-20261002",
+      "inboundId": "wamid.MB15B_mb15b-events-final-20261002_eca21485-ba48-4f3b-b34d-d665561e7f61",
+      "conversationId": "2a1f8aa5-18a0-492f-b284-eeefca84b4da",
+      "ingressSequence": 2,
+      "agentRunId": "4b4fdcbb-87d2-4611-9153-32279357c388",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "getEffectivePolicy",
+          "args_hash": "11e9748d799ce31eb061cf170b072722c8931e40a1f57da481f646e04b5f8aae",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5200,
+          "output_tokens": 42
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5434,
+          "output_tokens": 105
+        }
+      ],
+      "transitions": [
+        null,
+        {
+          "version": 1,
+          "customerId": "be9bd3da-e9ac-4bd8-bf9c-3ac353bef4ee",
+          "leadId": null,
+          "slotCount": 0,
+          "slotFingerprints": []
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_5d272c2c-068a-4afd-a4ab-4255061df679",
+      "simulatorReceived": true,
+      "responseMs": 10009,
+      "queueLatencyMs": 2524,
+      "workerLatencyMs": 2196,
+      "targetInContext": true,
+      "contextSourceChars": 202,
+      "canonicalResponse": true,
+      "duplicates": false
+    }
+  ]
+}

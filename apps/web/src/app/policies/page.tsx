@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { OperatorNav } from '@/components/OperatorNav';
+import { OperatorNav } from '@/client/navigation/OperatorNav';
 import {
   BUSINESS_POLICY_STATUSES,
   BUSINESS_POLICY_TYPES,

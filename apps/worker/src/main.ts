@@ -409,7 +409,14 @@ async function main() {
                 organizationId,
               ]);
               await c2.query(`SELECT set_config('app.current_user_id', $1, true)`, [workerId]);
-              const dispatched = await dispatchOutboundMessage(c2, organizationId, outboundMessageId);
+              const dispatched = await dispatchOutboundMessage(c2, organizationId, outboundMessageId, {
+                beforeProviderIo: async () => {
+                  await c2.query('COMMIT');
+                  await c2.query('BEGIN');
+                  await c2.query(`SELECT set_config('app.current_organization_id', $1, true)`,[organizationId]);
+                  await c2.query(`SELECT set_config('app.current_user_id', $1, true)`,[workerId]);
+                },
+              });
               if (dispatched.outcome === 'RETRY') {
                 await c2.query('COMMIT');
                 throw new Error(`provider_retryable:${dispatched.class ?? 'TRANSIENT'}`);

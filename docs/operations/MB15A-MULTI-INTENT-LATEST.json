@@ -1,0 +1,108 @@
+{
+  "target_inbound_id": "wamid.SIM_MULTI_RECOVERY_725fe2df-c181-4660-8c52-c2db75707ebf",
+  "conversation_id": "f14e33fb-4d53-4ec7-98e3-ab12030aae0d",
+  "agent_run_id": "7453e6cd-4759-4e1f-894e-19ff3c5a1407",
+  "status": "SUCCEEDED",
+  "terminal_reason": "final_response",
+  "model_calls": 6,
+  "final_outbound_message_id": "8e652668-e224-46be-b288-364c2f0a84f2",
+  "ingress_sequence": 1,
+  "audited_model_calls": 6,
+  "usage": [
+    {
+      "provider": "deepseek",
+      "model": "deepseek-chat"
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-chat"
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-chat"
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-chat"
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-chat"
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-chat"
+    }
+  ],
+  "tools": [
+    {
+      "ordinal": 1,
+      "tool_name": "searchServices",
+      "result_code": "OK",
+      "authz_result": "ALLOWED",
+      "args_hash": "5576efe9788b465220c1565cfa48e8da72fdfcdf736c3da258f9638bf038e604"
+    },
+    {
+      "ordinal": 2,
+      "tool_name": "getServicePrice",
+      "result_code": "OK",
+      "authz_result": "ALLOWED",
+      "args_hash": "7c00e0781306259b3d3615bc0d32997de9ca2232b6b2b73cdf246d7bf0fff4ef"
+    },
+    {
+      "ordinal": 3,
+      "tool_name": "getActiveOffers",
+      "result_code": "OK",
+      "authz_result": "ALLOWED",
+      "args_hash": "a5bfbad1653a00864fd01db25a9494c510a706ad37033bee7e917875f2b6aead"
+    },
+    {
+      "ordinal": 4,
+      "tool_name": "ensureLead",
+      "result_code": "OK",
+      "authz_result": "ALLOWED",
+      "args_hash": "5756cb452025b369f47c8bc634f3da384521df9f927491ec6cbd988f5ae526a2"
+    },
+    {
+      "ordinal": 5,
+      "tool_name": "getAvailableSlots",
+      "result_code": "OK",
+      "authz_result": "ALLOWED",
+      "args_hash": "332e1c2df5f6769f11d9696157ef7e3e56344c3a15554ccf7713c475dc4eec23"
+    }
+  ],
+  "transitions": [
+    {
+      "version": 1,
+      "customer_id": "1477cd4f-de11-4e9a-a03d-f646790f4936",
+      "lead_id": null,
+      "active_workflow": "{\"id\": \"DISCOVERY\", \"stage\": \"IN_PROGRESS\", \"startedAt\": \"2026-10-02T00:25:00.163Z\", \"updatedAt\": \"2026-10-02T00:25:00.163Z\"}",
+      "active_intent": null,
+      "service_id": "a0500001-0001-4001-8001-000000000001",
+      "candidate_slot_count": 0
+    },
+    {
+      "version": 2,
+      "customer_id": "1477cd4f-de11-4e9a-a03d-f646790f4936",
+      "lead_id": null,
+      "active_workflow": "{\"id\": \"LEAD_CAPTURE\", \"stage\": \"IN_PROGRESS\", \"startedAt\": \"2026-10-02T00:25:00.163Z\", \"updatedAt\": \"2026-10-02T00:25:03.401Z\"}",
+      "active_intent": null,
+      "service_id": "a0500001-0001-4001-8001-000000000001",
+      "candidate_slot_count": 0
+    },
+    {
+      "version": 3,
+      "customer_id": "1477cd4f-de11-4e9a-a03d-f646790f4936",
+      "lead_id": null,
+      "active_workflow": "{\"id\": \"BOOKING\", \"stage\": \"AWAITING_SLOT_SELECTION\", \"startedAt\": \"2026-10-02T00:25:00.163Z\", \"updatedAt\": \"2026-10-02T00:25:05.030Z\"}",
+      "active_intent": null,
+      "service_id": "a0500001-0001-4001-8001-000000000001",
+      "candidate_slot_count": 3
+    }
+  ],
+  "provider_message_id": "wamid.SIM_efcd32b3-fa6a-4f47-974c-4628f068e9e3",
+  "simulator_received": true,
+  "duplicate_tools": false,
+  "bookings_unchanged": true,
+  "MULTI_INTENT_FLOW": "PASS"
+}

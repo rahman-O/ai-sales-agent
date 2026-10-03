@@ -493,3 +493,25 @@ test('Two consecutive invalid prose responses fail closed with unparseable_provi
 });
 
 
+
+
+test('empty/whitespace provider output receives exactly one canonical recovery attempt', async () => {
+  for (const content of ['', ' '.repeat(80), null]) {
+    let calls = 0;
+    const provider = new OpenAiCompatibleModelProvider({ apiKey: 'test-fixture', model: 'test-model', fetchImpl: async () => {
+      calls++;
+      return Response.json({ choices: [{ message: { content: calls === 1 ? content : JSON.stringify({ type: 'final_response', text: 'Canonical recovery', claims: [] }) } }] });
+    } });
+    const result = await provider.generate({ messages: [], tools: [], responseSchemaHint: 'AgentDecision', budget: {}, deadlineMs: 1000, traceContext: {} });
+    assert.equal(calls, 2);
+    assert.deepEqual(result.decision, { type: 'final_response', text: 'Canonical recovery', claims: [] });
+  }
+});
+
+test('repeated whitespace output fails closed after the single recovery attempt', async () => {
+  let calls = 0;
+  const provider = new OpenAiCompatibleModelProvider({ apiKey: 'test-fixture', model: 'test-model', fetchImpl: async () => { calls++; return Response.json({ choices: [{ message: { content: ' '.repeat(80) } }] }); } });
+  const result = await provider.generate({ messages: [], tools: [], responseSchemaHint: 'AgentDecision', budget: {}, deadlineMs: 1000, traceContext: {} });
+  assert.equal(calls, 2);
+  assert.deepEqual(result.decision, { type: 'safe_stop', reason: 'unparseable_provider_json' });
+});

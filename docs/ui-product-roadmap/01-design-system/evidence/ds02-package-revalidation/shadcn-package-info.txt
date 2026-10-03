@@ -1,0 +1,54 @@
+Project
+  framework         Manual (manual)
+  frameworkVersion  -
+  srcDirectory      Yes
+  rsc               No
+  typescript        Yes
+  tailwindVersion   v4
+  tailwindConfig    -
+  tailwindCss       -
+  importAlias       #
+
+Configuration
+  style        new-york
+  base         radix
+  rsc          Yes
+  typescript   Yes
+  iconLibrary  lucide
+  rtl          No
+  menuColor    -
+  menuAccent   -
+
+Preset
+  code  -
+
+Aliases
+  components  #components
+  utils       #lib/utils
+  ui          #components/ui
+  lib         #lib
+  hooks       -
+
+Resolved Paths
+  cwd             <repository>/packages/design-system
+  tailwindConfig  -
+  tailwindCss     <repository>/packages/design-system/src/styles/index.css
+  utils           <repository>/packages/design-system/src/lib/utils.ts
+  components      <repository>/packages/design-system/src/components
+  lib             <repository>/packages/design-system/src/lib
+  hooks           <repository>/packages/design-system/src/hooks
+  ui              <repository>/packages/design-system/src/components/ui
+
+registries:
+  @shadcn  https://ui.shadcn.com/r/styles/{style}/{name}.json
+
+Installed Components
+  button
+
+Links
+  docs        https://ui.shadcn.com/docs
+  components  https://ui.shadcn.com/docs/components/radix/[component].md
+  ui          https://ui.shadcn.com/code/apps/v4/registry/bases/radix/ui/[component].tsx
+  examples    https://ui.shadcn.com/code/apps/v4/registry/bases/radix/examples/[component]-example.tsx
+  schema      https://ui.shadcn.com/schema.json
+

@@ -216,7 +216,10 @@ export interface RunStorePort {
     agentConfigVersionId: string;
     promptVersion: string;
     modelProfile: string;
-  }): Promise<{ agentRunId: string; status: string; resumed: boolean }>;
+  }): Promise<{ agentRunId: string; status: string; resumed: boolean; priorModelCalls?: number; priorToolCalls?: number; priorToolFingerprints?: Array<{toolName:string;argsHash:string;count:number}>; successfulBookingResult?: Record<string, unknown> | null }>;
+
+  /** Persist the attempted model call before external I/O, including crash ambiguity. */
+  recordModelAttempt?(organizationId: string, agentRunId: string): Promise<void>;
 
   loadAuthority(organizationId: string, conversationId: string): Promise<{
     mode: string;

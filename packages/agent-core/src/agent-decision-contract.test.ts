@@ -650,3 +650,12 @@ test('TIMED_OUT_CONTINUITY_G: no synthetic assistant history is inserted into co
 
 
 
+
+test('AgentDecision prompts describe all permitted claim kinds without inventing policy kinds', () => {
+  for (const kind of ['price', 'availability', 'booking', 'generic']) {
+    assert.ok(AGENT_DECISION_CONTRACT.includes(`"${kind}"`));
+    assert.ok(SCHEMA_REPAIR_PROMPT.includes(kind));
+  }
+  assert.ok(AGENT_DECISION_CONTRACT.includes('never invent additional claim kinds'));
+  assert.ok(AGENT_DECISION_CONTRACT.includes('unknown fields'));
+});

@@ -1,0 +1,94 @@
+{
+  "runId": "mb15b-crash-read-before-20261002",
+  "scenarios": {
+    "PREFLIGHT": {
+      "status": "PASS",
+      "details": {
+        "provider": "deepseek",
+        "keyConfigured": true,
+        "simulatorOnly": true,
+        "syntheticToken": true,
+        "scripted": false
+      }
+    },
+    "WORKER_CRASH_after-read": {
+      "status": "FAIL",
+      "reason": "turn_RUNNING_no_outbound"
+    },
+    "WORKER_CRASH_RECOVERY": {
+      "status": "FAIL",
+      "variantsPassed": 0
+    }
+  },
+  "evidence": [
+    {
+      "event": "crash_boundary_observed",
+      "kind": "after-read",
+      "runId": "mb15b-crash-read-before-20261002",
+      "inboundId": "wamid.MB15B_mb15b-crash-read-before-20261002_627c4fab-10f4-4774-8c82-243c11780729",
+      "conversationId": "6514272d-e7b9-4871-b9ad-3410729340a0",
+      "id": "50169473-b6f9-4a91-bb14-c15afba9b1b0",
+      "status": "RUNNING",
+      "tool_count": 1,
+      "booking_count": 0,
+      "attempts": 0
+    },
+    {
+      "runId": "mb15b-crash-read-before-20261002",
+      "inboundId": "wamid.MB15B_mb15b-crash-read-before-20261002_627c4fab-10f4-4774-8c82-243c11780729",
+      "conversationId": "6514272d-e7b9-4871-b9ad-3410729340a0",
+      "ingressSequence": 1,
+      "agentRunId": "50169473-b6f9-4a91-bb14-c15afba9b1b0",
+      "status": "RUNNING",
+      "terminalReason": null,
+      "modelCalls": 1,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "args_hash": "5576efe9788b465220c1565cfa48e8da72fdfcdf736c3da258f9638bf038e604",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 4974,
+          "output_tokens": 27
+        }
+      ],
+      "transitions": [
+        {
+          "version": 1,
+          "customerId": "1f4b32f1-21cc-4038-a9de-e1564dbe7620",
+          "leadId": null,
+          "workflow": "DISCOVERY",
+          "stage": "IN_PROGRESS",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "simulatorReceived": false,
+      "responseMs": 126901,
+      "queueLatencyMs": 882,
+      "workerLatencyMs": null,
+      "targetInContext": true,
+      "contextSourceChars": 50,
+      "canonicalResponse": false,
+      "duplicates": false
+    }
+  ]
+}

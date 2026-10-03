@@ -109,6 +109,10 @@ function range(from: number, to: number): number[] {
 export function isExplicitBookingConfirmation(text: string): boolean {
   const t = text.trim().toLowerCase();
   if (!t) return false;
+  // An explicit ordinal choice is confirmation, but questions and negations are not.
+  if (/^(?:اختار|أختار|اخترت|أختارُ)\s+(?:الموعد\s+)?(?:الأول|الاول|أول|اول|الثاني|ثاني|الثالث|ثالث)(?:\s+موعد)?[.!،]*$/u.test(t)) {
+    return true;
+  }
   // Availability-only questions must fail
   if (
     /^(what|which|any|هل|ايش|شو|متى|كم)\b/.test(t) &&
@@ -135,6 +139,15 @@ export function isExplicitBookingConfirmation(text: string): boolean {
     return true;
   }
   return false;
+}
+
+/** Server-proven ordinal for a candidate reference; questions/negations never select. */
+export function confirmedCandidateIndex(text:string): number | null {
+  const t=text.trim();
+  if (!isExplicitBookingConfirmation(t) || /[?؟]/u.test(t) || /(?:^|\s)(?:لا|مو|ما|هل|شنو|متى|كيف|إذا|اذا|لو|if|unless)(?:\s|$)/ui.test(t)) return null;
+  const ordinals=[/(?:^|\s)(?:الأول|الاول|أول|اول)(?:\s|$|[!.،])/u,/(?:^|\s)(?:الثاني|ثاني|تاني)(?:\s|$|[!.،])/u,/(?:^|\s)(?:الثالث|ثالث|تالت)(?:\s|$|[!.،])/u];
+  const found=ordinals.flatMap((p,i)=>p.test(t)?[i]:[]);
+  return found.length===1?found[0]!:null;
 }
 
 export type LocalWindow = { startLocal: string; endLocal: string }; // HH:MM:SS

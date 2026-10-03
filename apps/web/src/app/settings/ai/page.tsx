@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { OperatorNav } from '@/components/OperatorNav';
+import { OperatorNav } from '@/client/navigation/OperatorNav';
 import type {
   ConversationProfileDto,
   CustomerNameUsage,

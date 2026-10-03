@@ -1,0 +1,19 @@
+{
+  "runId": "mb15b-crash-containment-20261002",
+  "scenarios": {
+    "WORKER_CRASH_READ_BASELINE": {
+      "status": "FAIL",
+      "reason": "resume_reused_tool_ordinal_and_reset_budget",
+      "modelCalls": 11
+    }
+  },
+  "evidence": [
+    {
+      "event": "verified_synthetic_failure_contained",
+      "agentRunId": "50169473-b6f9-4a91-bb14-c15afba9b1b0",
+      "conversationId": "6514272d-e7b9-4871-b9ad-3410729340a0",
+      "modelCalls": 11,
+      "terminal": "BUDGET_EXCEEDED"
+    }
+  ]
+}

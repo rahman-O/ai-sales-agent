@@ -1,0 +1,919 @@
+{
+  "runId": "mb15b-worker-pool-20261003",
+  "scenarios": {
+    "WORKER_DB_CONNECTION_MONITOR": {
+      "status": "PASS",
+      "details": {
+        "samples": 53,
+        "measurement": "Postgres connection activity attributed to the worker container; pool maximum 4. Checked-out idle clients cannot be distinguished from available idle clients."
+      }
+    }
+  },
+  "evidence": [
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:52:58.778Z",
+      "stage": "25",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:01.308Z",
+      "stage": "25",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:03.817Z",
+      "stage": "25",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:06.280Z",
+      "stage": "25",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:08.756Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:11.227Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:13.971Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:16.434Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 4
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:18.902Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 4
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:21.417Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 4
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:23.890Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 4
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:26.348Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:28.824Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:31.288Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:33.777Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:36.273Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:38.760Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:41.247Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:43.708Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:46.216Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:48.709Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:51.182Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:53.668Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:56.177Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:53:58.662Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:01.121Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:03.608Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:06.098Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:08.582Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:11.040Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:13.576Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:16.032Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:18.514Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:21.004Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:23.482Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:25.943Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:28.457Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:30.950Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:33.743Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:36.276Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:38.762Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:41.263Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:43.717Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:46.193Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:48.673Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:51.154Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:53.661Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:56.153Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:54:58.621Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:55:01.109Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:55:03.654Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:55:06.209Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "active",
+          "connections": 1
+        },
+        {
+          "state": "idle",
+          "connections": 2
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "event": "worker_pool_snapshot",
+      "at": "2026-10-02T21:55:08.672Z",
+      "stage": "50",
+      "workerPoolMaximum": 4,
+      "workerConnections": [
+        {
+          "state": "idle",
+          "connections": 3
+        }
+      ],
+      "harnessPool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    }
+  ]
+}

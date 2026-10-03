@@ -1,0 +1,44 @@
+{
+  "captured_before_changes": true,
+  "root_layout": "system-ui; inline margin=0 and padding=24px; unchanged by DS-03",
+  "next_font": "none before DS-03",
+  "intentional_arabic_font": "NONE; platform fallback",
+  "latin_fonts": [
+    "system-ui and system fallback stacks",
+    "Georgia on Dashboard/Inbox/Bookings and other route-local pages",
+    "monospace for trace/code"
+  ],
+  "route_local_font_sizes_px": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28
+  ],
+  "route_local_numeric_weights": [
+    500,
+    600,
+    700,
+    800
+  ],
+  "explicit_line_heights": [
+    1.4,
+    1.5,
+    1.6
+  ],
+  "package_foundation_before_ds03": "DS-02 scoped color/theme/state/radius/shadow/motion tokens, one Button, cn, controlled tw sources; no semantic typography or spacing scale",
+  "font_assets_before_ds03": [],
+  "source_hash_snapshot": "/tmp/ds03-before.json",
+  "historical_evidence_preserved": [
+    "evidence/ds02",
+    "evidence/ds02-package-revalidation"
+  ]
+}

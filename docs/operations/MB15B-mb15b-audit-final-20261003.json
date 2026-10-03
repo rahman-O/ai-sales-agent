@@ -1,0 +1,124 @@
+{
+  "runId": "mb15b-audit-final-20261003",
+  "scenarios": {
+    "PREFLIGHT": {
+      "status": "PASS",
+      "details": {
+        "provider": "deepseek",
+        "keyConfigured": true,
+        "simulatorOnly": true,
+        "syntheticToken": true,
+        "scripted": false
+      }
+    },
+    "STUCK_STATE_AUDIT": {
+      "status": "PASS",
+      "details": {
+        "scopeConversationCount": 176,
+        "queueAudit": {
+          "retained": 71,
+          "retryLimitViolations": 0,
+          "uniqueConstraintFailures": 21
+        },
+        "expiredRunning": [],
+        "unresolvedMessages": [
+          {
+            "id": "ba95af64-6efa-4df2-aa3d-9a7c557b05fb",
+            "conversation_id": "72589a5f-a551-451c-b295-f72560c104ee",
+            "delivery_state": "UNKNOWN"
+          }
+        ],
+        "unexplainedMessages": [],
+        "unpublishedOlderThan6Minutes": [],
+        "expiredOwnedLeases": [],
+        "unexplainedLeases": [],
+        "jobs": {
+          "waiting": 0,
+          "active": 0,
+          "delayed": 0,
+          "failedRetained": 71
+        }
+      }
+    },
+    "DATA_INTEGRITY_AUDIT": {
+      "status": "PASS",
+      "details": {
+        "scopeConversationCount": 176,
+        "results": {
+          "orphanIdentity": 0,
+          "orphanConversation": 0,
+          "duplicateProviderId": 0,
+          "duplicateTimeline": 0,
+          "duplicateAgentBooking": 0,
+          "invalidBooking": 0,
+          "foreignBookingReferences": 0,
+          "invalidWorkingStateBooking": 0,
+          "invalidWorkingStateEntity": 0
+        },
+        "mutations": {
+          "quotes": 0,
+          "orders": 0
+        }
+      }
+    },
+    "SECRET_HYGIENE": {
+      "status": "PASS",
+      "details": {
+        "diffChecked": true,
+        "trackedEnvCount": 2,
+        "artifactAndLogFilesChecked": 288,
+        "exactKeyLeaks": 0,
+        "suspiciousKeyPatterns": 0,
+        "demoLocalIgnored": true,
+        "credentialValuesPrinted": false
+      }
+    }
+  },
+  "evidence": [
+    {
+      "event": "stuck_audit",
+      "scopeConversationCount": 176,
+      "queueAudit": {
+        "retained": 71,
+        "retryLimitViolations": 0,
+        "uniqueConstraintFailures": 21
+      },
+      "expiredRunning": [],
+      "unresolvedMessages": [
+        {
+          "id": "ba95af64-6efa-4df2-aa3d-9a7c557b05fb",
+          "conversation_id": "72589a5f-a551-451c-b295-f72560c104ee",
+          "delivery_state": "UNKNOWN"
+        }
+      ],
+      "unexplainedMessages": [],
+      "unpublishedOlderThan6Minutes": [],
+      "expiredOwnedLeases": [],
+      "unexplainedLeases": [],
+      "jobs": {
+        "waiting": 0,
+        "active": 0,
+        "delayed": 0,
+        "failedRetained": 71
+      }
+    },
+    {
+      "event": "integrity_audit",
+      "results": {
+        "orphanIdentity": 0,
+        "orphanConversation": 0,
+        "duplicateProviderId": 0,
+        "duplicateTimeline": 0,
+        "duplicateAgentBooking": 0,
+        "invalidBooking": 0,
+        "foreignBookingReferences": 0,
+        "invalidWorkingStateBooking": 0,
+        "invalidWorkingStateEntity": 0
+      },
+      "mutations": {
+        "quotes": 0,
+        "orders": 0
+      }
+    }
+  ]
+}

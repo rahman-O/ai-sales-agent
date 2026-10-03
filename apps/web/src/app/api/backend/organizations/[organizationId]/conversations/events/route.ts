@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSupabaseServerClient } from '@/shared/auth/supabase/server';
 
 /**
  * Authenticated BFF proxy for conversation SSE.

@@ -1,0 +1,3622 @@
+{
+  "runId": "mb15b-resume-final-20261003",
+  "scenarios": {
+    "PREFLIGHT": {
+      "status": "PASS",
+      "details": {
+        "provider": "deepseek",
+        "keyConfigured": true,
+        "simulatorOnly": true,
+        "syntheticToken": true,
+        "scripted": false
+      }
+    },
+    "TOPIC_RESUME_CASE_1": {
+      "status": "PASS",
+      "details": {
+        "conversationId": "dec6bf42-8fd5-4528-972f-5545fc869c63",
+        "agentRunIds": [
+          "ec9901d4-362b-4f7d-95a8-6bfd32794d70",
+          "3fb7eb26-b0cd-4459-bb4b-0ae743f9dc2c",
+          "749ab206-b68c-498f-bb9e-4ae7aed387ec",
+          "2f96783d-e376-4fbd-97d8-52a699a77d03",
+          "c7c91040-0a77-4df2-abb3-2ea9e97184cf"
+        ]
+      }
+    },
+    "TOPIC_RESUME_CASE_2": {
+      "status": "PASS",
+      "details": {
+        "conversationId": "c8b20677-97a9-497a-ac8e-99ed191e8f49",
+        "agentRunIds": [
+          "34141a7b-c7c2-4aa8-91cf-2acb3c0965a0",
+          "58791caf-3aef-48a4-939a-179388bbde4b",
+          "9552f3fa-e18a-4a46-9bc8-928bdf6ed33a",
+          "86f294ed-4440-49f4-b483-11dbee6a37cb",
+          "871e9570-ea65-4aea-b24f-cc2b69a7229c"
+        ]
+      }
+    },
+    "TOPIC_RESUME_CASE_3": {
+      "status": "FAIL",
+      "reason": "missing_tool_getActiveOffers"
+    },
+    "TOPIC_RESUME_CASE_4": {
+      "status": "PASS",
+      "details": {
+        "conversationId": "15a9c581-0258-4c3a-997a-b3baa985473c",
+        "agentRunIds": [
+          "2ceb3cc0-27d7-4a2b-9fb8-68006d7c76ab",
+          "12c7f4f1-b2c2-4e23-b825-04aa99009951",
+          "1f0176af-c16e-4665-bd40-d42e6cc85a57",
+          "5c74bffd-d0b5-414a-8e38-8976a21c012a",
+          "52a0b611-c0f6-4393-9883-f50cea307a27"
+        ]
+      }
+    },
+    "TOPIC_RESUME_CASE_5": {
+      "status": "FAIL",
+      "reason": "turn_FAILED_permanent_provider"
+    },
+    "TOPIC_RESUME_CASE_6": {
+      "status": "PASS",
+      "details": {
+        "conversationId": "bc3d2893-3cc5-4772-b83b-966cf1ecfa76",
+        "agentRunIds": [
+          "fd62b3a7-8aa5-4387-802d-beb345c6be70",
+          "0d52c1dd-b5d5-4dea-b4fd-41cd32f20fbf",
+          "f0e4233f-14e5-4ff1-afee-ff83a372d8d4",
+          "80e84487-b346-4ebb-a53c-7c691dec453b",
+          "27059a8c-1748-4771-bd94-e014a22fcdd0"
+        ]
+      }
+    },
+    "TOPIC_RESUME_CASE_7": {
+      "status": "PASS",
+      "details": {
+        "conversationId": "f34e07f5-db64-4a0d-bf4d-38fa4bc5e103",
+        "agentRunIds": [
+          "8cdc2c7f-7bcb-42a0-a669-e7b07b590171",
+          "bb934254-92f3-48cf-bbf8-a6e5368311a9",
+          "f140d4f8-1c52-4054-a7fc-d10c193645dc",
+          "137cfbfe-fc64-4314-a2f4-4105e1f6b02c",
+          "26411e61-b93d-400d-b246-dd602f6df484"
+        ]
+      }
+    },
+    "TOPIC_RESUME_CASE_8": {
+      "status": "PASS",
+      "details": {
+        "conversationId": "3f192ca1-55f5-478a-9a67-ee6978d7f77c",
+        "agentRunIds": [
+          "c2e1cada-e6dc-44fc-8e74-179811084602",
+          "80df2791-ea60-4295-9c5d-238533b4b4ed",
+          "2c1ea675-f34f-46f9-9e2c-4c17b86a4745",
+          "36949508-7c7e-4526-a836-2ebd190225d2",
+          "18995acc-3f7f-4771-996b-2519d624ea1f"
+        ]
+      }
+    },
+    "TOPIC_RESUME_CASE_9": {
+      "status": "PASS",
+      "details": {
+        "conversationId": "93cbd555-24df-464f-ac6f-99e3654aaeba",
+        "agentRunIds": [
+          "0fe4fc8a-994a-480d-9fc0-509896486958",
+          "43aab767-3d8b-4cf8-941f-7bc4b521ac5c",
+          "0846cf93-ad0a-4942-98ff-03970dcc15dc",
+          "b543cf7a-0c72-4cfa-b3c6-9d4160b200da",
+          "66f8e474-3ce8-48ff-b2aa-e60bcb86f903"
+        ]
+      }
+    },
+    "TOPIC_RESUME_CASE_10": {
+      "status": "PASS",
+      "details": {
+        "conversationId": "67f1b5be-c57b-4320-98bd-d624ce05a1c8",
+        "agentRunIds": [
+          "29160554-62cc-4bf8-8e98-dfad42987ebe",
+          "8efd578d-acf9-406c-8a5f-935c94825b7d",
+          "8fa92f7f-45a0-43df-90b8-59537b66101f",
+          "a6ec0951-b58a-4ae0-b284-b6bab8578c13",
+          "7e3c7a7b-c397-4374-a9c8-e3c75ac595ad"
+        ]
+      }
+    },
+    "TOPIC_RESUME_STRESS": {
+      "status": "FAIL",
+      "successRate": "8/10",
+      "failures": [
+        3,
+        5
+      ]
+    },
+    "MODEL_BUDGET_STABILITY": {
+      "status": "PASS",
+      "details": {
+        "averageModelCalls": 2.0851063829787235,
+        "p95ModelCalls": 3,
+        "maxModelCalls": 4,
+        "averageToolCalls": 1.0851063829787233,
+        "p95ToolCalls": 2,
+        "finalizationReserveUsage": 0,
+        "safeStopCount": 1,
+        "structuredRepairCount": 14,
+        "providerFailureCount": 1
+      }
+    }
+  },
+  "evidence": [
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_8c598d10-14d1-45ba-b369-063bf83ac029",
+      "conversationId": "dec6bf42-8fd5-4528-972f-5545fc869c63",
+      "ingressSequence": 1,
+      "agentRunId": "ec9901d4-362b-4f7d-95a8-6bfd32794d70",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 3,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "args_hash": "5576efe9788b465220c1565cfa48e8da72fdfcdf736c3da258f9638bf038e604",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        },
+        {
+          "ordinal": 2,
+          "tool_name": "getAvailableSlots",
+          "args_hash": "43afcb3738a3ab2ad06ad9ec729ecb4f12269a3cf77fc442ddc6b58c59b516fd",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5244,
+          "output_tokens": 27
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5434,
+          "output_tokens": 101
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16832,
+          "output_tokens": 303
+        }
+      ],
+      "transitions": [
+        null,
+        {
+          "version": 1,
+          "customerId": "35aa2ff9-f1a8-44ce-9053-0c944b3d05ff",
+          "leadId": null,
+          "workflow": "DISCOVERY",
+          "stage": "IN_PROGRESS",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        },
+        {
+          "version": 2,
+          "customerId": "35aa2ff9-f1a8-44ce-9053-0c944b3d05ff",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "f980cd436b5066d1be3f656f12ed352099f392df2d308bbd2334c780c7208571",
+            "69332f8c6e23a28c5e9372e490e5b635f57964bb73571826d5db30d88e016594",
+            "22d34e8dc577ae458f4d570f65f8c24230e80f5625ab3074e2dc0c66e1929267"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_c3132742-5c5a-4f39-8248-48b228e7e99c",
+      "simulatorReceived": true,
+      "responseMs": 25252,
+      "queueLatencyMs": 15421,
+      "workerLatencyMs": 5664,
+      "targetInContext": true,
+      "contextSourceChars": 538,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_1ed3eb76-5e72-4295-8630-48b22e1a225f",
+      "conversationId": "dec6bf42-8fd5-4528-972f-5545fc869c63",
+      "ingressSequence": 2,
+      "agentRunId": "3fb7eb26-b0cd-4459-bb4b-0ae743f9dc2c",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "getActiveOffers",
+          "args_hash": "5576efe9788b465220c1565cfa48e8da72fdfcdf736c3da258f9638bf038e604",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8251,
+          "output_tokens": 41
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8504,
+          "output_tokens": 137
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "35aa2ff9-f1a8-44ce-9053-0c944b3d05ff",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "f980cd436b5066d1be3f656f12ed352099f392df2d308bbd2334c780c7208571",
+            "69332f8c6e23a28c5e9372e490e5b635f57964bb73571826d5db30d88e016594",
+            "22d34e8dc577ae458f4d570f65f8c24230e80f5625ab3074e2dc0c66e1929267"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_d88e1bd4-d404-43c4-bd8b-64ebf8527787",
+      "simulatorReceived": true,
+      "responseMs": 9823,
+      "queueLatencyMs": 4672,
+      "workerLatencyMs": 2083,
+      "targetInContext": true,
+      "contextSourceChars": 769,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_d32d4224-5635-411d-94d8-5e80a1df7aae",
+      "conversationId": "dec6bf42-8fd5-4528-972f-5545fc869c63",
+      "ingressSequence": 3,
+      "agentRunId": "749ab206-b68c-498f-bb9e-4ae7aed387ec",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchKnowledge",
+          "args_hash": "38fa478250edc90c39609896d7437ca7a54fc26528ee814b63efaa56b25521db",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8344,
+          "output_tokens": 43
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8500,
+          "output_tokens": 87
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "35aa2ff9-f1a8-44ce-9053-0c944b3d05ff",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "f980cd436b5066d1be3f656f12ed352099f392df2d308bbd2334c780c7208571",
+            "69332f8c6e23a28c5e9372e490e5b635f57964bb73571826d5db30d88e016594",
+            "22d34e8dc577ae458f4d570f65f8c24230e80f5625ab3074e2dc0c66e1929267"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_19a93978-430f-4569-92a6-ddfdafe3ffbc",
+      "simulatorReceived": true,
+      "responseMs": 10235,
+      "queueLatencyMs": 4808,
+      "workerLatencyMs": 4326,
+      "targetInContext": true,
+      "contextSourceChars": 948,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_ce189fe6-67ae-4b78-997a-ee70ed1f24b3",
+      "conversationId": "dec6bf42-8fd5-4528-972f-5545fc869c63",
+      "ingressSequence": 4,
+      "agentRunId": "2f96783d-e376-4fbd-97d8-52a699a77d03",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 1,
+      "structuredRepairCount": 1,
+      "tools": [],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16886,
+          "output_tokens": 363
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "35aa2ff9-f1a8-44ce-9053-0c944b3d05ff",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "f980cd436b5066d1be3f656f12ed352099f392df2d308bbd2334c780c7208571",
+            "69332f8c6e23a28c5e9372e490e5b635f57964bb73571826d5db30d88e016594",
+            "22d34e8dc577ae458f4d570f65f8c24230e80f5625ab3074e2dc0c66e1929267"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_983483ef-a449-485e-aae9-2dff100d717d",
+      "simulatorReceived": true,
+      "responseMs": 9742,
+      "queueLatencyMs": 5801,
+      "workerLatencyMs": 3192,
+      "targetInContext": true,
+      "contextSourceChars": 1135,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_21bd5329-28fa-4614-92ae-f26a7a881061",
+      "conversationId": "dec6bf42-8fd5-4528-972f-5545fc869c63",
+      "ingressSequence": 5,
+      "agentRunId": "c7c91040-0a77-4df2-abb3-2ea9e97184cf",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 1,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "createBooking",
+          "args_hash": "f0fa05011616f28796649dda7fd10816d3290b45b47186dd142cf575bdf0a290",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8506,
+          "output_tokens": 40
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 17462,
+          "output_tokens": 249
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "35aa2ff9-f1a8-44ce-9053-0c944b3d05ff",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "f980cd436b5066d1be3f656f12ed352099f392df2d308bbd2334c780c7208571",
+            "69332f8c6e23a28c5e9372e490e5b635f57964bb73571826d5db30d88e016594",
+            "22d34e8dc577ae458f4d570f65f8c24230e80f5625ab3074e2dc0c66e1929267"
+          ]
+        },
+        {
+          "version": 3,
+          "customerId": "35aa2ff9-f1a8-44ce-9053-0c944b3d05ff",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "COMPLETED",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 1,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_6bcb4bc7-e35f-4b95-8d1a-29b95d1c2c39",
+      "simulatorReceived": true,
+      "responseMs": 15171,
+      "queueLatencyMs": 4742,
+      "workerLatencyMs": 3821,
+      "targetInContext": true,
+      "contextSourceChars": 1317,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_68e9a4c5-c044-47f5-83e3-b4fc3f51aa19",
+      "conversationId": "c8b20677-97a9-497a-ac8e-99ed191e8f49",
+      "ingressSequence": 1,
+      "agentRunId": "34141a7b-c7c2-4aa8-91cf-2acb3c0965a0",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 3,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "args_hash": "5576efe9788b465220c1565cfa48e8da72fdfcdf736c3da258f9638bf038e604",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        },
+        {
+          "ordinal": 2,
+          "tool_name": "getAvailableSlots",
+          "args_hash": "43afcb3738a3ab2ad06ad9ec729ecb4f12269a3cf77fc442ddc6b58c59b516fd",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5243,
+          "output_tokens": 27
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5433,
+          "output_tokens": 101
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16845,
+          "output_tokens": 345
+        }
+      ],
+      "transitions": [
+        null,
+        {
+          "version": 1,
+          "customerId": "e0ba0b91-6aa3-450e-a4d2-f4235a5092cf",
+          "leadId": null,
+          "workflow": "DISCOVERY",
+          "stage": "IN_PROGRESS",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        },
+        {
+          "version": 2,
+          "customerId": "e0ba0b91-6aa3-450e-a4d2-f4235a5092cf",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "875ee8c3a8dc2ae8e2b10a1da9b9b3a8806ecd18145edc7d350444b45a2dbb95",
+            "b3769962b2e21e174d45e06e74ec0930fbb746dac32349a306e3b547f6dce977",
+            "225766614737960ab0bfb0418d27d9d49970ac1039efd62c57a90358273322dd"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_f69efbbe-bed7-4172-8bd9-eb994983bea0",
+      "simulatorReceived": true,
+      "responseMs": 21656,
+      "queueLatencyMs": 4557,
+      "workerLatencyMs": 7715,
+      "targetInContext": true,
+      "contextSourceChars": 553,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_62c3d48c-8250-4d65-8e05-2726cb14d71f",
+      "conversationId": "c8b20677-97a9-497a-ac8e-99ed191e8f49",
+      "ingressSequence": 2,
+      "agentRunId": "58791caf-3aef-48a4-939a-179388bbde4b",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "getActiveOffers",
+          "args_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8287,
+          "output_tokens": 23
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8522,
+          "output_tokens": 140
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "e0ba0b91-6aa3-450e-a4d2-f4235a5092cf",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "875ee8c3a8dc2ae8e2b10a1da9b9b3a8806ecd18145edc7d350444b45a2dbb95",
+            "b3769962b2e21e174d45e06e74ec0930fbb746dac32349a306e3b547f6dce977",
+            "225766614737960ab0bfb0418d27d9d49970ac1039efd62c57a90358273322dd"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_b5efe982-ae47-4c66-bf40-303491d4fc1b",
+      "simulatorReceived": true,
+      "responseMs": 20218,
+      "queueLatencyMs": 2940,
+      "workerLatencyMs": 2816,
+      "targetInContext": true,
+      "contextSourceChars": 786,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_10567171-c06c-446b-8cbc-4948b27121dd",
+      "conversationId": "c8b20677-97a9-497a-ac8e-99ed191e8f49",
+      "ingressSequence": 3,
+      "agentRunId": "9552f3fa-e18a-4a46-9bc8-928bdf6ed33a",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchKnowledge",
+          "args_hash": "d31885da4202362925a188dc79659623cccb10faf884b53d1b7704f522b3915e",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8384,
+          "output_tokens": 43
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8540,
+          "output_tokens": 91
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "e0ba0b91-6aa3-450e-a4d2-f4235a5092cf",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "875ee8c3a8dc2ae8e2b10a1da9b9b3a8806ecd18145edc7d350444b45a2dbb95",
+            "b3769962b2e21e174d45e06e74ec0930fbb746dac32349a306e3b547f6dce977",
+            "225766614737960ab0bfb0418d27d9d49970ac1039efd62c57a90358273322dd"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_9587513c-0085-48df-a480-673993001a93",
+      "simulatorReceived": true,
+      "responseMs": 7905,
+      "queueLatencyMs": 2583,
+      "workerLatencyMs": 4707,
+      "targetInContext": true,
+      "contextSourceChars": 965,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_70b111c3-5773-433c-934d-5fbdf68d015e",
+      "conversationId": "c8b20677-97a9-497a-ac8e-99ed191e8f49",
+      "ingressSequence": 4,
+      "agentRunId": "86f294ed-4440-49f4-b483-11dbee6a37cb",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 1,
+      "structuredRepairCount": 1,
+      "tools": [],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16982,
+          "output_tokens": 481
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "e0ba0b91-6aa3-450e-a4d2-f4235a5092cf",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "875ee8c3a8dc2ae8e2b10a1da9b9b3a8806ecd18145edc7d350444b45a2dbb95",
+            "b3769962b2e21e174d45e06e74ec0930fbb746dac32349a306e3b547f6dce977",
+            "225766614737960ab0bfb0418d27d9d49970ac1039efd62c57a90358273322dd"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_247f2551-cdfd-4cf2-b00c-0540cf9e0a58",
+      "simulatorReceived": true,
+      "responseMs": 9642,
+      "queueLatencyMs": 4595,
+      "workerLatencyMs": 3983,
+      "targetInContext": true,
+      "contextSourceChars": 1441,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_ab3ecf76-4b4a-4f1c-8294-e84b461076e7",
+      "conversationId": "c8b20677-97a9-497a-ac8e-99ed191e8f49",
+      "ingressSequence": 5,
+      "agentRunId": "871e9570-ea65-4aea-b24f-cc2b69a7229c",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "createBooking",
+          "args_hash": "f0fa05011616f28796649dda7fd10816d3290b45b47186dd142cf575bdf0a290",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8757,
+          "output_tokens": 27
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8960,
+          "output_tokens": 157
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "e0ba0b91-6aa3-450e-a4d2-f4235a5092cf",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "875ee8c3a8dc2ae8e2b10a1da9b9b3a8806ecd18145edc7d350444b45a2dbb95",
+            "b3769962b2e21e174d45e06e74ec0930fbb746dac32349a306e3b547f6dce977",
+            "225766614737960ab0bfb0418d27d9d49970ac1039efd62c57a90358273322dd"
+          ]
+        },
+        {
+          "version": 3,
+          "customerId": "e0ba0b91-6aa3-450e-a4d2-f4235a5092cf",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "COMPLETED",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 1,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_dd087369-bfc8-4b95-b06c-c86be6554d19",
+      "simulatorReceived": true,
+      "responseMs": 10226,
+      "queueLatencyMs": 4907,
+      "workerLatencyMs": 2463,
+      "targetInContext": true,
+      "contextSourceChars": 1681,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_698f1d19-b2f2-4a87-9ae4-545804a1dee4",
+      "conversationId": "4578ad47-1c10-49ff-862a-51f012c24c0b",
+      "ingressSequence": 1,
+      "agentRunId": "57ed6eaf-fc9b-4768-8b14-78bc46893a8d",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 4,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "args_hash": "5576efe9788b465220c1565cfa48e8da72fdfcdf736c3da258f9638bf038e604",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        },
+        {
+          "ordinal": 2,
+          "tool_name": "ensureLead",
+          "args_hash": "906eec56b02c6bf05a756abe2d40f33fd792dca529107b99567d1d1ff8e47919",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        },
+        {
+          "ordinal": 3,
+          "tool_name": "getAvailableSlots",
+          "args_hash": "43afcb3738a3ab2ad06ad9ec729ecb4f12269a3cf77fc442ddc6b58c59b516fd",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5242,
+          "output_tokens": 50
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5432,
+          "output_tokens": 105
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5764,
+          "output_tokens": 101
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 17199,
+          "output_tokens": 174
+        }
+      ],
+      "transitions": [
+        null,
+        {
+          "version": 1,
+          "customerId": "3f147b01-505d-4342-84ee-3df4d527901b",
+          "leadId": null,
+          "workflow": "DISCOVERY",
+          "stage": "IN_PROGRESS",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        },
+        {
+          "version": 2,
+          "customerId": "3f147b01-505d-4342-84ee-3df4d527901b",
+          "leadId": null,
+          "workflow": "LEAD_CAPTURE",
+          "stage": "IN_PROGRESS",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        },
+        {
+          "version": 3,
+          "customerId": "3f147b01-505d-4342-84ee-3df4d527901b",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "df20ed7c06099a84951df639da0b9547401671d18b89fb6cf034b8de0b8007ec",
+            "e80c89852e2f7800e5bd4ea15ce634333b7b27629734e1d0946836786897788f",
+            "153ce953a03b52c031d114ffd3eaa1c84a106913ce912054fd8bae619cf4b026"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_2489cc8e-f924-439b-a5ec-264769e6202f",
+      "simulatorReceived": true,
+      "responseMs": 15624,
+      "queueLatencyMs": 4667,
+      "workerLatencyMs": 7672,
+      "targetInContext": true,
+      "contextSourceChars": 306,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_f87c74de-a37b-4fdf-8099-7b8e60b0848b",
+      "conversationId": "4578ad47-1c10-49ff-862a-51f012c24c0b",
+      "ingressSequence": 2,
+      "agentRunId": "609d93c3-206c-4f84-a42a-19919672a910",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 1,
+      "structuredRepairCount": 0,
+      "tools": [],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8114,
+          "output_tokens": 34
+        }
+      ],
+      "transitions": [
+        {
+          "version": 3,
+          "customerId": "3f147b01-505d-4342-84ee-3df4d527901b",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "df20ed7c06099a84951df639da0b9547401671d18b89fb6cf034b8de0b8007ec",
+            "e80c89852e2f7800e5bd4ea15ce634333b7b27629734e1d0946836786897788f",
+            "153ce953a03b52c031d114ffd3eaa1c84a106913ce912054fd8bae619cf4b026"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_9379e8ad-e5ca-4264-b838-0b97b1734cbd",
+      "simulatorReceived": true,
+      "responseMs": 9624,
+      "queueLatencyMs": 4464,
+      "workerLatencyMs": 2344,
+      "targetInContext": true,
+      "contextSourceChars": 368,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_eeb8549d-9f59-4832-b3f7-e7eae1954ce5",
+      "conversationId": "15a9c581-0258-4c3a-997a-b3baa985473c",
+      "ingressSequence": 1,
+      "agentRunId": "2ceb3cc0-27d7-4a2b-9fb8-68006d7c76ab",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 3,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "args_hash": "73213d848cd3f84c0a4833dac13c759421810e4d9a1758e6cfc00e8825a1d245",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        },
+        {
+          "ordinal": 2,
+          "tool_name": "getAvailableSlots",
+          "args_hash": "43afcb3738a3ab2ad06ad9ec729ecb4f12269a3cf77fc442ddc6b58c59b516fd",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5244,
+          "output_tokens": 30
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5552,
+          "output_tokens": 101
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16956,
+          "output_tokens": 184
+        }
+      ],
+      "transitions": [
+        null,
+        {
+          "version": 1,
+          "customerId": "7e24c700-1b72-45d6-aaa5-82d0b781a127",
+          "leadId": null,
+          "slotCount": 0,
+          "slotFingerprints": []
+        },
+        {
+          "version": 2,
+          "customerId": "7e24c700-1b72-45d6-aaa5-82d0b781a127",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "36c3282a1e27691809148f65aa5525d5d91e0a119e23aa9dcb1977292d7c601d",
+            "ce3b7f14aa1fce1f55f4d8a3d42c89278a5e1bc9cb9dd5c4050476318d34f8e0",
+            "1c844b91f6b38342e1bbc419993a3b27bed5c4b0f553e182b15898a88d21f61a"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_0566d032-fe92-459c-86a5-71bc4b858883",
+      "simulatorReceived": true,
+      "responseMs": 15204,
+      "queueLatencyMs": 4810,
+      "workerLatencyMs": 5053,
+      "targetInContext": true,
+      "contextSourceChars": 338,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_05dfc919-4f32-4287-abbe-82e7f50366bf",
+      "conversationId": "15a9c581-0258-4c3a-997a-b3baa985473c",
+      "ingressSequence": 2,
+      "agentRunId": "12c7f4f1-b2c2-4e23-b825-04aa99009951",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 3,
+      "structuredRepairCount": 1,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "getActiveOffers",
+          "args_hash": "73e5b4da322726e73761064c528e89b0d4f5c9e5622ad2d29263d710d879d2fb",
+          "result_code": "NOT_FOUND",
+          "authz_result": "DENIED_OR_FAILED"
+        },
+        {
+          "ordinal": 2,
+          "tool_name": "getActiveOffers",
+          "args_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8065,
+          "output_tokens": 77
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8165,
+          "output_tokens": 23
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16846,
+          "output_tokens": 238
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "7e24c700-1b72-45d6-aaa5-82d0b781a127",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "36c3282a1e27691809148f65aa5525d5d91e0a119e23aa9dcb1977292d7c601d",
+            "ce3b7f14aa1fce1f55f4d8a3d42c89278a5e1bc9cb9dd5c4050476318d34f8e0",
+            "1c844b91f6b38342e1bbc419993a3b27bed5c4b0f553e182b15898a88d21f61a"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_e961883d-1829-45a4-8739-67aa7b737b79",
+      "simulatorReceived": true,
+      "responseMs": 9731,
+      "queueLatencyMs": 4576,
+      "workerLatencyMs": 4596,
+      "targetInContext": true,
+      "contextSourceChars": 540,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_56e1aeb1-242c-4c68-b1fa-8e5869d50d8c",
+      "conversationId": "15a9c581-0258-4c3a-997a-b3baa985473c",
+      "ingressSequence": 3,
+      "agentRunId": "1f0176af-c16e-4665-bd40-d42e6cc85a57",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchKnowledge",
+          "args_hash": "eaf37b853c4ab0e18bd89124f3aa9c62d28e01080c443e0854f6ddd7dbeb84c3",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8148,
+          "output_tokens": 43
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8304,
+          "output_tokens": 84
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "7e24c700-1b72-45d6-aaa5-82d0b781a127",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "36c3282a1e27691809148f65aa5525d5d91e0a119e23aa9dcb1977292d7c601d",
+            "ce3b7f14aa1fce1f55f4d8a3d42c89278a5e1bc9cb9dd5c4050476318d34f8e0",
+            "1c844b91f6b38342e1bbc419993a3b27bed5c4b0f553e182b15898a88d21f61a"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_677bf5bc-7c35-4b8a-9040-f9297b23ed13",
+      "simulatorReceived": true,
+      "responseMs": 9995,
+      "queueLatencyMs": 4814,
+      "workerLatencyMs": 3055,
+      "targetInContext": true,
+      "contextSourceChars": 704,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_0b257b93-7d40-4cf8-bfe4-c857d6c0f2e9",
+      "conversationId": "15a9c581-0258-4c3a-997a-b3baa985473c",
+      "ingressSequence": 4,
+      "agentRunId": "5c74bffd-d0b5-414a-8e38-8976a21c012a",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 1,
+      "structuredRepairCount": 1,
+      "tools": [],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16496,
+          "output_tokens": 222
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "7e24c700-1b72-45d6-aaa5-82d0b781a127",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "36c3282a1e27691809148f65aa5525d5d91e0a119e23aa9dcb1977292d7c601d",
+            "ce3b7f14aa1fce1f55f4d8a3d42c89278a5e1bc9cb9dd5c4050476318d34f8e0",
+            "1c844b91f6b38342e1bbc419993a3b27bed5c4b0f553e182b15898a88d21f61a"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_1bd1e31e-b508-4f92-9fc2-5b33f8b4ccd4",
+      "simulatorReceived": true,
+      "responseMs": 10102,
+      "queueLatencyMs": 4776,
+      "workerLatencyMs": 2244,
+      "targetInContext": true,
+      "contextSourceChars": 883,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_d2190f7c-955e-477a-9edb-4181068fe36f",
+      "conversationId": "15a9c581-0258-4c3a-997a-b3baa985473c",
+      "ingressSequence": 5,
+      "agentRunId": "52a0b611-c0f6-4393-9883-f50cea307a27",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "createBooking",
+          "args_hash": "f0fa05011616f28796649dda7fd10816d3290b45b47186dd142cf575bdf0a290",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8310,
+          "output_tokens": 27
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8519,
+          "output_tokens": 159
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "7e24c700-1b72-45d6-aaa5-82d0b781a127",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "36c3282a1e27691809148f65aa5525d5d91e0a119e23aa9dcb1977292d7c601d",
+            "ce3b7f14aa1fce1f55f4d8a3d42c89278a5e1bc9cb9dd5c4050476318d34f8e0",
+            "1c844b91f6b38342e1bbc419993a3b27bed5c4b0f553e182b15898a88d21f61a"
+          ]
+        },
+        {
+          "version": 3,
+          "customerId": "7e24c700-1b72-45d6-aaa5-82d0b781a127",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "COMPLETED",
+          "slotCount": 0,
+          "slotFingerprints": []
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 1,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_eb23b467-5c58-4692-933e-2d1a1b5c2a1b",
+      "simulatorReceived": true,
+      "responseMs": 9732,
+      "queueLatencyMs": 4632,
+      "workerLatencyMs": 2896,
+      "targetInContext": true,
+      "contextSourceChars": 1101,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_02e05cee-3da8-4c5e-a8f7-e5398698cb5d",
+      "conversationId": "00fda62a-46e2-4d8f-b14d-7f23347131ef",
+      "ingressSequence": 1,
+      "agentRunId": "c4e0c3ba-449b-4df4-b072-252e856895ed",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 3,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "args_hash": "73213d848cd3f84c0a4833dac13c759421810e4d9a1758e6cfc00e8825a1d245",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        },
+        {
+          "ordinal": 2,
+          "tool_name": "getAvailableSlots",
+          "args_hash": "43afcb3738a3ab2ad06ad9ec729ecb4f12269a3cf77fc442ddc6b58c59b516fd",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5245,
+          "output_tokens": 30
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5553,
+          "output_tokens": 101
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 17001,
+          "output_tokens": 161
+        }
+      ],
+      "transitions": [
+        null,
+        {
+          "version": 1,
+          "customerId": "414ffa99-9491-47f6-bd3c-7e600a88a0f6",
+          "leadId": null,
+          "slotCount": 0,
+          "slotFingerprints": []
+        },
+        {
+          "version": 2,
+          "customerId": "414ffa99-9491-47f6-bd3c-7e600a88a0f6",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "3e5acc84f27e468c056934b119720fc2102528e3075bbbe284d8bd1f3bc697b1",
+            "d81a67e22e252b26618cdc1563d35054ebe097b569126e34cbc52175671f2ab0",
+            "d5d47f58d2787296aedc000e16d14a91b68405619e87f40f3aeb2c33d76e49a6"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_f879b2a3-f6f9-4edf-977a-eef0d3361a5d",
+      "simulatorReceived": true,
+      "responseMs": 10049,
+      "queueLatencyMs": 4850,
+      "workerLatencyMs": 4399,
+      "targetInContext": true,
+      "contextSourceChars": 309,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_faf9cf35-933e-45a4-872f-dac478dc406b",
+      "conversationId": "00fda62a-46e2-4d8f-b14d-7f23347131ef",
+      "ingressSequence": 2,
+      "agentRunId": "2c701ade-a843-4767-a363-1c210081cb52",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 1,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "getActiveOffers",
+          "args_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8052,
+          "output_tokens": 23
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16620,
+          "output_tokens": 277
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "414ffa99-9491-47f6-bd3c-7e600a88a0f6",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "3e5acc84f27e468c056934b119720fc2102528e3075bbbe284d8bd1f3bc697b1",
+            "d81a67e22e252b26618cdc1563d35054ebe097b569126e34cbc52175671f2ab0",
+            "d5d47f58d2787296aedc000e16d14a91b68405619e87f40f3aeb2c33d76e49a6"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_3fb15b83-543f-4250-9777-4c74f6d2c301",
+      "simulatorReceived": true,
+      "responseMs": 9846,
+      "queueLatencyMs": 4759,
+      "workerLatencyMs": 3355,
+      "targetInContext": true,
+      "contextSourceChars": 606,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_216c2bfe-5a76-47b0-a03f-bbdd2407b735",
+      "conversationId": "00fda62a-46e2-4d8f-b14d-7f23347131ef",
+      "ingressSequence": 3,
+      "agentRunId": "162ebf02-391f-43bd-9c2f-63e88e676b60",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchKnowledge",
+          "args_hash": "38fa478250edc90c39609896d7437ca7a54fc26528ee814b63efaa56b25521db",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8194,
+          "output_tokens": 43
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8350,
+          "output_tokens": 154
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "414ffa99-9491-47f6-bd3c-7e600a88a0f6",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "3e5acc84f27e468c056934b119720fc2102528e3075bbbe284d8bd1f3bc697b1",
+            "d81a67e22e252b26618cdc1563d35054ebe097b569126e34cbc52175671f2ab0",
+            "d5d47f58d2787296aedc000e16d14a91b68405619e87f40f3aeb2c33d76e49a6"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_b9e07f0e-8633-4d86-9284-7f3189add225",
+      "simulatorReceived": true,
+      "responseMs": 14911,
+      "queueLatencyMs": 4878,
+      "workerLatencyMs": 5132,
+      "targetInContext": true,
+      "contextSourceChars": 908,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_410e0f54-6125-4ec9-bbbc-b8dcc7bd83d6",
+      "conversationId": "00fda62a-46e2-4d8f-b14d-7f23347131ef",
+      "ingressSequence": 4,
+      "agentRunId": "80e881f3-ec16-4db2-a558-3ef529d667d2",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 1,
+      "structuredRepairCount": 0,
+      "tools": [],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8337,
+          "output_tokens": 115
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "414ffa99-9491-47f6-bd3c-7e600a88a0f6",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "3e5acc84f27e468c056934b119720fc2102528e3075bbbe284d8bd1f3bc697b1",
+            "d81a67e22e252b26618cdc1563d35054ebe097b569126e34cbc52175671f2ab0",
+            "d5d47f58d2787296aedc000e16d14a91b68405619e87f40f3aeb2c33d76e49a6"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_6ce8b575-816e-4c5d-aca3-c3cb621a7ace",
+      "simulatorReceived": true,
+      "responseMs": 15405,
+      "queueLatencyMs": 4911,
+      "workerLatencyMs": 8306,
+      "targetInContext": true,
+      "contextSourceChars": 1118,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_ffcb1780-caa3-41b6-a28f-e2677a4947c9",
+      "conversationId": "00fda62a-46e2-4d8f-b14d-7f23347131ef",
+      "ingressSequence": 5,
+      "agentRunId": "d4b51629-0486-473e-b4e1-5253435948ce",
+      "status": "FAILED",
+      "terminalReason": "permanent_provider",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "createBooking",
+          "args_hash": "f0fa05011616f28796649dda7fd10816d3290b45b47186dd142cf575bdf0a290",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8438,
+          "output_tokens": 27
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "414ffa99-9491-47f6-bd3c-7e600a88a0f6",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "3e5acc84f27e468c056934b119720fc2102528e3075bbbe284d8bd1f3bc697b1",
+            "d81a67e22e252b26618cdc1563d35054ebe097b569126e34cbc52175671f2ab0",
+            "d5d47f58d2787296aedc000e16d14a91b68405619e87f40f3aeb2c33d76e49a6"
+          ]
+        },
+        {
+          "version": 3,
+          "customerId": "414ffa99-9491-47f6-bd3c-7e600a88a0f6",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "COMPLETED",
+          "slotCount": 0,
+          "slotFingerprints": []
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 1,
+        "quotes": 0,
+        "orders": 0
+      },
+      "simulatorReceived": false,
+      "responseMs": 132167,
+      "queueLatencyMs": 4428,
+      "workerLatencyMs": 127667,
+      "targetInContext": true,
+      "contextSourceChars": 1130,
+      "canonicalResponse": false,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_86382374-4c56-4623-bd01-86fca7aa5cba",
+      "conversationId": "bc3d2893-3cc5-4772-b83b-966cf1ecfa76",
+      "ingressSequence": 1,
+      "agentRunId": "fd62b3a7-8aa5-4387-802d-beb345c6be70",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 3,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "args_hash": "5576efe9788b465220c1565cfa48e8da72fdfcdf736c3da258f9638bf038e604",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        },
+        {
+          "ordinal": 2,
+          "tool_name": "getAvailableSlots",
+          "args_hash": "43afcb3738a3ab2ad06ad9ec729ecb4f12269a3cf77fc442ddc6b58c59b516fd",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5247,
+          "output_tokens": 27
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5437,
+          "output_tokens": 69
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16866,
+          "output_tokens": 190
+        }
+      ],
+      "transitions": [
+        null,
+        {
+          "version": 1,
+          "customerId": "a4252ceb-84de-4c6f-9bda-0d0e76b0b2ff",
+          "leadId": null,
+          "workflow": "DISCOVERY",
+          "stage": "IN_PROGRESS",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        },
+        {
+          "version": 2,
+          "customerId": "a4252ceb-84de-4c6f-9bda-0d0e76b0b2ff",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "803d686034bc338583e0262ed46ad84566b69943e87f6949b9c3e500fc60b3b7",
+            "54d22508e11f6b01a7fa340597537f5f707b8397eb188a548313529fa05d3992",
+            "93a5d4a61e64f64b973f0d1695f2f9aaf6685e546d1254517dce4985bb567021"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_efe600ee-cd0c-4fcc-937d-07b905afbf2a",
+      "simulatorReceived": true,
+      "responseMs": 7624,
+      "queueLatencyMs": 2305,
+      "workerLatencyMs": 4612,
+      "targetInContext": true,
+      "contextSourceChars": 334,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_a79c29cb-7739-4337-a53d-95bc04751e4c",
+      "conversationId": "bc3d2893-3cc5-4772-b83b-966cf1ecfa76",
+      "ingressSequence": 2,
+      "agentRunId": "0d52c1dd-b5d5-4dea-b4fd-41cd32f20fbf",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "getActiveOffers",
+          "args_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8139,
+          "output_tokens": 23
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8374,
+          "output_tokens": 125
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "a4252ceb-84de-4c6f-9bda-0d0e76b0b2ff",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "803d686034bc338583e0262ed46ad84566b69943e87f6949b9c3e500fc60b3b7",
+            "54d22508e11f6b01a7fa340597537f5f707b8397eb188a548313529fa05d3992",
+            "93a5d4a61e64f64b973f0d1695f2f9aaf6685e546d1254517dce4985bb567021"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_0a32bade-416a-4b7a-a05a-0d20171cea58",
+      "simulatorReceived": true,
+      "responseMs": 9787,
+      "queueLatencyMs": 4610,
+      "workerLatencyMs": 1931,
+      "targetInContext": true,
+      "contextSourceChars": 539,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_fff30069-43dc-4d92-941b-fb73d4fc3905",
+      "conversationId": "bc3d2893-3cc5-4772-b83b-966cf1ecfa76",
+      "ingressSequence": 3,
+      "agentRunId": "f0e4233f-14e5-4ff1-afee-ff83a372d8d4",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchKnowledge",
+          "args_hash": "700f717c1faf49afa80a891544d469d16f380895828e58be3aba646ffd9b7fad",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8221,
+          "output_tokens": 46
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8380,
+          "output_tokens": 75
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "a4252ceb-84de-4c6f-9bda-0d0e76b0b2ff",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "803d686034bc338583e0262ed46ad84566b69943e87f6949b9c3e500fc60b3b7",
+            "54d22508e11f6b01a7fa340597537f5f707b8397eb188a548313529fa05d3992",
+            "93a5d4a61e64f64b973f0d1695f2f9aaf6685e546d1254517dce4985bb567021"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_749c971e-0210-4301-b739-147b97afd518",
+      "simulatorReceived": true,
+      "responseMs": 9832,
+      "queueLatencyMs": 4796,
+      "workerLatencyMs": 3296,
+      "targetInContext": true,
+      "contextSourceChars": 703,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_f2b4b3c7-7a3d-4667-b3fc-b1aa85463d5f",
+      "conversationId": "bc3d2893-3cc5-4772-b83b-966cf1ecfa76",
+      "ingressSequence": 4,
+      "agentRunId": "80e84487-b346-4ebb-a53c-7c691dec453b",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 1,
+      "structuredRepairCount": 1,
+      "tools": [],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16624,
+          "output_tokens": 236
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "a4252ceb-84de-4c6f-9bda-0d0e76b0b2ff",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "803d686034bc338583e0262ed46ad84566b69943e87f6949b9c3e500fc60b3b7",
+            "54d22508e11f6b01a7fa340597537f5f707b8397eb188a548313529fa05d3992",
+            "93a5d4a61e64f64b973f0d1695f2f9aaf6685e546d1254517dce4985bb567021"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_842fc867-01e7-4313-880f-79c86fe07c65",
+      "simulatorReceived": true,
+      "responseMs": 10501,
+      "queueLatencyMs": 4920,
+      "workerLatencyMs": 2329,
+      "targetInContext": true,
+      "contextSourceChars": 873,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_fa0465a4-ed42-4fdb-a56b-76757c1c0013",
+      "conversationId": "bc3d2893-3cc5-4772-b83b-966cf1ecfa76",
+      "ingressSequence": 5,
+      "agentRunId": "27059a8c-1748-4771-bd94-e014a22fcdd0",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "createBooking",
+          "args_hash": "f0fa05011616f28796649dda7fd10816d3290b45b47186dd142cf575bdf0a290",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8368,
+          "output_tokens": 27
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8574,
+          "output_tokens": 162
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "a4252ceb-84de-4c6f-9bda-0d0e76b0b2ff",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "803d686034bc338583e0262ed46ad84566b69943e87f6949b9c3e500fc60b3b7",
+            "54d22508e11f6b01a7fa340597537f5f707b8397eb188a548313529fa05d3992",
+            "93a5d4a61e64f64b973f0d1695f2f9aaf6685e546d1254517dce4985bb567021"
+          ]
+        },
+        {
+          "version": 3,
+          "customerId": "a4252ceb-84de-4c6f-9bda-0d0e76b0b2ff",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "COMPLETED",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 1,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_959f3a12-0a2a-49cf-81aa-ce6e795e8dd9",
+      "simulatorReceived": true,
+      "responseMs": 9814,
+      "queueLatencyMs": 4435,
+      "workerLatencyMs": 3211,
+      "targetInContext": true,
+      "contextSourceChars": 1119,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_29d7bf57-435b-4bd7-816d-a19ae9dd26bb",
+      "conversationId": "f34e07f5-db64-4a0d-bf4d-38fa4bc5e103",
+      "ingressSequence": 1,
+      "agentRunId": "8cdc2c7f-7bcb-42a0-a669-e7b07b590171",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 3,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "args_hash": "5576efe9788b465220c1565cfa48e8da72fdfcdf736c3da258f9638bf038e604",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        },
+        {
+          "ordinal": 2,
+          "tool_name": "getAvailableSlots",
+          "args_hash": "43afcb3738a3ab2ad06ad9ec729ecb4f12269a3cf77fc442ddc6b58c59b516fd",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5245,
+          "output_tokens": 27
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5435,
+          "output_tokens": 101
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16870,
+          "output_tokens": 242
+        }
+      ],
+      "transitions": [
+        null,
+        {
+          "version": 1,
+          "customerId": "a4b5ad1d-d411-49bc-8e7f-65e63a9cd45d",
+          "leadId": null,
+          "workflow": "DISCOVERY",
+          "stage": "IN_PROGRESS",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        },
+        {
+          "version": 2,
+          "customerId": "a4b5ad1d-d411-49bc-8e7f-65e63a9cd45d",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "0c86b2801f35d9297c578e03060df31e0337b3950d1443275ffad02eaeb42948",
+            "2fe726b15e05dbc88e602590f986462890d4955c38b1793f28a577721e12e1fa",
+            "d343f130ff4b5a626c5e5d2d458db060997fc4d9dbf325e212a58d5e604f0eba"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_d73172c0-3655-4564-b21f-ec0fdae281c4",
+      "simulatorReceived": true,
+      "responseMs": 15308,
+      "queueLatencyMs": 4896,
+      "workerLatencyMs": 7792,
+      "targetInContext": true,
+      "contextSourceChars": 435,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_86c2a03a-0c1a-4ebf-8f74-aabeb36fd0e7",
+      "conversationId": "f34e07f5-db64-4a0d-bf4d-38fa4bc5e103",
+      "ingressSequence": 2,
+      "agentRunId": "bb934254-92f3-48cf-bbf8-a6e5368311a9",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 1,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "getActiveOffers",
+          "args_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8215,
+          "output_tokens": 22
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16946,
+          "output_tokens": 260
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "a4b5ad1d-d411-49bc-8e7f-65e63a9cd45d",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "0c86b2801f35d9297c578e03060df31e0337b3950d1443275ffad02eaeb42948",
+            "2fe726b15e05dbc88e602590f986462890d4955c38b1793f28a577721e12e1fa",
+            "d343f130ff4b5a626c5e5d2d458db060997fc4d9dbf325e212a58d5e604f0eba"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_ab818b8e-d23e-4e4f-a338-b39bfd4dc268",
+      "simulatorReceived": true,
+      "responseMs": 9790,
+      "queueLatencyMs": 4646,
+      "workerLatencyMs": 4057,
+      "targetInContext": true,
+      "contextSourceChars": 699,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_ab275aaa-a07d-4dbc-83b3-8b66ffce57f7",
+      "conversationId": "f34e07f5-db64-4a0d-bf4d-38fa4bc5e103",
+      "ingressSequence": 3,
+      "agentRunId": "f140d4f8-1c52-4054-a7fc-d10c193645dc",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchKnowledge",
+          "args_hash": "a2bd731b3f4888d09e110d1c2b9ae947a41fcd4754c156f36a1d70fdd523286e",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8330,
+          "output_tokens": 29
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8484,
+          "output_tokens": 95
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "a4b5ad1d-d411-49bc-8e7f-65e63a9cd45d",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "0c86b2801f35d9297c578e03060df31e0337b3950d1443275ffad02eaeb42948",
+            "2fe726b15e05dbc88e602590f986462890d4955c38b1793f28a577721e12e1fa",
+            "d343f130ff4b5a626c5e5d2d458db060997fc4d9dbf325e212a58d5e604f0eba"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_1c0eebda-c861-4e95-83ca-a32042a3441c",
+      "simulatorReceived": true,
+      "responseMs": 14512,
+      "queueLatencyMs": 4405,
+      "workerLatencyMs": 4906,
+      "targetInContext": true,
+      "contextSourceChars": 834,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_f20df85e-7ee7-4cd1-8a41-ecc783d5b00f",
+      "conversationId": "f34e07f5-db64-4a0d-bf4d-38fa4bc5e103",
+      "ingressSequence": 4,
+      "agentRunId": "137cfbfe-fc64-4314-a2f4-4105e1f6b02c",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 1,
+      "structuredRepairCount": 1,
+      "tools": [],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16836,
+          "output_tokens": 140
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "a4b5ad1d-d411-49bc-8e7f-65e63a9cd45d",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "0c86b2801f35d9297c578e03060df31e0337b3950d1443275ffad02eaeb42948",
+            "2fe726b15e05dbc88e602590f986462890d4955c38b1793f28a577721e12e1fa",
+            "d343f130ff4b5a626c5e5d2d458db060997fc4d9dbf325e212a58d5e604f0eba"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_bb0fefd5-f1c1-4974-8245-73ba74d181ed",
+      "simulatorReceived": true,
+      "responseMs": 10400,
+      "queueLatencyMs": 4723,
+      "workerLatencyMs": 1999,
+      "targetInContext": true,
+      "contextSourceChars": 944,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_e25cfd8b-4f3b-4967-9b59-7a58786ecf26",
+      "conversationId": "f34e07f5-db64-4a0d-bf4d-38fa4bc5e103",
+      "ingressSequence": 5,
+      "agentRunId": "26411e61-b93d-400d-b246-dd602f6df484",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "createBooking",
+          "args_hash": "f0fa05011616f28796649dda7fd10816d3290b45b47186dd142cf575bdf0a290",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8453,
+          "output_tokens": 27
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8658,
+          "output_tokens": 141
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "a4b5ad1d-d411-49bc-8e7f-65e63a9cd45d",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "0c86b2801f35d9297c578e03060df31e0337b3950d1443275ffad02eaeb42948",
+            "2fe726b15e05dbc88e602590f986462890d4955c38b1793f28a577721e12e1fa",
+            "d343f130ff4b5a626c5e5d2d458db060997fc4d9dbf325e212a58d5e604f0eba"
+          ]
+        },
+        {
+          "version": 3,
+          "customerId": "a4b5ad1d-d411-49bc-8e7f-65e63a9cd45d",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "COMPLETED",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 1,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_473dc8d1-9a93-4ee8-bbe7-a44afeed8ba3",
+      "simulatorReceived": true,
+      "responseMs": 9386,
+      "queueLatencyMs": 4383,
+      "workerLatencyMs": 3316,
+      "targetInContext": true,
+      "contextSourceChars": 1159,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_edc944db-bbc0-4adb-bab8-8cc0d81ca118",
+      "conversationId": "3f192ca1-55f5-478a-9a67-ee6978d7f77c",
+      "ingressSequence": 1,
+      "agentRunId": "c2e1cada-e6dc-44fc-8e74-179811084602",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 3,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "args_hash": "73213d848cd3f84c0a4833dac13c759421810e4d9a1758e6cfc00e8825a1d245",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        },
+        {
+          "ordinal": 2,
+          "tool_name": "getAvailableSlots",
+          "args_hash": "43afcb3738a3ab2ad06ad9ec729ecb4f12269a3cf77fc442ddc6b58c59b516fd",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5239,
+          "output_tokens": 49
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5547,
+          "output_tokens": 69
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16918,
+          "output_tokens": 333
+        }
+      ],
+      "transitions": [
+        null,
+        {
+          "version": 1,
+          "customerId": "f276647a-5261-415c-854e-48a491df980e",
+          "leadId": null,
+          "slotCount": 0,
+          "slotFingerprints": []
+        },
+        {
+          "version": 2,
+          "customerId": "f276647a-5261-415c-854e-48a491df980e",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "a9b59c3e940917c5116259d2ea3889bd0cd1f202e4c0d70952cf0ea8b9f928a6",
+            "beb8e5edffe2ed6c15a2fb68f181730211600116afdba37412be50f00f2a4125",
+            "a9174bdbdb37ef7d14df271b5e2595db434af421973aee18f3b236a92e95504a"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_dd3f7e38-7a02-464c-af10-db24fbf7623a",
+      "simulatorReceived": true,
+      "responseMs": 15239,
+      "queueLatencyMs": 4839,
+      "workerLatencyMs": 5271,
+      "targetInContext": true,
+      "contextSourceChars": 558,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_bbe82c0d-0a7f-48e8-996a-3e6a2557b56f",
+      "conversationId": "3f192ca1-55f5-478a-9a67-ee6978d7f77c",
+      "ingressSequence": 2,
+      "agentRunId": "80df2791-ea60-4295-9c5d-238533b4b4ed",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "getActiveOffers",
+          "args_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8204,
+          "output_tokens": 23
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8439,
+          "output_tokens": 153
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "f276647a-5261-415c-854e-48a491df980e",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "a9b59c3e940917c5116259d2ea3889bd0cd1f202e4c0d70952cf0ea8b9f928a6",
+            "beb8e5edffe2ed6c15a2fb68f181730211600116afdba37412be50f00f2a4125",
+            "a9174bdbdb37ef7d14df271b5e2595db434af421973aee18f3b236a92e95504a"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_f7adae61-db0f-4d19-b1d8-e34c91ce40bd",
+      "simulatorReceived": true,
+      "responseMs": 9745,
+      "queueLatencyMs": 4560,
+      "workerLatencyMs": 2858,
+      "targetInContext": true,
+      "contextSourceChars": 840,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_46278d38-640a-4c28-b547-f2e1f4e01603",
+      "conversationId": "3f192ca1-55f5-478a-9a67-ee6978d7f77c",
+      "ingressSequence": 3,
+      "agentRunId": "2c1ea675-f34f-46f9-9e2c-4c17b86a4745",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchKnowledge",
+          "args_hash": "1c51dd81e201a721f2c1a2712df24cd96ee2957bc58a037566b9ae07d08022ee",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8315,
+          "output_tokens": 48
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8476,
+          "output_tokens": 71
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "f276647a-5261-415c-854e-48a491df980e",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "a9b59c3e940917c5116259d2ea3889bd0cd1f202e4c0d70952cf0ea8b9f928a6",
+            "beb8e5edffe2ed6c15a2fb68f181730211600116afdba37412be50f00f2a4125",
+            "a9174bdbdb37ef7d14df271b5e2595db434af421973aee18f3b236a92e95504a"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_b73089fe-d511-45b7-96b3-81e8e599579e",
+      "simulatorReceived": true,
+      "responseMs": 10086,
+      "queueLatencyMs": 4786,
+      "workerLatencyMs": 4680,
+      "targetInContext": true,
+      "contextSourceChars": 947,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_6d7f83c2-f086-498c-af83-0c9a8a6d84eb",
+      "conversationId": "3f192ca1-55f5-478a-9a67-ee6978d7f77c",
+      "ingressSequence": 4,
+      "agentRunId": "36949508-7c7e-4526-a836-2ebd190225d2",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 1,
+      "structuredRepairCount": 1,
+      "tools": [],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16772,
+          "output_tokens": 419
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "f276647a-5261-415c-854e-48a491df980e",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "a9b59c3e940917c5116259d2ea3889bd0cd1f202e4c0d70952cf0ea8b9f928a6",
+            "beb8e5edffe2ed6c15a2fb68f181730211600116afdba37412be50f00f2a4125",
+            "a9174bdbdb37ef7d14df271b5e2595db434af421973aee18f3b236a92e95504a"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_f8c4dda8-685b-45f1-871a-9293835901f7",
+      "simulatorReceived": true,
+      "responseMs": 9761,
+      "queueLatencyMs": 4666,
+      "workerLatencyMs": 2778,
+      "targetInContext": true,
+      "contextSourceChars": 1422,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_36cc71c0-8016-4287-a6de-49fbde00301c",
+      "conversationId": "3f192ca1-55f5-478a-9a67-ee6978d7f77c",
+      "ingressSequence": 5,
+      "agentRunId": "18995acc-3f7f-4771-996b-2519d624ea1f",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "createBooking",
+          "args_hash": "f0fa05011616f28796649dda7fd10816d3290b45b47186dd142cf575bdf0a290",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8634,
+          "output_tokens": 27
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8840,
+          "output_tokens": 178
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "f276647a-5261-415c-854e-48a491df980e",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "a9b59c3e940917c5116259d2ea3889bd0cd1f202e4c0d70952cf0ea8b9f928a6",
+            "beb8e5edffe2ed6c15a2fb68f181730211600116afdba37412be50f00f2a4125",
+            "a9174bdbdb37ef7d14df271b5e2595db434af421973aee18f3b236a92e95504a"
+          ]
+        },
+        {
+          "version": 3,
+          "customerId": "f276647a-5261-415c-854e-48a491df980e",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "COMPLETED",
+          "slotCount": 0,
+          "slotFingerprints": []
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 1,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_211a68b4-f190-4931-b366-0d737d04c899",
+      "simulatorReceived": true,
+      "responseMs": 9921,
+      "queueLatencyMs": 4821,
+      "workerLatencyMs": 2328,
+      "targetInContext": true,
+      "contextSourceChars": 1693,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_539b8af2-ee34-42b2-8133-8e5ab3cb2180",
+      "conversationId": "93cbd555-24df-464f-ac6f-99e3654aaeba",
+      "ingressSequence": 1,
+      "agentRunId": "0fe4fc8a-994a-480d-9fc0-509896486958",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 3,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "args_hash": "5576efe9788b465220c1565cfa48e8da72fdfcdf736c3da258f9638bf038e604",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        },
+        {
+          "ordinal": 2,
+          "tool_name": "getAvailableSlots",
+          "args_hash": "43afcb3738a3ab2ad06ad9ec729ecb4f12269a3cf77fc442ddc6b58c59b516fd",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5245,
+          "output_tokens": 27
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5435,
+          "output_tokens": 101
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16811,
+          "output_tokens": 327
+        }
+      ],
+      "transitions": [
+        null,
+        {
+          "version": 1,
+          "customerId": "b6f9a2b9-0f0c-436e-944c-33da3bbc0099",
+          "leadId": null,
+          "workflow": "DISCOVERY",
+          "stage": "IN_PROGRESS",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        },
+        {
+          "version": 2,
+          "customerId": "b6f9a2b9-0f0c-436e-944c-33da3bbc0099",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "3ca53262d8403e0909f0ea7679f7d4c87685a21c93e5f8b99af42f21bc363a19",
+            "b738c62b5e68dedfc7d735a4e0731decf0092682d1f0ca91d1cdcfcac0c41f1e",
+            "7e7ecd603c84b22bc4478848fa991de4e68a11a3800762398d1c33f8f1f649a7"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_7b7b25f9-934a-4eb8-9fd7-254723638566",
+      "simulatorReceived": true,
+      "responseMs": 14979,
+      "queueLatencyMs": 4865,
+      "workerLatencyMs": 5332,
+      "targetInContext": true,
+      "contextSourceChars": 540,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_a211f609-4f29-4d68-a8fc-f434d4524622",
+      "conversationId": "93cbd555-24df-464f-ac6f-99e3654aaeba",
+      "ingressSequence": 2,
+      "agentRunId": "43aab767-3d8b-4cf8-941f-7bc4b521ac5c",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 3,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "getActiveOffers",
+          "args_hash": "73e5b4da322726e73761064c528e89b0d4f5c9e5622ad2d29263d710d879d2fb",
+          "result_code": "NOT_FOUND",
+          "authz_result": "DENIED_OR_FAILED"
+        },
+        {
+          "ordinal": 2,
+          "tool_name": "getActiveOffers",
+          "args_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8258,
+          "output_tokens": 77
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8358,
+          "output_tokens": 23
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8593,
+          "output_tokens": 134
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "b6f9a2b9-0f0c-436e-944c-33da3bbc0099",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "3ca53262d8403e0909f0ea7679f7d4c87685a21c93e5f8b99af42f21bc363a19",
+            "b738c62b5e68dedfc7d735a4e0731decf0092682d1f0ca91d1cdcfcac0c41f1e",
+            "7e7ecd603c84b22bc4478848fa991de4e68a11a3800762398d1c33f8f1f649a7"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_6a5a1a07-f980-45de-93ad-853ed8daa573",
+      "simulatorReceived": true,
+      "responseMs": 9880,
+      "queueLatencyMs": 4834,
+      "workerLatencyMs": 3226,
+      "targetInContext": true,
+      "contextSourceChars": 761,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_ec374cdf-d7fd-400b-af62-9376280bbb6a",
+      "conversationId": "93cbd555-24df-464f-ac6f-99e3654aaeba",
+      "ingressSequence": 3,
+      "agentRunId": "0846cf93-ad0a-4942-98ff-03970dcc15dc",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchKnowledge",
+          "args_hash": "edaa22e4152ab060dcc943c78ac75ddeee94f15e658ff398ebaf25b8197c0535",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8351,
+          "output_tokens": 56
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8508,
+          "output_tokens": 80
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "b6f9a2b9-0f0c-436e-944c-33da3bbc0099",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "3ca53262d8403e0909f0ea7679f7d4c87685a21c93e5f8b99af42f21bc363a19",
+            "b738c62b5e68dedfc7d735a4e0731decf0092682d1f0ca91d1cdcfcac0c41f1e",
+            "7e7ecd603c84b22bc4478848fa991de4e68a11a3800762398d1c33f8f1f649a7"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_66698ef9-d100-45fa-8f9b-40c5b35d7b57",
+      "simulatorReceived": true,
+      "responseMs": 10032,
+      "queueLatencyMs": 4898,
+      "workerLatencyMs": 2806,
+      "targetInContext": true,
+      "contextSourceChars": 920,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_c510f444-8269-4c9e-825a-f43d270c5c52",
+      "conversationId": "93cbd555-24df-464f-ac6f-99e3654aaeba",
+      "ingressSequence": 4,
+      "agentRunId": "b543cf7a-0c72-4cfa-b3c6-9d4160b200da",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 1,
+      "structuredRepairCount": 1,
+      "tools": [],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16894,
+          "output_tokens": 546
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "b6f9a2b9-0f0c-436e-944c-33da3bbc0099",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "3ca53262d8403e0909f0ea7679f7d4c87685a21c93e5f8b99af42f21bc363a19",
+            "b738c62b5e68dedfc7d735a4e0731decf0092682d1f0ca91d1cdcfcac0c41f1e",
+            "7e7ecd603c84b22bc4478848fa991de4e68a11a3800762398d1c33f8f1f649a7"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_0cd3b310-e3bf-49df-b457-f3e0fb641726",
+      "simulatorReceived": true,
+      "responseMs": 10104,
+      "queueLatencyMs": 4813,
+      "workerLatencyMs": 2986,
+      "targetInContext": true,
+      "contextSourceChars": 1383,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_6f42c0ba-2dd9-426d-8414-67ee02b6b9b5",
+      "conversationId": "93cbd555-24df-464f-ac6f-99e3654aaeba",
+      "ingressSequence": 5,
+      "agentRunId": "66f8e474-3ce8-48ff-b2aa-e60bcb86f903",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "createBooking",
+          "args_hash": "f0fa05011616f28796649dda7fd10816d3290b45b47186dd142cf575bdf0a290",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8692,
+          "output_tokens": 27
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8899,
+          "output_tokens": 153
+        }
+      ],
+      "transitions": [
+        {
+          "version": 2,
+          "customerId": "b6f9a2b9-0f0c-436e-944c-33da3bbc0099",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "3ca53262d8403e0909f0ea7679f7d4c87685a21c93e5f8b99af42f21bc363a19",
+            "b738c62b5e68dedfc7d735a4e0731decf0092682d1f0ca91d1cdcfcac0c41f1e",
+            "7e7ecd603c84b22bc4478848fa991de4e68a11a3800762398d1c33f8f1f649a7"
+          ]
+        },
+        {
+          "version": 3,
+          "customerId": "b6f9a2b9-0f0c-436e-944c-33da3bbc0099",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "COMPLETED",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 1,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_4d78366e-1916-4b68-8505-0117ad870dac",
+      "simulatorReceived": true,
+      "responseMs": 9918,
+      "queueLatencyMs": 4672,
+      "workerLatencyMs": 2483,
+      "targetInContext": true,
+      "contextSourceChars": 1586,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_f87c474a-a5b4-4ed4-998e-28ff5df0b6f7",
+      "conversationId": "67f1b5be-c57b-4320-98bd-d624ce05a1c8",
+      "ingressSequence": 1,
+      "agentRunId": "29160554-62cc-4bf8-8e98-dfad42987ebe",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 4,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchServices",
+          "args_hash": "5576efe9788b465220c1565cfa48e8da72fdfcdf736c3da258f9638bf038e604",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        },
+        {
+          "ordinal": 2,
+          "tool_name": "ensureLead",
+          "args_hash": "906eec56b02c6bf05a756abe2d40f33fd792dca529107b99567d1d1ff8e47919",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        },
+        {
+          "ordinal": 3,
+          "tool_name": "getAvailableSlots",
+          "args_hash": "43afcb3738a3ab2ad06ad9ec729ecb4f12269a3cf77fc442ddc6b58c59b516fd",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5246,
+          "output_tokens": 27
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5436,
+          "output_tokens": 105
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 5773,
+          "output_tokens": 101
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 17234,
+          "output_tokens": 194
+        }
+      ],
+      "transitions": [
+        null,
+        {
+          "version": 1,
+          "customerId": "1ed5fb4a-67c1-4ada-9def-4eb4c0fc3a09",
+          "leadId": null,
+          "workflow": "DISCOVERY",
+          "stage": "IN_PROGRESS",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        },
+        {
+          "version": 2,
+          "customerId": "1ed5fb4a-67c1-4ada-9def-4eb4c0fc3a09",
+          "leadId": null,
+          "workflow": "LEAD_CAPTURE",
+          "stage": "IN_PROGRESS",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        },
+        {
+          "version": 3,
+          "customerId": "1ed5fb4a-67c1-4ada-9def-4eb4c0fc3a09",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "0787d3eeb2616dcbb683eb547d2a9875e21a0dd44350d96d9b8a538a8351ef88",
+            "1c9d82bddb7c3b709b7ce5f6ba080a1b3f6f2add1cc7e077d702244ad42eaf82",
+            "8b1461cf70abaff1a59d1dd9bb9a283f2ae4e248974a3178b2a35a581dd4674f"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_c92db6ec-6c24-452f-88e5-e1f11713ad96",
+      "simulatorReceived": true,
+      "responseMs": 15189,
+      "queueLatencyMs": 4715,
+      "workerLatencyMs": 5294,
+      "targetInContext": true,
+      "contextSourceChars": 358,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_6e178364-328b-451c-8c08-8bba985c02bd",
+      "conversationId": "67f1b5be-c57b-4320-98bd-d624ce05a1c8",
+      "ingressSequence": 2,
+      "agentRunId": "8efd578d-acf9-406c-8a5f-935c94825b7d",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 1,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "getActiveOffers",
+          "args_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8140,
+          "output_tokens": 23
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16796,
+          "output_tokens": 229
+        }
+      ],
+      "transitions": [
+        {
+          "version": 3,
+          "customerId": "1ed5fb4a-67c1-4ada-9def-4eb4c0fc3a09",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "0787d3eeb2616dcbb683eb547d2a9875e21a0dd44350d96d9b8a538a8351ef88",
+            "1c9d82bddb7c3b709b7ce5f6ba080a1b3f6f2add1cc7e077d702244ad42eaf82",
+            "8b1461cf70abaff1a59d1dd9bb9a283f2ae4e248974a3178b2a35a581dd4674f"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_8ee18e5d-a49a-4d11-b407-aa315d95de21",
+      "simulatorReceived": true,
+      "responseMs": 9815,
+      "queueLatencyMs": 4472,
+      "workerLatencyMs": 3508,
+      "targetInContext": true,
+      "contextSourceChars": 604,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_4ad6bc16-fc08-4770-9312-5cb7632330ec",
+      "conversationId": "67f1b5be-c57b-4320-98bd-d624ce05a1c8",
+      "ingressSequence": 3,
+      "agentRunId": "8fa92f7f-45a0-43df-90b8-59537b66101f",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 0,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "searchKnowledge",
+          "args_hash": "77b4f55b9acee71943f60d4b57c3ee6088edf5abe53d75cf17ada8274530b12a",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8233,
+          "output_tokens": 46
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8392,
+          "output_tokens": 98
+        }
+      ],
+      "transitions": [
+        {
+          "version": 3,
+          "customerId": "1ed5fb4a-67c1-4ada-9def-4eb4c0fc3a09",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "0787d3eeb2616dcbb683eb547d2a9875e21a0dd44350d96d9b8a538a8351ef88",
+            "1c9d82bddb7c3b709b7ce5f6ba080a1b3f6f2add1cc7e077d702244ad42eaf82",
+            "8b1461cf70abaff1a59d1dd9bb9a283f2ae4e248974a3178b2a35a581dd4674f"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_fc093582-afe2-4851-89e1-2a6e65c13783",
+      "simulatorReceived": true,
+      "responseMs": 9712,
+      "queueLatencyMs": 4639,
+      "workerLatencyMs": 2883,
+      "targetInContext": true,
+      "contextSourceChars": 814,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_9f6c0b48-32ff-4025-9eb3-1d1377a75416",
+      "conversationId": "67f1b5be-c57b-4320-98bd-d624ce05a1c8",
+      "ingressSequence": 4,
+      "agentRunId": "a6ec0951-b58a-4ae0-b284-b6bab8578c13",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 1,
+      "structuredRepairCount": 1,
+      "tools": [],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 16696,
+          "output_tokens": 228
+        }
+      ],
+      "transitions": [
+        {
+          "version": 3,
+          "customerId": "1ed5fb4a-67c1-4ada-9def-4eb4c0fc3a09",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "0787d3eeb2616dcbb683eb547d2a9875e21a0dd44350d96d9b8a538a8351ef88",
+            "1c9d82bddb7c3b709b7ce5f6ba080a1b3f6f2add1cc7e077d702244ad42eaf82",
+            "8b1461cf70abaff1a59d1dd9bb9a283f2ae4e248974a3178b2a35a581dd4674f"
+          ]
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_bd2210a2-533a-4280-be57-75d9b8b56ce7",
+      "simulatorReceived": true,
+      "responseMs": 10287,
+      "queueLatencyMs": 4890,
+      "workerLatencyMs": 2239,
+      "targetInContext": true,
+      "contextSourceChars": 976,
+      "canonicalResponse": true,
+      "duplicates": false
+    },
+    {
+      "runId": "mb15b-resume-final-20261003",
+      "inboundId": "wamid.MB15B_mb15b-resume-final-20261003_41a19383-7fc1-4521-8142-8cef826f94e1",
+      "conversationId": "67f1b5be-c57b-4320-98bd-d624ce05a1c8",
+      "ingressSequence": 5,
+      "agentRunId": "7e3c7a7b-c397-4374-a9c8-e3c75ac595ad",
+      "status": "SUCCEEDED",
+      "terminalReason": "final_response",
+      "modelCalls": 2,
+      "structuredRepairCount": 1,
+      "tools": [
+        {
+          "ordinal": 1,
+          "tool_name": "createBooking",
+          "args_hash": "f0fa05011616f28796649dda7fd10816d3290b45b47186dd142cf575bdf0a290",
+          "result_code": "OK",
+          "authz_result": "ALLOWED"
+        }
+      ],
+      "usage": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 8397,
+          "output_tokens": 27
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "input_tokens": 17254,
+          "output_tokens": 187
+        }
+      ],
+      "transitions": [
+        {
+          "version": 3,
+          "customerId": "1ed5fb4a-67c1-4ada-9def-4eb4c0fc3a09",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "AWAITING_SLOT_SELECTION",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 3,
+          "slotFingerprints": [
+            "0787d3eeb2616dcbb683eb547d2a9875e21a0dd44350d96d9b8a538a8351ef88",
+            "1c9d82bddb7c3b709b7ce5f6ba080a1b3f6f2add1cc7e077d702244ad42eaf82",
+            "8b1461cf70abaff1a59d1dd9bb9a283f2ae4e248974a3178b2a35a581dd4674f"
+          ]
+        },
+        {
+          "version": 4,
+          "customerId": "1ed5fb4a-67c1-4ada-9def-4eb4c0fc3a09",
+          "leadId": null,
+          "workflow": "BOOKING",
+          "stage": "COMPLETED",
+          "selectedService": "a0500001-0001-4001-8001-000000000001",
+          "slotCount": 0,
+          "slotFingerprints": []
+        }
+      ],
+      "mutationsBefore": {
+        "bookings": 0,
+        "quotes": 0,
+        "orders": 0
+      },
+      "mutationsAfter": {
+        "bookings": 1,
+        "quotes": 0,
+        "orders": 0
+      },
+      "providerMessageId": "wamid.SIM_1cf82409-31d8-46a0-ae38-f62daccf49e3",
+      "simulatorReceived": true,
+      "responseMs": 9736,
+      "queueLatencyMs": 4536,
+      "workerLatencyMs": 3039,
+      "targetInContext": true,
+      "contextSourceChars": 1117,
+      "canonicalResponse": true,
+      "duplicates": false
+    }
+  ]
+}

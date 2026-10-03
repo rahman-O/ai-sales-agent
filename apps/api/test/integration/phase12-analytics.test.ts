@@ -15,7 +15,7 @@ test('P12 overview is tenant-scoped, role-scoped, aggregate-only and marks unava
   await owner.query(`INSERT INTO organizations(id,name) VALUES($1,'P12 A'),($2,'P12 B'),($3,'P12 Missing')`,[orgA,orgB,orgMissing]);
   await owner.query(`INSERT INTO organization_members(organization_id,user_id,role,status) VALUES($1,$3,'OWNER','ACTIVE'),($2,$3,'ADMIN','ACTIVE')`,[orgA,orgB,user]);
   await owner.query(`INSERT INTO customers(id,organization_id,display_name) VALUES($1,$2,'Synthetic')`,[customer,orgA]);
-  await owner.query(`INSERT INTO leads(id,organization_id,customer_id,status,source_type,created_at) VALUES($1,$2,$3,'QUALIFIED','MANUAL',now())`,[lead,orgA,customer]);
+  await owner.query(`INSERT INTO leads(id,organization_id,customer_id,status,source_type,created_at) VALUES($1,$2,$3,'QUALIFIED','MANUAL','2026-09-15T09:00:00Z'::timestamptz)`,[lead,orgA,customer]);
   assert.ok(process.env.DATABASE_URL);
   const prisma=new PrismaService({databaseUrl:process.env.DATABASE_URL} as AppConfigService); const analytics=new AnalyticsService(new TenantContextService(prisma));
   try {

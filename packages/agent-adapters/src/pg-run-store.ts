@@ -48,15 +48,34 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
           throw new Error(`ai_emergency_kill:${kill.reason ?? 'ORG'}`);
         }
 
-        const existing = await c.query<{ id: string; status: string }>(
-          `SELECT id, status FROM agent_runs WHERE organization_id=$1 AND run_key=$2`,
+        const existing = await c.query<{ id: string; status: string; prior_model_calls: number; prior_tool_calls: number }>(
+          `SELECT ar.id, ar.status,
+                  GREATEST(ar.model_calls,(SELECT count(*)::int FROM usage_events u WHERE u.organization_id=ar.organization_id AND u.agent_run_id=ar.id)) AS prior_model_calls,
+                  COALESCE((SELECT max(t.ordinal) FROM tool_calls t WHERE t.organization_id=ar.organization_id AND t.agent_run_id=ar.id),0) AS prior_tool_calls
+           FROM agent_runs ar WHERE ar.organization_id=$1 AND ar.run_key=$2 FOR UPDATE`,
           [input.organizationId, input.runKey],
         );
         if (existing.rows[0]) {
+          const fingerprints = await c.query<{tool_name:string;args_hash:string;n:number}>(
+            `SELECT tool_name,args_hash,count(*)::int n FROM tool_calls WHERE organization_id=$1 AND agent_run_id=$2 GROUP BY tool_name,args_hash`,
+            [input.organizationId,existing.rows[0].id],
+          );
+          const booking = await c.query<{ result_json: Record<string, unknown> }>(
+            `SELECT op.result_json FROM command_operations op
+             JOIN bookings b ON b.organization_id=op.organization_id AND b.created_by_agent_run_id=op.agent_run_id
+               AND b.id::text=op.result_json->>'bookingId'
+             WHERE op.organization_id=$1 AND op.agent_run_id=$2 AND op.status='SUCCEEDED'
+             ORDER BY op.completed_at DESC LIMIT 1`,
+            [input.organizationId,existing.rows[0].id],
+          );
           return {
             agentRunId: existing.rows[0].id,
             status: existing.rows[0].status,
             resumed: true,
+            priorModelCalls: existing.rows[0].prior_model_calls,
+            priorToolCalls: existing.rows[0].prior_tool_calls,
+            priorToolFingerprints: fingerprints.rows.map(r=>({toolName:r.tool_name,argsHash:r.args_hash,count:r.n})),
+            successfulBookingResult: booking.rows[0]?.result_json ?? null,
           };
         }
         const id = randomUUID();
@@ -80,6 +99,13 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
         );
         return { agentRunId: id, status: 'RUNNING', resumed: false };
       });
+    },
+
+    async recordModelAttempt(organizationId, agentRunId) {
+      await withTenant(pool,organizationId,systemUserId,c => c.query(
+        `UPDATE agent_runs SET model_calls=model_calls+1 WHERE organization_id=$1 AND id=$2 AND status='RUNNING'`,
+        [organizationId,agentRunId],
+      ));
     },
 
     async loadAuthority(organizationId, conversationId) {
@@ -223,7 +249,11 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
         }
 
         const messageId = randomUUID();
-        const timeline = row.next_timeline_sequence;
+        const maxTimeline = await c.query<{ max_seq: number | null }>(
+          `SELECT MAX(timeline_sequence) AS max_seq FROM messages WHERE conversation_id = $1`,
+          [input.conversationId],
+        );
+        const timeline = Math.max(row.next_timeline_sequence, (maxTimeline.rows[0]?.max_seq ?? 0) + 1);
         const digest = createHash('sha256').update(input.outboundText).digest('hex');
         await c.query(
           `INSERT INTO messages(
@@ -244,7 +274,7 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
         );
         await c.query(
           `UPDATE conversations SET
-             next_timeline_sequence = next_timeline_sequence + 1,
+             next_timeline_sequence = $7,
              processed_sequence = GREATEST(processed_sequence, $3),
              last_message_at = now(),
              updated_at = now()
@@ -257,6 +287,7 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
             input.leaseOwner,
             input.leaseFence,
             input.ownershipEpoch,
+            timeline + 1,
           ],
         );
         const eventId = randomUUID();
@@ -364,6 +395,11 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
         const ackId = randomUUID();
         const ackText = 'سيتم تحويلك إلى موظف قريبًا. / You will be connected to a team member shortly.';
         const digest = createHash('sha256').update(ackText).digest('hex');
+        const maxTimeline = await c.query<{ max_seq: number | null }>(
+          `SELECT MAX(timeline_sequence) AS max_seq FROM messages WHERE conversation_id = $1`,
+          [input.conversationId],
+        );
+        const timeline = Math.max(row.next_timeline_sequence, (maxTimeline.rows[0]?.max_seq ?? 0) + 1);
         await c.query(
           `INSERT INTO messages(
              id, organization_id, conversation_id, channel_connection_id, direction, origin,
@@ -375,16 +411,16 @@ export function createPgRunStore(pool: Pool, systemUserId = AGENT_SYSTEM_USER_ID
             input.organizationId,
             input.conversationId,
             row.channel_connection_id,
-            row.next_timeline_sequence,
+            timeline,
             ackText,
             digest,
             newEpoch,
           ],
         );
         await c.query(
-          `UPDATE conversations SET next_timeline_sequence = next_timeline_sequence + 1, last_message_at=now()
+          `UPDATE conversations SET next_timeline_sequence = $3, last_message_at=now()
            WHERE organization_id=$1 AND id=$2`,
-          [input.organizationId, input.conversationId],
+          [input.organizationId, input.conversationId, timeline + 1],
         );
         const outboundEventId = randomUUID();
         await c.query(

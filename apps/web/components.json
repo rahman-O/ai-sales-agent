@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/app/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": "tw"
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@/client/components",
+    "ui": "@ai-sales-agent/design-system/components/ui",
+    "utils": "@ai-sales-agent/design-system/utils",
+    "lib": "@/shared"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "runId": "mb15b-tenant-final-20261002",
+  "scenarios": {
+    "PREFLIGHT": {
+      "status": "PASS",
+      "details": {
+        "provider": "deepseek",
+        "keyConfigured": true,
+        "simulatorOnly": true,
+        "syntheticToken": true,
+        "scripted": false
+      }
+    },
+    "CROSS_TENANT_ADVERSARIAL": {
+      "status": "PASS",
+      "details": {
+        "tenantA": "6e1b1dd3-e143-47ce-9e9f-729f54e914ae",
+        "tenantB": "d178f71c-a4e8-4b0f-9373-ec9b4851c8c5",
+        "runtimeRole": "app_runtime",
+        "rlsNegativeCases": 8,
+        "toolResults": [
+          {
+            "name": "getServicePrice",
+            "code": "NOT_FOUND"
+          },
+          {
+            "name": "getActiveOffers",
+            "code": "NOT_FOUND"
+          },
+          {
+            "name": "getCustomer",
+            "code": "NOT_FOUND"
+          },
+          {
+            "name": "getQuote",
+            "code": "NOT_FOUND"
+          },
+          {
+            "name": "getOrder",
+            "code": "NOT_FOUND"
+          }
+        ],
+        "endpointService404Cases": 5,
+        "foreignBookingUnchanged": true
+      }
+    }
+  },
+  "evidence": []
+}

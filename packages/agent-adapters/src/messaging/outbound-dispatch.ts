@@ -39,7 +39,7 @@ export async function dispatchOutboundMessage(
   c: PoolClient,
   organizationId: string,
   messageId: string,
-  opts?: { fetchImpl?: typeof fetch; env?: NodeJS.ProcessEnv },
+  opts?: { fetchImpl?: typeof fetch; env?: NodeJS.ProcessEnv; beforeProviderIo?: () => Promise<void> },
 ): Promise<OutboundDispatchResult> {
   const msg = await c.query(
     `SELECT m.id, m.conversation_id, m.channel_connection_id, m.content_text, m.delivery_state,
@@ -71,6 +71,13 @@ export async function dispatchOutboundMessage(
   if (row.delivery_state === 'UNKNOWN') {
     // Ambiguous prior dispatch — no blind resend
     return { outcome: 'UNKNOWN' };
+  }
+  if (row.delivery_state === 'DISPATCHING') {
+    // A committed attempt proves I/O may already have happened. Never replay it.
+    await c.query(`UPDATE outbound_attempts SET status='UNKNOWN',error_text='worker_recovered_ambiguous_dispatch'
+      WHERE organization_id=$1 AND message_id=$2 AND status='DISPATCHING'`,[organizationId,messageId]);
+    await c.query(`UPDATE messages SET delivery_state='UNKNOWN' WHERE organization_id=$1 AND id=$2 AND delivery_state='DISPATCHING'`,[organizationId,messageId]);
+    return {outcome:'UNKNOWN',class:'WORKER_CRASH_AMBIGUOUS'};
   }
   if (row.delivery_state === 'FAILED' || row.delivery_state === 'SUPPRESSED') {
     return { outcome: 'SKIPPED' };
@@ -211,6 +218,9 @@ export async function dispatchOutboundMessage(
      ) VALUES ($1,$2,$3,$4,$5,'DISPATCHING',now())`,
     [attemptId, organizationId, messageId, nextAttempt, attemptEpoch],
   );
+
+  // Worker commits the claim before crossing the external side-effect boundary.
+  await opts?.beforeProviderIo?.();
 
   const channel = new MetaWhatsAppChannel();
   const templateMeta =

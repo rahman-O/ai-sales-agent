@@ -1,0 +1,10 @@
+{
+  "runId": "mb15b-long-baseline-20261002",
+  "scenarios": {
+    "HARNESS": {
+      "status": "FAIL",
+      "reason": "worker_provider_or_simulator_preflight"
+    }
+  },
+  "evidence": []
+}

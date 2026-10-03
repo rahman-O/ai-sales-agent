@@ -84,62 +84,7 @@ export class FakeModelProvider implements ModelProvider {
 }
 
 export function parseAgentDecision(raw: unknown): AgentDecision {
-  if (typeof raw === 'object' && raw !== null) {
-    const obj = raw as Record<string, unknown>;
-    if (obj.type === 'final_response') {
-      return AgentDecisionSchema.parse({
-        type: 'final_response',
-        text: String(obj.text ?? obj.message ?? obj.content ?? obj.response ?? ''),
-        claims: Array.isArray(obj.claims) ? obj.claims : [],
-      });
-    }
-    if (obj.type === 'tool_request') {
-      return AgentDecisionSchema.parse({
-        type: 'tool_request',
-        toolName: String(obj.toolName ?? obj.name ?? ''),
-        arguments: typeof obj.arguments === 'object' && obj.arguments !== null ? obj.arguments : {},
-      });
-    }
-    if (obj.type === 'safe_stop') {
-      return AgentDecisionSchema.parse({
-        type: 'safe_stop',
-        reason: String(obj.reason ?? 'unspecified'),
-      });
-    }
-    if (typeof obj.text === 'string' && obj.text.length > 0 && !obj.type) {
-      return AgentDecisionSchema.parse({
-        type: 'final_response',
-        text: obj.text,
-        claims: Array.isArray(obj.claims) ? obj.claims : [],
-      });
-    }
-    if (typeof obj.response === 'string' && obj.response.length > 0 && !obj.type) {
-      return AgentDecisionSchema.parse({
-        type: 'final_response',
-        text: obj.response,
-        claims: [],
-      });
-    }
-    if (typeof obj.message === 'string' && obj.message.length > 0 && !obj.type) {
-      return AgentDecisionSchema.parse({
-        type: 'final_response',
-        text: obj.message,
-        claims: [],
-      });
-    }
-    if (typeof obj.content === 'string' && obj.content.length > 0 && !obj.type) {
-      return AgentDecisionSchema.parse({
-        type: 'final_response',
-        text: obj.content,
-        claims: [],
-      });
-    }
-  } else if (typeof raw === 'string' && raw.trim().length > 0) {
-    return AgentDecisionSchema.parse({
-      type: 'final_response',
-      text: raw.trim(),
-      claims: [],
-    });
-  }
+  // Every decision must already be canonical. Malformed/wrapped/prose output
+  // enters the orchestrator's bounded repair path instead of being promoted.
   return AgentDecisionSchema.parse(raw);
 }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSupabaseServerClient } from '@/shared/auth/supabase/server';
 
 /**
  * BFF: extract verified access token from SSR session and forward to NestJS as Bearer.

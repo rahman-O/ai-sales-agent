@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import pg from 'pg';
@@ -42,6 +43,7 @@ export type ScenarioEvidence = {
 };
 
 const results: Record<string, AcceptanceStatus> = {};
+let bookingModelMode = 'NOT_RUN';
 const evidenceLog: ScenarioEvidence[] = [];
 
 function recordResult(scenario: string, status: AcceptanceStatus) {
@@ -180,6 +182,42 @@ export async function runAcceptanceSuite() {
     // ----------------------------------------------------
     console.log('\n--- PHASE A: Infrastructure & Webhook Contract ---');
 
+    // 1. Preflight
+    const apiHealth = await fetch(`${api}/health/live`).then((r) => r.ok).catch(() => false);
+    const simHealth = await fetch(`${simulator}/health/live`).then((r) => r.ok).catch(() => false);
+    const dbHealth = await pool.query('SELECT 1').then(() => true).catch(() => false);
+    // Query only non-secret fields after the same env loader used by the worker.
+    const worker = JSON.parse(execFileSync('docker', [
+      'exec', process.env.MB15_WORKER_CONTAINER ?? 'ai-sales-demo-worker',
+      'node', '--input-type=module', '-e',
+      `import {loadLocalEnv} from '@ai-sales-agent/config'; loadLocalEnv();
+       const embeddingReady=await fetch('http://tei:80/health',{signal:AbortSignal.timeout(5000)}).then(r=>r.ok).catch(()=>false);
+       console.log(JSON.stringify({provider:process.env.AI_PROVIDER,
+         keyConfigured:Boolean(process.env.DEEPSEEK_API_KEY?.trim()),
+         scripted:process.env.ZERO_COST_DEMO==='1' && process.env.AI_ALLOW_FAKE==='true',
+         metaBaseUrl:process.env.META_GRAPH_BASE_URL,embeddingReady}));`,
+    ], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })) as {
+      provider?: string; keyConfigured: boolean; scripted: boolean; metaBaseUrl?: string; embeddingReady: boolean;
+    };
+    const hasRealDeepseekKey = worker.provider === 'deepseek' && worker.keyConfigured;
+    const hasScriptedDemoMode = worker.scripted && worker.provider !== 'deepseek';
+    const deepseekKey = hasRealDeepseekKey;
+    const noRealMetaTarget = worker.metaBaseUrl === 'http://provider-simulator:3415';
+    logEvidence({ scenario: 'REAL_DEEPSEEK_AVAILABLE',
+      result: deepseekKey ? 'PASS' : 'BLOCKED_PRECONDITION',
+      finalState: `AI_PROVIDER=${worker.provider} DEEPSEEK_API_KEY_CONFIGURED=${worker.keyConfigured}` });
+
+    logEvidence({scenario:'KNOWLEDGE_EMBEDDING_AVAILABLE',result:worker.embeddingReady?'PASS':'BLOCKED_PRECONDITION'});
+    if (!apiHealth || !simHealth || !dbHealth || !deepseekKey || !noRealMetaTarget || !worker.embeddingReady) {
+      logEvidence({
+        scenario: 'INFRASTRUCTURE_PREFLIGHT',
+        result: 'BLOCKED_PRECONDITION',
+        finalState: JSON.stringify({ apiHealth, simHealth, dbHealth, deepseekKey, noRealMetaTarget }),
+      });
+      throw new Error('Infrastructure preflight failed');
+    }
+    logEvidence({ scenario: 'INFRASTRUCTURE_PREFLIGHT', result: 'PASS' });
+
     // 0. Preflight reset
     await pool.query(
       `UPDATE channel_connections SET health_status = 'ACTIVE', status = 'ACTIVE' WHERE organization_id IN ($1, $2)`,
@@ -187,24 +225,6 @@ export async function runAcceptanceSuite() {
     );
     await resetSimulator();
     await setSimulatorScenario('SUCCESS');
-
-    // 1. Preflight
-    const apiHealth = await fetch(`${api}/health/live`).then((r) => r.ok).catch(() => false);
-    const simHealth = await fetch(`${simulator}/health/live`).then((r) => r.ok).catch(() => false);
-    const dbHealth = await pool.query('SELECT 1').then(() => true).catch(() => false);
-    const deepseekKey = Boolean(process.env.DEEPSEEK_API_KEY?.trim());
-    const baseUrl = process.env.META_GRAPH_BASE_URL || 'http://provider-simulator:3415';
-    const noRealMetaTarget = !baseUrl.includes('graph.facebook.com');
-
-    if (!apiHealth || !simHealth || !dbHealth || !deepseekKey || !noRealMetaTarget) {
-      logEvidence({
-        scenario: 'INFRASTRUCTURE_PREFLIGHT',
-        result: 'FAIL',
-        finalState: JSON.stringify({ apiHealth, simHealth, dbHealth, deepseekKey, noRealMetaTarget }),
-      });
-      throw new Error('Infrastructure preflight failed');
-    }
-    logEvidence({ scenario: 'INFRASTRUCTURE_PREFLIGHT', result: 'PASS' });
 
     // 2. Webhook verification challenge
     const testChallenge = `challenge-${randomUUID().slice(0, 8)}`;
@@ -348,10 +368,13 @@ export async function runAcceptanceSuite() {
           `SELECT m.id, m.conversation_id, m.provider_message_id, m.content_text,
                   ar.id AS agent_run_id
            FROM messages m
-           JOIN messages in_m ON in_m.organization_id = m.organization_id AND in_m.provider_message_id = $1
-           JOIN agent_runs ar ON ar.organization_id = m.organization_id AND ar.final_outbound_message_id = m.id
+           JOIN messages in_m ON in_m.organization_id = m.organization_id AND in_m.conversation_id = m.conversation_id AND in_m.provider_message_id = $1
+           JOIN agent_runs ar ON ar.organization_id = m.organization_id AND (ar.final_outbound_message_id = m.id OR
+             (ar.status='HANDOFF_REQUESTED' AND EXISTS (SELECT 1 FROM outbox_events e WHERE e.organization_id=m.organization_id AND e.event_type='OutboundMessageReady' AND e.payload_json->'payload'->>'messageId'=m.id::text AND e.payload_json->'payload'->>'agentRunId'=ar.id::text)))
            WHERE m.organization_id = $2 AND m.direction = 'OUTBOUND' AND m.created_at >= in_m.created_at
-             AND m.provider_message_id IS NOT NULL`,
+             AND m.provider_message_id IS NOT NULL AND ar.status IN ('SUCCEEDED','HANDOFF_REQUESTED')
+             AND ar.target_ingress_sequence=in_m.ingress_sequence
+             AND EXISTS (SELECT 1 FROM usage_events u WHERE u.agent_run_id=ar.id AND u.provider='deepseek')`,
           [turnWamid, DEMO_ORG_ID],
         );
         return q.rows[0];
@@ -372,9 +395,13 @@ export async function runAcceptanceSuite() {
 
     const outboundMsg = await waitFor(async () => {
       const q = await pool.query(
-        `SELECT m.id, m.conversation_id, m.provider_message_id, m.delivery_state, ar.id AS agent_run_id
+        `SELECT m.id, m.conversation_id, m.provider_message_id, m.delivery_state,
+                ar.id AS agent_run_id, ar.model_calls, ar.status,
+                EXISTS (SELECT 1 FROM usage_events u WHERE u.agent_run_id = ar.id
+                  AND u.organization_id = ar.organization_id AND u.provider = 'deepseek'
+                  AND u.model = 'deepseek-chat') AS deepseek_usage
          FROM messages m
-         JOIN messages in_m ON in_m.organization_id = m.organization_id AND in_m.provider_message_id = $1
+         JOIN messages in_m ON in_m.organization_id = m.organization_id AND in_m.conversation_id = m.conversation_id AND in_m.provider_message_id = $1
          JOIN agent_runs ar ON ar.organization_id = m.organization_id AND ar.final_outbound_message_id = m.id
          WHERE m.organization_id = $2 AND m.direction = 'OUTBOUND' AND m.created_at >= in_m.created_at
            AND m.delivery_state = 'ACCEPTED' AND m.provider_message_id IS NOT NULL`,
@@ -383,12 +410,16 @@ export async function runAcceptanceSuite() {
       return q.rows[0];
     }, { description: 'fresh outbound message in ACCEPTED state', timeoutMs: 90_000 });
 
+    const modelCalls: number = outboundMsg.model_calls ?? 0;
+    const realDeepseekEvidence = hasRealDeepseekKey && outboundMsg.status === 'SUCCEEDED'
+      && modelCalls > 0 && outboundMsg.deepseek_usage === true;
     logEvidence({
       scenario: 'REAL_DEEPSEEK_AGENT_EXECUTION',
-      result: outboundMsg.agent_run_id ? 'PASS' : 'FAIL',
+      result: realDeepseekEvidence ? 'PASS' : 'FAIL',
       conversationId: outboundMsg.conversation_id,
       agentRunId: outboundMsg.agent_run_id,
       outboundInternalId: outboundMsg.id,
+      finalState: `provider=deepseek model=deepseek-chat model_calls=${modelCalls} audited=${outboundMsg.deepseek_usage} status=${outboundMsg.status}`,
     });
 
     const simulatorMessages = await fetch(`${simulator}/simulator/messages`).then((r) => r.json()) as { messages: Array<{ providerMessageId: string }> };
@@ -520,7 +551,7 @@ export async function runAcceptanceSuite() {
         `SELECT m.id, m.provider_message_id, m.delivery_state,
                 (SELECT count(*)::int FROM outbound_attempts oa WHERE oa.message_id = m.id) AS attempts
          FROM messages m
-         JOIN messages in_m ON in_m.organization_id = m.organization_id AND in_m.provider_message_id = $1
+         JOIN messages in_m ON in_m.organization_id = m.organization_id AND in_m.conversation_id = m.conversation_id AND in_m.provider_message_id = $1
          WHERE m.organization_id = $2 AND m.direction = 'OUTBOUND' AND m.created_at >= in_m.created_at
            AND m.delivery_state = 'ACCEPTED' AND m.provider_message_id IS NOT NULL`,
         [rlInboundId, DEMO_ORG_ID],
@@ -546,7 +577,7 @@ export async function runAcceptanceSuite() {
         `SELECT m.id, m.provider_message_id, m.delivery_state,
                 (SELECT count(*)::int FROM outbound_attempts oa WHERE oa.message_id = m.id) AS attempts
          FROM messages m
-         JOIN messages in_m ON in_m.organization_id = m.organization_id AND in_m.provider_message_id = $1
+         JOIN messages in_m ON in_m.organization_id = m.organization_id AND in_m.conversation_id = m.conversation_id AND in_m.provider_message_id = $1
          WHERE m.organization_id = $2 AND m.direction = 'OUTBOUND' AND m.created_at >= in_m.created_at
            AND m.delivery_state = 'ACCEPTED' AND m.provider_message_id IS NOT NULL`,
         [seInboundId, DEMO_ORG_ID],
@@ -572,7 +603,7 @@ export async function runAcceptanceSuite() {
         `SELECT m.id, m.delivery_state, cc.health_status,
                 (SELECT count(*)::int FROM outbound_attempts oa WHERE oa.message_id = m.id) AS attempts
          FROM messages m
-         JOIN messages in_m ON in_m.organization_id = m.organization_id AND in_m.provider_message_id = $1
+         JOIN messages in_m ON in_m.organization_id = m.organization_id AND in_m.conversation_id = m.conversation_id AND in_m.provider_message_id = $1
          JOIN channel_connections cc ON cc.id = m.channel_connection_id
          WHERE m.organization_id = $2 AND m.direction = 'OUTBOUND' AND m.created_at >= in_m.created_at
            AND m.delivery_state = 'FAILED'`,
@@ -705,13 +736,13 @@ export async function runAcceptanceSuite() {
     // 26. Catalog Flow
     const catTurn = await executeFlowTurn('ما هي الخدمات والأسعار المتوفرة عندكم؟', 'catalog flow', catPhone);
     const catTools = await pool.query(
-      `SELECT tool_name FROM tool_calls WHERE agent_run_id = $1`,
+      `SELECT tool_name FROM tool_calls WHERE agent_run_id = $1 AND result_code='OK' AND authz_result='ALLOWED'`,
       [catTurn.agent_run_id],
     );
     const catToolUsed = catTools.rows.some((r) => ['searchServices', 'getServiceDetails', 'getServicePrice'].includes(r.tool_name));
     logEvidence({
       scenario: 'CATALOG_FLOW',
-      result: catToolUsed || catTurn.content_text.length > 0 ? 'PASS' : 'FAIL',
+      result: catToolUsed ? 'PASS' : 'FAIL',
       agentRunId: catTurn.agent_run_id,
       outboundInternalId: catTurn.id,
     });
@@ -719,13 +750,13 @@ export async function runAcceptanceSuite() {
     // 27. Offer Flow
     const offerTurn = await executeFlowTurn('عندكم عروض وتخفيضات؟', 'offer flow', offerPhone);
     const offerTools = await pool.query(
-      `SELECT tool_name FROM tool_calls WHERE agent_run_id = $1`,
+      `SELECT tool_name FROM tool_calls WHERE agent_run_id = $1 AND result_code='OK' AND authz_result='ALLOWED'`,
       [offerTurn.agent_run_id],
     );
     const offerToolUsed = offerTools.rows.some((r) => r.tool_name === 'getActiveOffers');
     logEvidence({
       scenario: 'OFFER_FLOW',
-      result: (offerToolUsed || /عرض|عروض|تخفيض|خصم/i.test(offerTurn.content_text) || offerTurn.content_text.length > 0) ? 'PASS' : 'FAIL',
+      result: offerToolUsed ? 'PASS' : 'FAIL',
       agentRunId: offerTurn.agent_run_id,
       outboundInternalId: offerTurn.id,
     });
@@ -733,22 +764,23 @@ export async function runAcceptanceSuite() {
     // 28. Policy Flow
     const polTurn = await executeFlowTurn('ما هي سياسة الإلغاء؟', 'policy flow', polPhone);
     const polTools = await pool.query(
-      `SELECT tool_name FROM tool_calls WHERE agent_run_id = $1`,
+      `SELECT tool_name FROM tool_calls WHERE agent_run_id = $1 AND result_code='OK' AND authz_result='ALLOWED'`,
       [polTurn.agent_run_id],
     );
     const polToolUsed = polTools.rows.some((r) => r.tool_name === 'getEffectivePolicy');
     logEvidence({
       scenario: 'POLICY_FLOW',
-      result: polToolUsed || polTurn.content_text.length > 0 ? 'PASS' : 'FAIL',
+      result: polToolUsed ? 'PASS' : 'FAIL',
       agentRunId: polTurn.agent_run_id,
       outboundInternalId: polTurn.id,
     });
 
     // 29. Knowledge Flow
     const knwTurn = await executeFlowTurn('أين موقع العيادة ومواعيد العمل؟', 'knowledge flow', knwPhone);
+    const knwTools = await pool.query("SELECT tool_name FROM tool_calls WHERE agent_run_id=$1 AND result_code='OK' AND authz_result='ALLOWED'", [knwTurn.agent_run_id]);
     logEvidence({
       scenario: 'KNOWLEDGE_FLOW',
-      result: knwTurn.content_text.length > 0 ? 'PASS' : 'FAIL',
+      result: knwTools.rows.some(row => row.tool_name === 'searchKnowledge') ? 'PASS' : 'FAIL',
       agentRunId: knwTurn.agent_run_id,
       outboundInternalId: knwTurn.id,
     });
@@ -760,7 +792,7 @@ export async function runAcceptanceSuite() {
 
     // 30. Booking Preflight
     const caps = await pool.query(
-      `SELECT supports_booking FROM organization_capabilities WHERE organization_id = $1`,
+      `SELECT supports_booking,supports_quotes,supports_orders FROM organization_capabilities WHERE organization_id = $1`,
       [DEMO_ORG_ID],
     );
     const svcs = await pool.query(
@@ -792,9 +824,25 @@ export async function runAcceptanceSuite() {
     }
 
     // 31. Booking Happy Path
-    console.log('Sending availability request for booking...');
+    // Prefer scripted markers when ZERO_COST_DEMO=1 (scripted demo active); fall back to
+    // Arabic booking phrasing for real DeepSeek to handle naturally.
+    const bookingService=(await pool.query('SELECT id,name FROM services WHERE organization_id=$1 AND booking_enabled=true AND active=true ORDER BY id LIMIT 1',[DEMO_ORG_ID])).rows[0];
+    if (!bookingService) throw new Error('bookable_service_fixture_missing');
+    const openDays = (await pool.query('SELECT DISTINCT day_of_week FROM staff_availability_rules WHERE organization_id=$1 AND is_active=true', [DEMO_ORG_ID])).rows.map(row => row.day_of_week);
+    let bookingDate = '';
+    for (let offset=1; offset<=14 && !bookingDate; offset++) {
+      const date=new Date(Date.now()+offset*24*60*60*1000);
+      const weekday=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',weekday:'long'}).format(date);
+      if (openDays.includes(['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].indexOf(weekday) || 7))
+        bookingDate=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Baghdad'}).format(date);
+    }
+    if (!bookingDate) throw new Error('booking_fixture_has_no_future_open_weekday');
+    const bookingMsg = hasScriptedDemoMode
+      ? 'what appointments are available?'  // DemoScriptedProvider ASK_AVAILABILITY marker
+      : `أريد حجز خدمة ${bookingService.name} بتاريخ ${bookingDate}، اعرض المواعيد المتاحة`;
+    console.log(`Sending availability request for booking (mode=${hasScriptedDemoMode ? 'scripted' : 'deepseek'})...`);
     const bookInquireTurn = await executeFlowTurn(
-      'أريد حجز كشف استشارة غداً الأربعاء 2026-09-30',
+      bookingMsg,
       'booking availability discovery',
       bookPhone,
     );
@@ -810,16 +858,20 @@ export async function runAcceptanceSuite() {
 
     console.log(`Candidate slots found: ${workingState?.candidateSlots?.length}`);
 
-    console.log('Sending booking confirmation message...');
+    // Use CONFIRM_BOOKING marker when scripted demo active, Arabic for real DeepSeek.
+    const confirmMsg = hasScriptedDemoMode
+      ? 'book the first available appointment.'  // DemoScriptedProvider CONFIRM_BOOKING marker
+      : 'تمام احجزلي أول موعد';  // Arabic for real DeepSeek
+    console.log(`Sending booking confirmation message (mode=${hasScriptedDemoMode ? 'scripted' : 'deepseek'})...`);
     const confirmWamid = `wamid.SIM_CONFIRM_${randomUUID().slice(0, 8)}`;
-    await postInbound({ from: bookPhone, messageId: confirmWamid, text: 'تمام احجزلي أول موعد' });
+    await postInbound({ from: bookPhone, messageId: confirmWamid, text: confirmMsg });
 
     const bookConfirmTurn = await waitFor(async () => {
       const q = await pool.query(
         `SELECT m.id, m.conversation_id, m.provider_message_id, m.content_text,
                 ar.id AS agent_run_id
          FROM messages m
-         JOIN messages in_m ON in_m.organization_id = m.organization_id AND in_m.provider_message_id = $1
+         JOIN messages in_m ON in_m.organization_id = m.organization_id AND in_m.conversation_id = m.conversation_id AND in_m.provider_message_id = $1
          JOIN agent_runs ar ON ar.organization_id = m.organization_id AND ar.final_outbound_message_id = m.id
          WHERE m.organization_id = $2 AND m.direction = 'OUTBOUND' AND m.created_at >= in_m.created_at
            AND m.provider_message_id IS NOT NULL`,
@@ -838,18 +890,30 @@ export async function runAcceptanceSuite() {
 
     const bookingRow = bookingRows.rows[0];
     const bookingPass = Boolean(bookingRow && bookingRow.status === 'CONFIRMED');
+    const bookConfirmRunQ = await pool.query(
+      `SELECT provider, model FROM usage_events WHERE agent_run_id = $1 AND organization_id = $2`,
+      [bookConfirmTurn.agent_run_id, DEMO_ORG_ID],
+    );
+    const bookModelMode = bookConfirmRunQ.rows.length > 0 &&
+      bookConfirmRunQ.rows.every((row) => row.provider === 'deepseek') ? 'DEEPSEEK'
+      : bookConfirmRunQ.rows.some((row) => row.provider === 'fake' || row.provider === 'demo-scripted')
+        ? 'SCRIPTED_DEMO' : 'NOT_RUN';
+    bookingModelMode = bookModelMode;
     logEvidence({
       scenario: 'BOOKING_FLOW',
       result: bookingPass ? 'PASS' : 'FAIL',
       conversationId: bookConfirmTurn.conversation_id,
       agentRunId: bookConfirmTurn.agent_run_id,
       outboundInternalId: bookConfirmTurn.id,
-      finalState: bookingRow?.status || 'NO_BOOKING',
+      finalState: `status=${bookingRow?.status || 'NO_BOOKING'} BOOKING_MODEL_MODE=${bookModelMode}`,
     });
+    // Record for final report.
+    results['BOOKING_MODEL_MODE'] = bookModelMode === 'DEEPSEEK' ? 'PASS' : 'BLOCKED_PRECONDITION';
+    console.log(`[ACCEPTANCE] BOOKING_MODEL_MODE: ${bookModelMode}`);
 
-    // 32. Duplicate Booking Confirmation Replay
+    // 32. Duplicate Booking Confirmation Replay — use same message that was sent for booking
     console.log('Replaying confirmation message for duplicate safety...');
-    await postInbound({ from: bookPhone, messageId: confirmWamid, text: 'تمام احجزلي أول موعد' });
+    await postInbound({ from: bookPhone, messageId: confirmWamid, text: confirmMsg });
     await sleep(2000);
     const bookingCountAfterReplay = await pool.query(
       `SELECT count(*)::int AS count FROM bookings WHERE organization_id = $1 AND source_conversation_id = $2`,
@@ -863,14 +927,22 @@ export async function runAcceptanceSuite() {
     });
 
     // 33. Zero Slot Flow
-    console.log('Testing zero-slot inquiry on weekend...');
+    console.log('Testing zero-slot inquiry on a fixture day with no availability rules...');
+    let closedDate='';
+    for (let offset=1; offset<=14 && !closedDate; offset++) {
+      const date=new Date(Date.now()+offset*24*60*60*1000);
+      const weekday=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',weekday:'long'}).format(date);
+      const dow=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].indexOf(weekday)||7;
+      if (!openDays.includes(dow)) closedDate=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Baghdad'}).format(date);
+    }
+    if (!closedDate) throw new Error('zero_slot_fixture_has_no_closed_weekday');
     const initialBookingCount = (await pool.query(
       `SELECT count(*)::int AS count FROM bookings WHERE organization_id = $1`,
       [DEMO_ORG_ID],
     )).rows[0].count;
 
     const zeroSlotTurn = await executeFlowTurn(
-      'هل يمكنني الحجز يوم الجمعة 2026-10-02 الساعة 10 صباحاً؟',
+      `هل يوجد موعد لخدمة ${bookingService.name} بتاريخ ${closedDate} الساعة 10 صباحاً؟`,
       'zero slot weekend inquiry',
       zeroPhone,
     );
@@ -879,7 +951,9 @@ export async function runAcceptanceSuite() {
       [DEMO_ORG_ID],
     )).rows[0].count;
 
-    const zeroSlotPass = finalBookingCount === initialBookingCount && zeroSlotTurn.content_text.length > 0;
+    const zeroSlotTools=await pool.query("SELECT 1 FROM tool_calls WHERE agent_run_id=$1 AND tool_name='getAvailableSlots' AND result_code='OK'",[zeroSlotTurn.agent_run_id]);
+    const zeroState=await pool.query("SELECT state_json->'candidateSlots' AS slots FROM conversation_working_state WHERE organization_id=$1 AND conversation_id=$2",[DEMO_ORG_ID,zeroSlotTurn.conversation_id]);
+    const zeroSlotPass = finalBookingCount === initialBookingCount && !!zeroSlotTools.rowCount && Array.isArray(zeroState.rows[0]?.slots) && zeroState.rows[0].slots.length === 0;
     logEvidence({
       scenario: 'ZERO_SLOT_FLOW',
       result: zeroSlotPass ? 'PASS' : 'FAIL',
@@ -892,21 +966,28 @@ export async function runAcceptanceSuite() {
     // ----------------------------------------------------
     console.log('\n--- PHASE H: Continuity & Multi-Intent ---');
 
-    const switchInquire = await executeFlowTurn('أريد حجز كشف استشارة', 'topic switch step 1', switchPhone);
+    const switchInquire = await executeFlowTurn(`أريد حجز خدمة ${bookingService.name}`, 'topic switch step 1', switchPhone);
     const switchOffer = await executeFlowTurn('لحظة، هل لديكم عروض حالياً؟', 'topic switch step 2', switchPhone);
     const switchResume = await executeFlowTurn('تمام، لنكمل حجز الموعد', 'topic switch step 3', switchPhone);
 
-    const topicSwitchPass = Boolean(switchInquire && switchOffer && switchResume);
+    const switchTools = await pool.query('SELECT agent_run_id, tool_name FROM tool_calls WHERE agent_run_id=ANY($1::uuid[])', [[switchInquire.agent_run_id,switchOffer.agent_run_id,switchResume.agent_run_id]]);
+    const topicSwitchPass = switchTools.rows.some(row => row.agent_run_id === switchOffer.agent_run_id && row.tool_name === 'getActiveOffers') &&
+      switchTools.rows.some(row => ['getAvailableSlots','ensureLead','searchServices'].includes(row.tool_name) && row.agent_run_id !== switchOffer.agent_run_id);
     logEvidence({ scenario: 'TOPIC_SWITCH_FLOW', result: topicSwitchPass ? 'PASS' : 'FAIL' });
 
     const multiIntentTurn = await executeFlowTurn(
-      'شكد السعر وعندكم خصم وأريد أحجز باچر؟',
+      `شكد سعر خدمة ${bookingService.name} وعندكم خصم عليها وأريد أحجز بتاريخ ${bookingDate}؟`,
       'multi-intent request',
       multiPhone,
     );
+    const multiCalls=(await pool.query("SELECT tool_name,args_hash,result_code,authz_result FROM tool_calls WHERE agent_run_id=$1 ORDER BY ordinal",[multiIntentTurn.agent_run_id])).rows;
+    const multiTools=multiCalls.filter(row=>row.result_code==='OK' && row.authz_result==='ALLOWED').map(row=>row.tool_name);
+    const multiDuplicates=multiCalls.some((row,index)=>multiCalls.slice(0,index).some(prior=>prior.tool_name===row.tool_name && prior.args_hash===row.args_hash));
+    const multiState=(await pool.query("SELECT state_json->'activeWorkflow'->>'id' active_workflow,jsonb_array_length(COALESCE(state_json->'candidateSlots','[]'::jsonb)) slot_count FROM conversation_working_state WHERE organization_id=$1 AND conversation_id=$2",[DEMO_ORG_ID,multiIntentTurn.conversation_id])).rows[0];
+    const multiReceived=await fetch(`${simulator}/simulator/messages`).then(r=>r.json()) as {messages:Array<{providerMessageId:string}>};
     logEvidence({
       scenario: 'MULTI_INTENT_FLOW',
-      result: multiIntentTurn.content_text.length > 0 ? 'PASS' : 'FAIL',
+      result: multiTools.includes('getActiveOffers') && multiTools.includes('getServicePrice') && multiTools.includes('getAvailableSlots') && multiState?.active_workflow==='BOOKING' && multiState.slot_count>0 && !multiDuplicates && !multiTools.includes('createBooking') && multiReceived.messages.some(message=>message.providerMessageId===multiIntentTurn.provider_message_id) ? 'PASS' : 'FAIL',
       agentRunId: multiIntentTurn.agent_run_id,
       outboundInternalId: multiIntentTurn.id,
     });
@@ -930,7 +1011,7 @@ export async function runAcceptanceSuite() {
 
     const handoffTurn = await executeFlowTurn('أريد التحدث مع موظف بشري لو سمحت', 'human handoff request', handoffPhone);
     const handoffTools = await pool.query(
-      `SELECT tool_name FROM tool_calls WHERE agent_run_id = $1`,
+      `SELECT tool_name FROM tool_calls WHERE agent_run_id = $1 AND result_code='OK' AND authz_result='ALLOWED'`,
       [handoffTurn.agent_run_id],
     );
     const handoffToolUsed = handoffTools.rows.some((r) => r.tool_name === 'handoffToHuman');
@@ -938,10 +1019,10 @@ export async function runAcceptanceSuite() {
       `SELECT mode FROM conversations WHERE id = $1`,
       [handoffTurn.conversation_id],
     );
-    const handoffPass = handoffToolUsed || convState.rows[0]?.mode === 'AI_PAUSED' || handoffTurn.content_text.length > 0;
+    const handoffPass = handoffToolUsed && convState.rows[0]?.mode === 'AI_PAUSED';
     logEvidence({
       scenario: 'HUMAN_HANDOFF_FLOW',
-      result: handoffPass ? 'PASS' : 'NOT_ENABLED',
+      result: handoffPass ? 'PASS' : 'FAIL',
       agentRunId: handoffTurn.agent_run_id,
       outboundInternalId: handoffTurn.id,
     });
@@ -965,6 +1046,10 @@ export async function runAcceptanceSuite() {
     await updateReportFile();
     printStageSummary();
 
+  } catch (error) {
+    recordResult('SUITE_COMPLETED', 'FAIL');
+    await updateReportFile();
+    throw error;
   } finally {
     await pool.end();
   }
@@ -980,6 +1065,8 @@ function printStageSummary() {
   console.log(`CrossTenant: ${results['CROSS_TENANT_PROVIDER_ROUTING']}`);
   console.log(`ReadOnlyFlows: ${results['CATALOG_FLOW']}`);
   console.log(`Booking: ${results['BOOKING_FLOW']}`);
+  console.log(`BookingModelMode: ${bookingModelMode}`);
+  console.log(`RealDeepseekExecution: ${results['REAL_DEEPSEEK_AGENT_EXECUTION']}`);
   console.log(`Continuity: ${results['TOPIC_SWITCH_FLOW']}`);
   console.log(`OptionalFlows: QUOTE=${results['QUOTE_FLOW']}, ORDER=${results['ORDER_FLOW']}, HANDOFF=${results['HUMAN_HANDOFF_FLOW']}`);
 }
@@ -988,7 +1075,10 @@ async function updateReportFile() {
   const reportPath = path.join(process.cwd(), 'docs', 'operations', 'MB15-SIMULATOR-ACCEPTANCE-REPORT.md');
   let content = `# MB-15A Meta Simulator Acceptance Evidence\n\n`;
   content += `## Acceptance Summary\n\n`;
-  content += `Status: **VERIFIED**\n`;
+  const verified = results['REAL_DEEPSEEK_AGENT_EXECUTION'] === 'PASS' &&
+    Object.values(results).every((status) => status === 'PASS' || status === 'NOT_ENABLED');
+  content += `Status: **${verified ? 'VERIFIED' : 'PARTIAL'}**\n`;
+  content += `BOOKING_MODEL_MODE: ${bookingModelMode}\n`;
   content += `Generated at: ${new Date().toISOString()}\n`;
   content += `Execution mode: Meta Simulator Loopback / Private Container Network\n\n`;
   content += `## Acceptance Evidence Matrix\n\n`;
@@ -999,7 +1089,7 @@ async function updateReportFile() {
     content += `| ${row.runId} | ${row.timestamp} | ${row.scenario} | ${row.organization.slice(0, 8)}... | ${row.providerInboundId} | ${row.internalMessageId.slice(0, 8)}... | ${row.conversationId.slice(0, 8)}... | ${row.agentRunId.slice(0, 8)}... | ${row.outboundInternalId.slice(0, 8)}... | ${row.simulatedProviderId} | ${row.finalState} | **${row.result}** |\n`;
   }
 
-  content += `\n## Operational Invariants Verified\n\n`;
+  content += `\n## Operational Invariants Under Test\n\n`;
   content += `- Bounded provider retry policy: MAX ATTEMPTS = 4, exponential backoff with 5000ms base.\n`;
   content += `- Ambiguous send safety: Network timeouts transition attempt/message to UNKNOWN; no blind duplicate resend.\n`;
   content += `- Out of order status safety: READ status is monotonic; later delivered callback does not regress state.\n`;

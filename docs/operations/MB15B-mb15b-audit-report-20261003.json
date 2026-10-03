@@ -1,0 +1,75 @@
+{
+  "runId": "mb15b-audit-report-20261003",
+  "scenarios": {
+    "PREFLIGHT": {
+      "status": "PASS",
+      "details": {
+        "provider": "deepseek",
+        "keyConfigured": true,
+        "simulatorOnly": true,
+        "syntheticToken": true,
+        "scripted": false
+      }
+    },
+    "STUCK_STATE_AUDIT": {
+      "status": "FAIL",
+      "reason": "global_unexplained_stuck"
+    },
+    "DATA_INTEGRITY_AUDIT": {
+      "status": "PASS",
+      "details": {
+        "scopeConversationCount": 376,
+        "results": {
+          "orphanIdentity": 0,
+          "orphanConversation": 0,
+          "duplicateProviderId": 0,
+          "duplicateTimeline": 0,
+          "duplicateAgentBooking": 0,
+          "invalidBooking": 0,
+          "foreignBookingReferences": 0,
+          "invalidWorkingStateBooking": 0,
+          "invalidWorkingStateEntity": 0
+        },
+        "mutations": {
+          "quotes": 0,
+          "orders": 0
+        }
+      }
+    },
+    "SECRET_HYGIENE": {
+      "status": "PASS",
+      "details": {
+        "diffChecked": true,
+        "trackedEnvCount": 2,
+        "artifactAndLogFilesChecked": 334,
+        "exactKeyLeaks": 0,
+        "suspiciousKeyPatterns": 0,
+        "authTokenPatterns": 0,
+        "realMetaCredentialsUsed": false,
+        "productionDatabaseUsed": false,
+        "demoLocalIgnored": true,
+        "credentialValuesPrinted": false
+      }
+    }
+  },
+  "evidence": [
+    {
+      "event": "integrity_audit",
+      "results": {
+        "orphanIdentity": 0,
+        "orphanConversation": 0,
+        "duplicateProviderId": 0,
+        "duplicateTimeline": 0,
+        "duplicateAgentBooking": 0,
+        "invalidBooking": 0,
+        "foreignBookingReferences": 0,
+        "invalidWorkingStateBooking": 0,
+        "invalidWorkingStateEntity": 0
+      },
+      "mutations": {
+        "quotes": 0,
+        "orders": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "family": "Noto Sans Arabic",
+  "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosansarabic/NotoSansArabic%5Bwdth%2Cwght%5D.ttf",
+  "license": "OFL-1.1",
+  "retrieved": "2026-10-03",
+  "source_sha256": "63111b5b2e074dd48cc67692e0a2726d86ee94c1c37fe8598257b7b4e87e869e",
+  "woff2_sha256": "1ea3806d3a1bb49e98b5ad41d8ed5f4a9578150964f175abfdd2d6b9c36958d7",
+  "conversion": "fontTools 4.61.1 WOFF2 compression; all glyphs/variable axes preserved; no subsetting",
+  "bytes": 361528,
+  "axes": [
+    {
+      "tag": "wght",
+      "minimum": 100.0,
+      "maximum": 900.0
+    },
+    {
+      "tag": "wdth",
+      "minimum": 62.5,
+      "maximum": 100.0
+    }
+  ]
+}

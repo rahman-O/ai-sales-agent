@@ -21,6 +21,7 @@ async function main() {
   loadDemoCliEnv();
   const runId = randomUUID();
   const messageId = `wamid.SIM_INBOUND_${runId}`;
+  const from = process.env.MB15_PROBE_PHONE ?? `1555${Math.floor(100000 + Math.random() * 900000)}`;
   const api = 'http://127.0.0.1:3001';
   const simulator = 'http://127.0.0.1:3415';
   // The probe calls the simulator through its published host port, while the
@@ -53,16 +54,16 @@ async function main() {
       body: JSON.stringify({
         webhookUrl: simulatorWebhookUrl,
         phoneNumberId: DEMO_META_SIMULATOR_PHONE_NUMBER_ID,
-        from: '15555550006',
+        from,
         messageId,
-        text: 'مرحبا',
+        text: process.env.MB15_PROBE_TEXT ?? 'مرحبا',
       }),
     });
     if (!inbound.ok) fail('WEBHOOK_HTTP_STATUS', `http_${inbound.status}`);
     report({ checkpoint: 'WEBHOOK_HTTP_STATUS', result: 'PASS' });
 
     const persisted = await pool.query(
-      `SELECT m.id AS message_id, m.conversation_id, c.customer_id
+      `SELECT m.id AS message_id, m.conversation_id, c.customer_id, m.ingress_sequence
        FROM messages m JOIN conversations c ON c.organization_id=m.organization_id AND c.id=m.conversation_id
        WHERE m.organization_id=$1 AND m.provider_message_id=$2`,
       [DEMO_ORG_ID, messageId],
@@ -76,15 +77,34 @@ async function main() {
     const deadline = Date.now() + 180_000;
     while (Date.now() < deadline) {
       const state = await pool.query(
-        `SELECT ar.id AS agent_run_id, ar.final_outbound_message_id,
+        `SELECT ar.id AS agent_run_id, ar.final_outbound_message_id, ar.status, ar.terminal_reason, ar.model_calls,
+                EXISTS (SELECT 1 FROM usage_events u WHERE u.organization_id=ar.organization_id
+                  AND u.agent_run_id=ar.id AND u.provider='deepseek' AND u.model=$4) AS deepseek_usage,
                 m.provider_message_id AS outbound_provider_message_id, m.delivery_state
          FROM agent_runs ar LEFT JOIN messages m
            ON m.organization_id=ar.organization_id AND m.id=ar.final_outbound_message_id
-         WHERE ar.organization_id=$1 AND ar.conversation_id=$2
+         WHERE ar.organization_id=$1 AND ar.conversation_id=$2 AND ar.target_ingress_sequence=$3
          ORDER BY ar.started_at DESC LIMIT 1`,
-        [DEMO_ORG_ID, persisted.rows[0].conversation_id],
+        [DEMO_ORG_ID, persisted.rows[0].conversation_id, persisted.rows[0].ingress_sequence, process.env.DEEPSEEK_MODEL?.trim() || 'deepseek-chat'],
       );
+      if (state.rows[0]?.status === 'FAILED' || state.rows[0]?.status === 'TIMED_OUT')
+        fail('AGENT_FINALIZATION', state.rows[0].terminal_reason ?? 'failed');
       if (state.rows[0]?.outbound_provider_message_id) {
+        if (state.rows[0].status !== 'SUCCEEDED' || state.rows[0].model_calls < 1 || !state.rows[0].deepseek_usage)
+          fail('DEEPSEEK_EXECUTION', 'target_run_missing_real_provider_usage');
+        if (process.env.MB15_PROBE_REQUIRED_TOOL) {
+          const tools=await pool.query('SELECT 1 FROM tool_calls WHERE agent_run_id=$1 AND tool_name=$2 AND result_code=$3', [state.rows[0].agent_run_id,process.env.MB15_PROBE_REQUIRED_TOOL,'OK']);
+          if (!tools.rowCount) fail('REQUIRED_TOOL', 'expected_successful_tool_call_missing');
+          report({checkpoint:'REQUIRED_TOOL',result:'PASS',detail:process.env.MB15_PROBE_REQUIRED_TOOL});
+        }
+        report({ checkpoint: 'DEEPSEEK_EXECUTION', result: 'PASS', detail: `provider=deepseek model=${process.env.DEEPSEEK_MODEL?.trim() || 'deepseek-chat'} model_calls=${state.rows[0].model_calls}` });
+        const sends = await fetch(`${simulator}/simulator/messages`).then(r => r.json()) as {messages:Array<{providerMessageId:string}>};
+        if (!sends.messages.some(m => m.providerMessageId === state.rows[0].outbound_provider_message_id))
+          fail('OUTBOUND_REQUEST_TO_SIMULATOR', 'target_provider_id_not_received');
+        report({ checkpoint: 'OUTBOUND_REQUEST_TO_SIMULATOR', result: 'PASS' });
+        report({ checkpoint: 'QUEUE_ROUND_TRIP', result: 'PASS' });
+        report({ checkpoint: 'WORKER_PROCESSING', result: 'PASS' });
+        report({ checkpoint: 'PROVIDER_MESSAGE_ID_PERSISTED', result: 'PASS' });
         report({ checkpoint: 'WORKER_STARTED', result: 'PASS' });
         report({ checkpoint: 'AGENT_RUN', result: 'PASS' });
         report({ checkpoint: 'PROVIDER_MESSAGE_ID', result: 'PASS' });
@@ -98,7 +118,7 @@ async function main() {
             phoneNumberId: DEMO_META_SIMULATOR_PHONE_NUMBER_ID,
             providerMessageId: outboundProviderMessageId,
             status: 'delivered',
-            recipientId: '15555550006',
+            recipientId: from,
           }),
         });
         if (!deliveryRes.ok) fail('DELIVERY_CALLBACK_HTTP', `http_${deliveryRes.status}`);
@@ -126,7 +146,7 @@ async function main() {
             phoneNumberId: DEMO_META_SIMULATOR_PHONE_NUMBER_ID,
             providerMessageId: outboundProviderMessageId,
             status: 'read',
-            recipientId: '15555550006',
+            recipientId: from,
           }),
         });
         if (!readRes.ok) fail('READ_CALLBACK_HTTP', `http_${readRes.status}`);

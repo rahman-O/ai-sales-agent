@@ -43,3 +43,13 @@ test('P13 security middleware excludes health and provider webhook paths from ge
     middleware.use(request('GET', '/health/ready'), response(), next);
   }
 });
+
+test('provider webhook exemption survives an Express wildcard middleware mount', async () => {
+  const {default:express}=await import('express');
+  const app=express();const middleware=new SecurityHeadersAndRateLimitMiddleware();let observedPath='';
+  app.use('/{*path}',(req,res,next)=>{observedPath=req.path;try{middleware.use(req,res,next);}catch(e){res.status((e as HttpException).getStatus()).end();}});
+  app.post('/v1/webhooks/whatsapp/meta',(_req,res)=>{res.status(200).end();});
+  const server=app.listen(0,'127.0.0.1');await new Promise<void>(resolve=>server.once('listening',resolve));
+  try{const addr=server.address();assert.ok(addr&&typeof addr!=='string');for(let i=0;i<40;i++)assert.equal((await fetch(`http://127.0.0.1:${addr.port}/v1/webhooks/whatsapp/meta`,{method:'POST'})).status,200);assert.equal(observedPath,'/');}
+  finally{await new Promise<void>((resolve,reject)=>server.close(e=>e?reject(e):resolve()));}
+});

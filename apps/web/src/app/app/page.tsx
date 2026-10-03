@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSupabaseServerClient } from '@/shared/auth/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 

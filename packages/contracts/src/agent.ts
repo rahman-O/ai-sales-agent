@@ -13,8 +13,7 @@ export const FinalResponseDecision = z
           evidenceRef: z.string().max(200).optional(),
         }),
       )
-      .max(20)
-      .default([]),
+      .max(20),
   })
   .strict();
 
@@ -22,7 +21,7 @@ export const ToolRequestDecision = z
   .object({
     type: z.literal('tool_request'),
     toolName: z.string().min(1).max(64),
-    arguments: z.record(z.string(), z.unknown()).default({}),
+    arguments: z.record(z.string(), z.unknown()),
   })
   .strict();
 

@@ -22,6 +22,7 @@ export const SCHEMA_REPAIR_PROMPT = [
   '- Tool request: {"type": "tool_request", "toolName": "<toolName>", "arguments": {<args>}}',
   '- Final response: {"type": "final_response", "text": "<arabic message>", "claims": []}',
   '- Safe stop: {"type": "safe_stop", "reason": "<reason>"}',
+  'Claim kind must be price, availability, booking, or generic. Policy/offer/knowledge claims use generic. A claim may have evidenceRef; booking/availability require backend evidence. Do not add unknown fields to canonical decisions.',
   'Do NOT drop toolName or arguments. Do NOT use {"name": "...", "arguments": {...}} format. Do NOT use markdown fences.',
 ].join(' ');
 
@@ -111,13 +112,21 @@ export async function runAgentOrchestrator(
   );
   const toolDefs = deps.tools.listTools().filter((t) => allow.has(t.name));
 
-  let modelCalls = 0;
-  let toolCalls = 0;
+  let modelCalls = run.priorModelCalls ?? 0;
+  let toolCalls = run.priorToolCalls ?? 0;
+  const currentInbound = snap.messages.find(m => m.direction === 'INBOUND' && m.ingressSequence === snap.targetIngressSequence)?.contentText ?? '';
+  const offersInquiry = /(?:شنو\s+عروض|عندكم\s+(?:عروض|خصم)|عدكم\s+(?:عروض|خصم)|أكو\s+خصم|شوف\s+العرض)/u.test(currentInbound);
+  const locationInquiry = /(?:وين\s+موقع|أين\s+(?:موقع|العيادة)|موقعكم|مواعيد\s+العمل|ساعات\s+العمل)/u.test(currentInbound);
+  const requiredInquiryTool = offersInquiry ? 'getActiveOffers' : locationInquiry ? 'searchKnowledge' : null;
+  let inquiryEvidenceRetrieved = false;
+  let missingOffersRetryUsed = false;
   let schemaRepairs = 0;
-  let successfulBookingResult: Record<string, unknown> | null = null;
+  let finalizationReserveUsed = false;
+  let lastToolSucceeded = false;
+  let successfulBookingResult: Record<string, unknown> | null = run.successfulBookingResult ?? null;
   let postToolModelOutputInvalid = false;
   let postMutationStructuredRetryUsed = false;
-  const seenToolFingerprints = new Map<string, number>();
+  const seenToolFingerprints = new Map<string, number>((run.priorToolFingerprints ?? []).map(f=>[`${f.toolName}:${f.argsHash}`,f.count]));
   const messages: Array<{ role: 'system' | 'user' | 'assistant' | 'tool'; content: string }> = [
     ...buildContextMessages(snap),
   ];
@@ -172,10 +181,13 @@ export async function runAgentOrchestrator(
   };
 
   while (true) {
+    // A durable successful booking cannot be replayed after worker loss.
+    if (run.resumed && successfulBookingResult) return finalizeSuccessfulBookingFallback();
     if (now() - started > limits.runDeadlineMs) {
       return end('TIMED_OUT', 'run_deadline', false);
     }
-    if (modelCalls >= limits.maxModelCalls) {
+    const finalizationOnly = modelCalls >= limits.maxModelCalls;
+    if (finalizationOnly && (finalizationReserveUsed || !lastToolSucceeded)) {
       if (successfulBookingResult && postToolModelOutputInvalid) {
         return finalizeSuccessfulBookingFallback();
       }
@@ -196,12 +208,17 @@ export async function runAgentOrchestrator(
       return end('STALE', 'authority_lost', false);
     }
 
+    if (finalizationOnly) {
+      finalizationReserveUsed = true;
+      messages.push({ role: 'system', content: 'Operational model-call budget is exhausted. This is the single finalization-only reserve. Return final_response using only successful backend evidence already present, or safe_stop if evidence is insufficient. No tools or mutations are permitted. Never invent missing prices, discounts, slots or booking success.' });
+    }
     modelCalls += 1;
+    await deps.store.recordModelAttempt?.(snap.organizationId,run.agentRunId);
     let raw: unknown;
     try {
       const gen = await deps.provider.generate({
         messages,
-        tools: toolDefs.map((t) => ({
+        tools: (finalizationOnly ? [] : toolDefs).map((t) => ({
           name: t.name,
           description: t.description,
           parameters: t.inputSchema,
@@ -236,7 +253,15 @@ export async function runAgentOrchestrator(
     let decision: AgentDecision;
     try {
       decision = parseAgentDecision(raw);
-    } catch {
+    } catch (error) {
+      // Schema diagnostics contain only known schema paths/codes, never provider values.
+      const issues = error && typeof error === 'object' && 'issues' in error && Array.isArray(error.issues)
+        ? error.issues.map((issue: { code?: unknown; path?: unknown[] }) => ({
+          code: typeof issue.code === 'string' && /^[a-z_]+$/.test(issue.code) ? issue.code : 'schema_error',
+          path: (issue.path ?? []).map(part => typeof part === 'number' ? part :
+            ['type', 'text', 'claims', 'kind', 'evidenceRef', 'toolName', 'arguments', 'reason'].includes(String(part)) ? part : '<field>'),
+        })) : [];
+      console.warn(JSON.stringify({ event: 'agent_decision_schema_invalid', agentRunId: run.agentRunId, issues }));
       if (successfulBookingResult) {
         postToolModelOutputInvalid = true;
         if (!postMutationStructuredRetryUsed) {
@@ -269,6 +294,12 @@ export async function runAgentOrchestrator(
     }
 
     if (decision.type === 'final_response') {
+      if (requiredInquiryTool && allow.has(requiredInquiryTool) && !inquiryEvidenceRetrieved) {
+        if (missingOffersRetryUsed || finalizationOnly) return end('FAILED', requiredInquiryTool === 'getActiveOffers' ? 'required_offers_evidence_missing' : 'required_knowledge_evidence_missing', false);
+        missingOffersRetryUsed = true;
+        messages.push({ role: 'system', content: `The current inbound contains an explicit factual inquiry requiring ${requiredInquiryTool}. No successful ${requiredInquiryTool} evidence exists for this turn. Retrieve it before final_response. Preserve booking candidates during this detour; do not request selection or create a booking. For offers, use the actual catalogItemId returned by backend service lookup, or omit it for organization-wide offers. For location or hours, retrieve published knowledge. This correction uses the remaining existing budget.` });
+        continue;
+      }
       const safe = assertFinalResponseSafe(decision.text, decision.claims);
       if (!safe.ok) {
         return end('FAILED', safe.reason, false);
@@ -314,6 +345,15 @@ export async function runAgentOrchestrator(
         decisionTrace,
         finalization,
       };
+    }
+
+    // The one reserve call can never extend operational work or execute a mutation.
+    if (finalizationOnly) {
+      if (successfulBookingResult) {
+        postToolModelOutputInvalid = true;
+        return finalizeSuccessfulBookingFallback();
+      }
+      return end('BUDGET_EXCEEDED', 'finalization_reserve_tool_request', false);
     }
 
     // tool_request
@@ -384,6 +424,8 @@ export async function runAgentOrchestrator(
       durationMs: now() - t0,
     });
 
+    lastToolSucceeded = result.ok;
+
     if (
       decision.toolName === 'createBooking' &&
       result.ok &&
@@ -411,12 +453,16 @@ export async function runAgentOrchestrator(
 
     messages.push({
       role: 'assistant',
-      content: JSON.stringify({ type: 'tool_request', toolName: decision.toolName }),
+      content: JSON.stringify(decision),
     });
     messages.push({
       role: 'tool',
       content: JSON.stringify({ ok: result.ok, code: result.code, data: result.data }),
     });
+    if (result.ok) {
+      if (decision.toolName === requiredInquiryTool) inquiryEvidenceRetrieved = true;
+      messages.push({ role: 'system', content: `The ${decision.toolName} call above succeeded with the exact arguments shown. Its result is authoritative for this turn. Consume it; do not repeat a successful lookup for the same entity or input. ${Math.max(0, limits.maxModelCalls - modelCalls)} operational model calls remain before the single finalization-only reserve. Prioritize any still-unhandled intent, then finalize from retrieved evidence.` });
+    }
   }
 }
 

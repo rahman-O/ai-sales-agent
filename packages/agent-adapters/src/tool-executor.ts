@@ -227,16 +227,17 @@ const DEFS: ToolDefinition[] = [
   {
     name: 'createBooking',
     version: TOOL_VERSION,
-    description: 'Confirm booking from slotToken with server-proven confirmationMessageId',
+    description: 'Confirm an explicitly selected working-state candidate using candidateSlotIndex (preferred), or a backend-issued slotToken. Server proves customer confirmation and validates the signed token.',
     classification: 'mutate',
     inputSchema: {
       type: 'object',
       additionalProperties: false,
       properties: {
         slotToken: { type: 'string' },
+        candidateSlotIndex: { type: 'integer', minimum: 0, description: 'Zero-based candidate index explicitly selected in the current customer inbound. Server resolves and verifies its signed token.' },
         leadId: { type: 'string' },
       },
-      required: ['slotToken'],
+      oneOf: [{ required: ['slotToken'] }, { required: ['candidateSlotIndex'] }],
     },
   },
   {
@@ -780,7 +781,8 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
               ctx.organizationId,
               ctx.customerId,
               {
-                slotToken: String(args.slotToken ?? ''),
+                slotToken: args.slotToken === undefined ? undefined : String(args.slotToken),
+                candidateSlotIndex: typeof args.candidateSlotIndex === 'number' ? args.candidateSlotIndex : undefined,
                 confirmationMessageId: String(args.confirmationMessageId ?? ''),
                 leadId: typeof args.leadId === 'string' ? args.leadId : undefined,
               },
@@ -1145,7 +1147,7 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
             const q = typeof args.query === 'string' ? args.query : '';
             const limit = Math.min(Number(args.limit) || 10, 20);
             const r = await c.query(
-              `SELECT id, name, duration_minutes, amount_minor, currency, booking_enabled
+              `SELECT id, name, catalog_item_id, duration_minutes, amount_minor, currency, booking_enabled
                FROM services
                WHERE organization_id=$1 AND active = true AND archived_at IS NULL`,
               [ctx.organizationId],
@@ -1158,6 +1160,7 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
                 services: matched.map((s) => ({
                   id: s.id,
                   name: s.name,
+                  catalogItemId: s.catalog_item_id ?? null,
                 })),
               },
             };
@@ -1168,7 +1171,7 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
               return invalidUuidArg(name, 'serviceId', serviceId);
             }
             const r = await c.query(
-              `SELECT id, name, duration_minutes, amount_minor, currency, pricing_version, active
+              `SELECT id, name, catalog_item_id, duration_minutes, amount_minor, currency, pricing_version, active
                FROM services WHERE organization_id=$1 AND id=$2 AND archived_at IS NULL`,
               [ctx.organizationId, serviceId],
             );
@@ -1180,6 +1183,7 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
                 code: 'OK',
                 data: {
                   serviceId: s.id,
+                  catalogItemId: s.catalog_item_id ?? null,
                   amountMinor: String(s.amount_minor ?? ''),
                   currency: s.currency,
                   pricingVersion: s.pricing_version,
@@ -1289,6 +1293,7 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
                LIMIT $5`,
               [lit, ctx.organizationId, PROFILE_ID, MAX_DISTANCE, limit],
             );
+            console.info(JSON.stringify({ event: 'knowledge_evidence_selected', agentRunId: ctx.agentRunId, documentIds: [...new Set(r.rows.map(row => row.document_id))], chunkIds: r.rows.map(row => row.chunk_id) }));
             return {
               ok: true,
               code: 'OK',
@@ -1311,6 +1316,10 @@ export function createToolExecutor(pool: Pool, store: RunStorePort, sandbox = fa
             const catalogItemId = typeof args.catalogItemId === 'string' ? args.catalogItemId.trim() : undefined;
             if (catalogItemId && !isValidUuid(catalogItemId)) {
               return invalidUuidArg('getActiveOffers', 'catalogItemId', catalogItemId);
+            }
+            if (catalogItemId) {
+              const item=await c.query(`SELECT id FROM catalog_items WHERE organization_id=$1 AND id=$2 AND archived_at IS NULL`,[ctx.organizationId,catalogItemId]);
+              if (!item.rows[0]) return {ok:false,code:'NOT_FOUND'};
             }
 
             const capRes = await c.query(

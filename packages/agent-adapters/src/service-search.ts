@@ -5,6 +5,7 @@
  */
 
 export interface ServiceRow {
+  catalog_item_id?: string | null;
   id: string;
   name: string;
   booking_enabled?: boolean;
